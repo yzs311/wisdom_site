@@ -249,55 +249,23 @@
         }
       }
     }
-  }
-  .subnav {
-    position: absolute;
-    left: 1.75rem;
-    top: 5.52rem;
-    z-index: 1000;
-    background-color: #1872ad;
-    display: none;
-    ul {
-      width: 2rem;
-      height: 1.68rem;
-      li {
-        font-size: 0.18rem;
-        line-height: 0.36rem;
-        padding-left: 0.18rem;
-        margin-top: 0.06rem;
-        width: 1.9rem;
-        margin-left: 0.05rem;
-        z-index: 6;
-        cursor: pointer;
-        &:hover {
-          background-color: #54a4d7;
-        }
-        a {
-          color: #fff;
-          display: inline-block;
-          width: 100%;
-          height: 100%;
-        }
-      }
+    .sanjiao {
+        position: absolute;
+        top: 6.78rem;
+        left: 1.65rem;
+        width: 25px;
+        height: 0.25rem;
+        background-color: #1872ad;
+        transform: rotate(45deg);
+        z-index: 999;
+        display: none;
     }
-  }
-  .sanjiao {
-    position: absolute;
-    top: 6.78rem;
-    left: 1.65rem;
-    width: 25px;
-    height: 0.25rem;
-    background-color: #1872ad;
-    transform: rotate(45deg);
-    z-index: 999;
-    display: none;
-  }
-
-  .router-box {
-    flex: 1;
-    padding-top: 0.4rem;
-    padding-left: 0.3rem;
-    padding-right: 0.3rem;
+    .router-box {
+        flex: 1;
+        padding-top: 0.4rem;
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+    }
   }
 }
 </style>
@@ -356,19 +324,19 @@ export default {
     },
     // 选择模块
     isActiveShow(i) {
-      this.activeShow = i;
-      $(".sanjiao").hide();
-      $(".subnav").hide();
+        this.activeShow = i;
+        $(".sanjiao").hide();
+        $(".subnav").hide();
     },
     // 页面刷新时重新赋值
     getPath() {
-      this.activeShow = this.$route.path;
+        this.activeShow = this.$route.path;
     },
     // 两制服务选项弹出
     fw(i) {
-      $(".sanjiao").show();
-      $(".subnav").show();
-      this.activeShow = i;
+        $(".sanjiao").show();
+        $(".subnav").show();
+        this.activeShow = i;
     }
   }
 };
