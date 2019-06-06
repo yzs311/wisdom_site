@@ -1,5 +1,5 @@
 <template>
-  <div id="systemLiangZhi">
+  <div id="systemZhiHui">
     <!-- 阴影框 -->
     <div class="shadow-box"></div>
     <!-- 侧导航栏 -->
@@ -62,7 +62,7 @@
 </template>
 
 <style lang="less">
-#systemLiangZhi {
+#systemZhiHui {
   width: 100%;
   display: flex;
   position: relative;
@@ -102,11 +102,11 @@
             display: inline-block;
           }
           span {
-            width: 0.8rem;
+            // width: 0.8rem;
             vertical-align: top;
-            text-align: justify;
-            display: inline-block;
-            text-align-last: justify;
+            // text-align: justify;
+            // display: inline-block;
+            // text-align-last: justify;
           }
         }
         a:hover {
@@ -148,7 +148,7 @@
   }
   .router-box {
     flex: 1;
-    padding-top: 0.4rem;
+    padding-top: 0.3rem;
     padding-left: 0.3rem;
     padding-right: 0.3rem;
   }

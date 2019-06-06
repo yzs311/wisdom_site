@@ -97,37 +97,59 @@
                     <ul>
                         <li>
                             <span>
-                                账号
-                                <div class="required">*</div>
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
                                 姓名
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="userName">
+                        </li>
+                        <li>
+                            <span>
+                                手机号
+                                <div class="required">*</div>
+                            </span>
+                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="userPhone">
+                        </li>
+                        <li>
+                            <span>
+                                账号
+                                <div class="required">*</div>
+                            </span>
+                            <input type="text" v-model="userAccount" @blur="selectSystemUser">
                         </li>
                         <li>
                             <span>
                                 密码
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="userPassword">
                         </li>
                         <li>
                             <span>
-                                公司角色
+                                账户状态
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <el-select v-model="userState" placeholder="请选择">
+                                <el-option
+                                v-for="item in userStateOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
                         </li>
                         <li>
                             <span>
-                                手机号
+                                登录项
+                                <div class="required">*</div>
                             </span>
-                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
+                            <el-select v-model="entry" placeholder="请选择">
+                                <el-option
+                                v-for="item in entryOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
                         </li>
                     </ul>
                 </div>
@@ -384,20 +406,78 @@ export default {
             }], // 表格数据
             currentPage: 1, // 当前页码
             dialogShow: false, // 对话框显示状态
+
+            // 对话框数据
+            id: '', // 当前选中的账号id
+            userName: '', // 姓名
+            userPhone: '', // 联系电话
+            userAccount: '', // 账号
+            userPassword: '', // 密码
+            userState: '', // 账户状态
+            userType: 2, // 账户类型
+            entry: '', // 登录权限
+            ids: '', // 角色id字符串
+            userStateOptions: [
+                {
+                    value: '1',
+                    label: '启用'
+                },
+                {
+                    value: '0',
+                    label: '禁用'
+                }
+            ], // 账户状态选项
+            entryOptions: [
+                {
+                    value: '0',
+                    label: 'APP'
+                },
+                {
+                    value: '1',
+                    label: 'PC'
+                },
+                {
+                    value: '2',
+                    label: 'APP+PC'
+                }
+            ], // 登录项选项
         }
     },
     methods: {
+        // 每页条数切换
         handleSizeChange(val) {
-            console.log(`每页${val}条`)
+            // console.log(`每页 ${val} 条`)
+            this.pageSize = val
+            // this.selectConstructionCompanyList()
         },
+
+        // 当前页
         handleCurrentChange(val) {
-            console.log(`当前页：${val}`)
+            // console.log(`当前页: ${val}`)
+            this.pageNum = val
+            // this.selectConstructionCompanyList()
         },
 
         // 新增对话框状态切换
         dialogClick() {
             this.dialogShow = !this.dialogShow
         },
+
+        // 验证账号是否存在
+        selectSystemUser() {
+            this.$axios.post(`/api/system/computer/selectSystemUser?userAccount=${this.userAccount}`).then(
+                res => {
+                    console.log(res.data.code)
+                    if (res.data.code != 0) {
+                        this.$message({
+                            message: `${res.data.msg}`,
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
     }
 }
 </script>

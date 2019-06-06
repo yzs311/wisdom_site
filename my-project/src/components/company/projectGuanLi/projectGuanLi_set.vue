@@ -4,12 +4,12 @@
             <!-- 搜索栏 -->
             <div class="search-box">
                 <div class="input-box">
-                    <input type="text" placeholder="请输入公司名称">
+                    <input type="text" placeholder="请输入项目名称">
                     <a class="el-icon-search"></a>
                 </div>
                 <a class="new" @click="dialogClick">
                     <i class="icon"></i>
-                    新增公司
+                    新增项目
                 </a>
             </div>
             <!-- 列表盒子 -->
@@ -850,8 +850,36 @@ export default {
                     }]
                 }]
             }], // 地区列表
+
+            // 对话框数据
             selectedRegion: [], // 当前选中地区
+            cid: '', // 所属公司id
+            projectName: '', // 项目名
+            shortName: '', // 简称
+            projectPrincipal: '', // 项目负责人
+            phone: '', // 联系方式
+            projectType: '', // 项目类型 
+            projectState: '', // 项目状态 
+            projectNumber: '', // 项目管理人数
+            projectRegion: '', // 所属地区
+            builderLicense: '', // 	施工许可证
+            projectAddress: '', // 项目地址
+            startingTime: '', // 起始时间
+            finishTime: '', // 结束时间
+            acreage: '', // 建筑面积
+            projectCost: '', // 工程造价
+            longitude: '', // 经度
+            latitude: '', // 纬度
+            securityCode: '', // 安全报监编号
+            qualityNumber: '', // 质量报监编号
+            designOrganization: '', // 设计单位
+            explorationUnit: '', // 勘察单位
+            remark: '', // 	备注
+            projectImage: '', // 项目效果图
         }
+    },
+    created() {
+        this.getArea()
     },
     methods: {
         handleSizeChange(val) {
@@ -870,6 +898,57 @@ export default {
         handleChange(value) {
             console.log(value)
         },
+
+        // 获取城市数据
+        getArea() {
+            this.$axios.post(`/api/area/getArea?parentId=0`).then(
+                res => {
+                    // console.log(res.data)
+                    let temp = []
+                    for (let i = 0; i < res.data.data.length; i++) {
+                        this.$axios.post(`/api/area/getArea?parentId=${res.data.data[i].id}`).then(
+                            res2 => {
+                                // console.log(res2.data.data)
+                                let temp2 = []
+                                for (let i2 = 0; i2 < res2.data.data.length; i2++) {
+                                    this.$axios.post(`/api/area/getArea?parentId=${res2.data.data[i2].id}`).then(
+                                        res3 => {
+                                            // console.log(res3.data)
+                                            // if (res3.data) {
+                                                let temp3 = []
+                                                for (let i3 = 0; i3 < res3.data.data.length; i3++) {
+                                                    temp3.push({
+                                                        value: res3.data.data[i3].id,
+                                                        label: res3.data.data[i3].title
+                                                    })
+                                                }
+                                                temp2.push({
+                                                    value: res2.data.data[i2].id,
+                                                    label: res2.data.data[i2].title,
+                                                    children: temp3
+                                                })
+                                            // }
+                                        }
+                                    )
+                                }
+                                temp.push({
+                                    value: res.data.data[i].id,
+                                    label: res.data.data[i].title,
+                                    children: temp2
+                                })
+                            }
+                        )
+                    }
+                    this.regionOptions = temp
+                    console.log(temp)
+                }
+            )
+        },
+
+        // 获取项目列表
+        selectProjectList() {
+            this.$axios.post(`/api/project/selectProjectList`)
+        }
     }
 }
 </script>

@@ -4,8 +4,8 @@
             <!-- 搜索栏 -->
             <div class="search-box">
                 <div class="input-box">
-                    <input type="text" placeholder="请输入公司名称">
-                    <a class="el-icon-search"></a>
+                    <input type="text" placeholder="请输入公司名称" v-model="searchName">
+                    <a class="el-icon-search" @click="searchClick"></a>
                 </div>
                 <a class="new" @click="dialogClick">
                     <i class="icon"></i>
@@ -19,7 +19,8 @@
                     <el-table
                     :data="tableData"
                     stripe
-                    border>
+                    border
+                    @selection-change="handleSelectionChange">
                         <el-table-column
                         type="selection"
                         width="35">
@@ -30,15 +31,37 @@
                         width="60">
                         </el-table-column>
                         <el-table-column
-                        prop="company"
-                        label="公司名称">
+                        prop="companyName"
+                        label="公司名称"
+                        width="200">
                         </el-table-column>
                         <el-table-column
+                        prop="shortName"
+                        label="公司简称"
+                        width="150">
+                        </el-table-column>
+                        <el-table-column
+                        prop="companyType"
+                        label="单位类型"
+                        width="150">
+                        </el-table-column>
+                        <el-table-column
+                        prop="contacts"
+                        label="负责人"
+                        width="150">
+                        </el-table-column>
+                        <el-table-column
+                        prop="mobilePhone"
+                        label="电话">
+                        </el-table-column>
+                        <el-table-column
+                        prop=""
                         label="操作"
-                        width="200">
-                        <template>
-                            <a class="table-button">编辑</a>
+                        width="300">
+                        <template slot-scope="scope">
+                            <a class="table-button" @click="getIdcompanyList(scope.row.id)">编辑</a>
                             <a class="table-button">绑定账号</a>
+                            <a class="table-button" @click="deleteClick(scope.row.id)">删除</a>
                         </template>
                         </el-table-column>
                     </el-table>
@@ -48,11 +71,11 @@
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage"
+                        :current-page="pageNum"
                         :page-sizes="[10, 20, 30]"
-                        :page-size="10"
+                        :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="2">
+                        :total="pageTotal">
                     </el-pagination>
                 </div>
             </div>
@@ -71,109 +94,229 @@
                                 企业名称
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="companyName">
                         </li>
                         <li>
                             <span>
                                 企业简称
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="shortName">
                         </li>
                         <li>
                             <span>
                                 负责人
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="contacts">
                         </li>
                         <li>
                             <span>
                                 联系电话
                                 <div class="required">*</div>
                             </span>
-                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
+                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="mobilePhone">
                         </li>
                         <li>
                             <span>
-                                企业类型
+                                单位类型
+                                <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <el-select v-model="companyType" placeholder="请选择">
+                                <el-option
+                                v-for="item in contractorType"
+                                :key="item.id"
+                                :label="item.title"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
                         </li>
                         <li>
                             <span>
                                 注册资金（万元）
                             </span>
-                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
+                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="capital">
                         </li>
                         <li>
                             <span>
                                 地址
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="address">
                         </li>
                         <li>
                             <span>
                                 法人代表
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="legalPerson">
                         </li>
                         <li>
                             <span>
-                                企业组织机构代码
+                               社会统一信用代码
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="suid">
                         </li>
                         <li>
                             <span>
                                 组织机构信用代码
                             </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                联系地址
-                            </span>
-                            <input type="text">
+                            <input type="text" v-model="organizationCode">
                         </li>
                         <li>
                             <span>
                                 电子邮箱
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="email">
                         </li>
                         <li>
                             <span>
                                 开户行
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="bankOpen">
                         </li>
                         <li>
                             <span>
                                 开户地址
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="bankAddress">
                         </li>
                         <li>
                             <span>
                                 开户账号
                             </span>
-                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
+                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="bankNum">
                         </li>
                         <li>
                             <span>
                                 备注
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="remark">
                         </li>
                     </ul>
                 </div>
                 <div class="confirm">
-                    <a class="button" @click="dialogClick">确定</a>
+                    <a class="button" @click="insertHjCompanyLibrary">确定</a>
+                </div>
+            </div>
+            <!-- 编辑对话框 -->
+            <div class="dialog-box" v-show="compileShow">
+                <div class="title">
+                    新增公司
+                    <a class="close" @click="compileShow=false">
+                        <i class="el-icon-close"></i>
+                    </a>
+                </div>
+                <div class="form">
+                    <ul>
+                        <li>
+                            <span>
+                                企业名称
+                                <div class="required">*</div>
+                            </span>
+                            <input type="text" v-model="companyName">
+                        </li>
+                        <li>
+                            <span>
+                                企业简称
+                                <div class="required">*</div>
+                            </span>
+                            <input type="text" v-model="shortName">
+                        </li>
+                        <li>
+                            <span>
+                                负责人
+                                <div class="required">*</div>
+                            </span>
+                            <input type="text" v-model="contacts">
+                        </li>
+                        <li>
+                            <span>
+                                联系电话
+                                <div class="required">*</div>
+                            </span>
+                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="mobilePhone">
+                        </li>
+                        <li>
+                            <span>
+                                单位类型
+                                <div class="required">*</div>
+                            </span>
+                            <el-select v-model="companyType" placeholder="请选择">
+                                <el-option
+                                v-for="item in contractorType"
+                                :key="item.id"
+                                :label="item.title"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </li>
+                        <li>
+                            <span>
+                                注册资金（万元）
+                            </span>
+                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="capital">
+                        </li>
+                        <li>
+                            <span>
+                                地址
+                            </span>
+                            <input type="text" v-model="address">
+                        </li>
+                        <li>
+                            <span>
+                                法人代表
+                            </span>
+                            <input type="text" v-model="legalPerson">
+                        </li>
+                        <li>
+                            <span>
+                               社会统一信用代码
+                            </span>
+                            <input type="text" v-model="suid">
+                        </li>
+                        <li>
+                            <span>
+                                组织机构信用代码
+                            </span>
+                            <input type="text" v-model="organizationCode">
+                        </li>
+                        <li>
+                            <span>
+                                电子邮箱
+                            </span>
+                            <input type="text" v-model="email">
+                        </li>
+                        <li>
+                            <span>
+                                开户行
+                            </span>
+                            <input type="text" v-model="bankOpen">
+                        </li>
+                        <li>
+                            <span>
+                                开户地址
+                            </span>
+                            <input type="text" v-model="bankAddress">
+                        </li>
+                        <li>
+                            <span>
+                                开户账号
+                            </span>
+                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="bankNum">
+                        </li>
+                        <li>
+                            <span>
+                                备注
+                            </span>
+                            <input type="text" v-model="remark">
+                        </li>
+                    </ul>
+                </div>
+                <div class="confirm">
+                    <a class="button" @click="updateCompanyLibrary">确定</a>
                 </div>
             </div>
             <!-- 遮罩层 -->
-            <div class="shade-box" v-show="dialogShow"></div>
+            <div class="shade-box" v-show="dialogShow||compileShow"></div>
         </div>
     </div>
 </template>
@@ -400,28 +543,276 @@
 export default {
     data() {
         return {
-            tableData: [{
-                number: 1, // 序号
-                company: '深圳市市政工程有限公司', // 公司名称
-            },{
-                number: 2, // 序号
-                company: '市政总隧道公司', // 公司名称
-            }], // 表格数据
-            currentPage: 1, // 当前页码
+            tableData: [], // 表格数据
             dialogShow: false, // 对话框显示状态
+            compileShow: false, // 编辑对话框状态
+            companyId: 1, // 所属公司id
+            pageNum: 1, // 当前页码
+            pageSize: 10, // 每页记录数
+            pageTotal: 0, // 总条数
+            searchName: '', // 需要搜索的公司名称
+            selectionId: '', // 当前选中的行数
+            id: '', // 当前在修改的公司id
+
+            // 对话框数据
+            contractorType: [], // 单位类型选项
+            companyType: '', // 单位类型
+            companyName: '', // 公司名称
+            shortName: '', // 简称
+            contacts: '', // 负责人
+            mobilePhone: '', // 电话
+            capital: '', // 注册资金
+            legalPerson: '', // 法人代表
+            suid: '', // 社会统一信用代码
+            organizationCode: '', // 组织机构代码
+            bankOpen: '', // 基本账户开户银行
+            bankNum: '', // 基本账户银行账户
+            bankAddress: '', // 开户地址
+            address: '', // 单位详细地址
+            email: '', // 电子邮箱
+            remark: '', // 备注
         }
     },
+    created() {
+        this.getCompanyList()
+        this.getContractorType()
+    },
     methods: {
+        // 每页条数切换
         handleSizeChange(val) {
-            console.log(`每页${val}条`)
+            // console.log(`每页 ${val} 条`)
+            this.pageSize = val
+            this.getCompanyList()
         },
+
+        // 当前页
         handleCurrentChange(val) {
-            console.log(`当前页：${val}`)
+            // console.log(`当前页: ${val}`)
+            this.pageNum = val
+            this.getCompanyList()
+        },
+
+        // 当前选中的行数
+        handleSelectionChange(val) {
+            // console.log(val)
+            let temp = ''
+            for (let i = 0; i < val.length; i++) {
+                if (i == val.length-1) {
+                    temp+=(val[i].id)
+                } else {
+                    temp+=(val[i].id+',')
+                }
+            }
+            this.selectionId = temp
+            // console.log(this.selectionId)
         },
 
         // 新增对话框状态切换
         dialogClick() {
+            this.companyType = '' // 单位类型
+            this.companyName = '' // 公司名称
+            this.shortName = '' // 简称
+            this.contacts = '' // 负责人
+            this.mobilePhone = '' // 电话
+            this.capital = '' // 注册资金
+            this.legalPerson = '' // 法人代表
+            this.suid = '' // 社会统一信用代码
+            this.organizationCode = '' // 组织机构代码
+            this.bankOpen = '' // 基本账户开户银行
+            this.bankNum = '' // 基本账户银行账户
+            this.bankAddress = '' // 开户地址
+            this.address = '' // 单位详细地址
+            this.email = '' // 电子邮箱
+            this.remark = '' // 备注
             this.dialogShow = !this.dialogShow
+        },
+
+        // 获取公司列表
+        getCompanyList() {
+            this.$axios.post(`/api/pcCompanyLibrary/companyLibraryList?companyId=${this.companyId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
+                res => {
+                    // console.log(res.data)
+                    let temp = []
+                    for (let i = 0; i < res.data.data.rows.length; i++) {
+                        temp.push({
+                            number: (this.pageNum-1)*this.pageSize+i+1, // 序号
+                            companyName: res.data.data.rows[i].companyName, // 公司名称
+                            shortName: res.data.data.rows[i].shortName, // 公司简称
+                            contacts: res.data.data.rows[i].contacts, // 负责人
+                            mobilePhone: res.data.data.rows[i].mobilePhone, // 电话
+                            companyType: res.data.data.rows[i].dictionaries.title, // 单位类型
+                            id: res.data.data.rows[i].id, // 公司id
+                        })
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+        // 获取单位类型
+        getContractorType() {
+            this.$axios.post(`/api/dictionariesApi/selectDictionaries?category=UNIT_TYPE`).then(
+                res => {
+                    // console.log(res.data)
+                    this.contractorType = res.data.data
+                }
+            )
+        },
+
+        // 添加公司
+        insertHjCompanyLibrary() {
+            if (this.companyName && this.shortName && this.contacts && this.mobilePhone && this.companyType) {
+                this.$axios.post(`/api/pcCompanyLibrary/insertHjCompanyLibrary?pid=${this.companyId}&companyName=${this.companyName}&shortName=${this.shortName}&companyType=${this.companyType}&contacts=${this.contacts}&mobilePhone=${this.mobilePhone}&capital=${this.capital}&legalPerson=${this.legalPerson}&suid=${this.suid}&organizationCode=${this.organizationCode}&bankOpen=${this.bankOpen}&bankNum=${this.bankNum}&bankAddress=${this.bankAddress}&address=${this.address}&email=${this.email}&remark=${this.remark}`).then(
+                    res => {
+                        // console.log(res.data)
+                        if (res.data.code == 0) {
+                            this.$message({
+                                message: '添加成功',
+                                type: 'success'
+                            })
+                            this.dialogShow = false
+                            this.pageNum = 1
+                            this.getCompanyList()
+                        } else {
+                            this.$message({
+                                message: `${res.data.msg}`,
+                                type: 'warning'
+                            })
+                        }
+                    }
+                )
+            } else {
+                this.$message({
+                    message: '带 * 号的输入框不得为空',
+                    type: 'warning'
+                })
+            }
+        },
+
+        // 搜索
+        searchClick() {
+            this.$axios.post(`/api/pcCompanyLibrary/companyLibraryList?companyId=${this.companyId}&pageNum=1&pageSize=${this.pageSize}&companyName=${this.searchName}`).then(
+                res => {
+                    // console.log(res.data)
+                    if (res.data.data.rows) {
+                        let temp = []
+                        for (let i = 0; i < res.data.data.rows.length; i++) {
+                            temp.push({
+                                number: (this.pageNum-1)*this.pageSize+i+1, // 序号
+                                companyName: res.data.data.rows[i].companyName, // 公司名称
+                                shortName: res.data.data.rows[i].shortName, // 公司简称
+                                contacts: res.data.data.rows[i].contacts, // 负责人
+                                mobilePhone: res.data.data.rows[i].mobilePhone, // 电话
+                                companyType: res.data.data.rows[i].dictionaries.title, // 单位类型
+                                id: res.data.data.rows[i].id, // 公司id
+                            })
+                        }
+                        this.pageTotal = res.data.data.total
+                        this.tableData = temp
+                    } else {
+                        this.$message({
+                            message: '没有找到相关公司',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 根据id拿到公司的详细信息
+        getIdcompanyList(id) {
+            this.id = id
+            this.$axios.post(`/api/pcCompanyLibrary/selectHjCompanyLibrary?id=${id}`).then(
+                res => {
+                    // console.log(res.data)
+                    if (res.data.code==0) {
+                        this.companyType = res.data.data.companyType
+                        this.companyName = res.data.data.companyName
+                        this.shortName = res.data.data.shortName
+                        this.contacts = res.data.data.contacts
+                        this.mobilePhone = res.data.data.mobilePhone
+                        this.capital = res.data.data.capital
+                        // this.capital = 0
+                        this.legalPerson = res.data.data.legalPerson
+                        this.suid = res.data.data.suid
+                        this.organizationCode = res.data.data.organizationCode
+                        this.bankOpen = res.data.data.bankOpen
+                        this.bankNum = res.data.data.bankNum
+                        this.bankAddress = res.data.data.bankAddress
+                        this.address = res.data.data.address
+                        this.email = res.data.data.email
+                        this.remark = res.data.data.remark
+                        this.compileShow = true
+                    } else {
+                        this.$message({
+                            message: `${res.data.msg}`,
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 修改公司信息
+        updateCompanyLibrary() {
+            if (this.companyName && this.shortName && this.contacts && this.mobilePhone &&this.companyType) {
+                this.$axios.post(`/api/pcCompanyLibrary/updateHjCompanyLibrary?id=${this.id}&companyName=${this.companyName}&shortName=${this.shortName}&companyType=${this.companyType}&contacts=${this.contacts}&mobilePhone=${this.mobilePhone}&capital=${this.capital}&legalPerson=${this.legalPerson}&suid=${this.suid}&organizationCode=${this.organizationCode}&bankOpen=${this.bankOpen}&bankNum=${this.bankNum}&bankAddress=${this.bankAddress}&address=${this.address}&email=${this.email}&remark=${this.remark}`).then(
+                    res => {
+                        if (res.data.code == 0) {
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            })
+                            this.compileShow = false
+                            this.pageNum = 1
+                            this.getCompanyList()
+                        } else {
+                            this.$message({
+                                message: `${res.data.msg}`,
+                                type: 'warning'
+                            })
+                        }
+                    }
+                )
+            } else {
+                this.$message({
+                    message: '带 * 号的输入框不得为空',
+                    type: 'warning'
+                })
+            }
+        },
+
+        // 删除
+        deleteClick(id) {
+            this.$confirm('是否要删除选中的参建单位？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$axios.post(`/api/pcCompanyLibrary/deleteHjCompanyLibrary?ids=${id}`).then(
+                    res => {
+                        console.log(res.data)
+                        if (res.data.code == 0) {
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功'
+                            })
+                            this.getCompanyList()
+                        } else {
+                            this.$message({
+                                message: '删除失败，请重试',
+                                type: 'error'
+                            })
+                        }
+                    }
+                )
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                })         
+            })
         },
     }
 }

@@ -9,7 +9,7 @@
                 <li>
                     <a class="active">
                         <div class="icon home"></div>
-                        <span>首页</span>
+                        <span>首&#12288;&#12288;页</span>
                     </a>
                 </li>
                 <li>
@@ -122,11 +122,11 @@
                             background-position: center center;
                         }
                         span {
-                            width: .8rem;
+                            // width: .8rem;
                             vertical-align: top;
-                            text-align: justify;
-                            text-align-last:justify;
-                            display: inline-block;
+                            // text-align: justify;
+                            // text-align-last:justify;
+                            // display: inline-block;
                         }
                         .home {
                             background-image: url('../../../static/images/system-home.png');

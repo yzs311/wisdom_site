@@ -79,11 +79,11 @@
                             background-position: center center;
                         }
                         span {
-                            width: .8rem;
+                            // width: .8rem;
                             vertical-align: top;
-                            text-align: justify;
-                            display: inline-block;
-                            text-align-last:justify;
+                            // text-align: justify;
+                            // display: inline-block;
+                            // text-align-last:justify;
                         }
                     }
                     a:hover {

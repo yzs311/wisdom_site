@@ -7,12 +7,12 @@
                     <div class="text">
                         <span>当前工程：</span>
                         <span class="project-name">
-                            盐田区11项管网改造工程（施工）
+                            {{indexData.projectName}}
                         </span>
                     </div>
                     <!-- 完工=accomplish 正常=normal 停工=lockout -->
-                    <div class="state normal">
-                        正常施工
+                    <div class="state" :class="indexData.status=='ABUILDING'?'normal':indexData.status=='LOCKOUT'?'accomplish':'lockout'">
+                        {{indexData.status=='ABUILDING'?'在建':indexData.status=='LOCKOUT'?'竣工':'停工'}}
                     </div>
                 </div>
                 <div class="condition">
@@ -23,15 +23,15 @@
                             <div class="title">劳务工人情况</div>
                             <ul>
                                 <li>
-                                    <p>90</p>
+                                    <p>{{indexData.grzrs}}</p>
                                     <span>劳务工人总数</span>
                                 </li>
                                 <li>
-                                    <p>0</p>
+                                    <p>{{indexData.grzcrs}}</p>
                                     <span>在场劳务工人</span>
                                 </li>
                                 <li>
-                                    <p>0</p>
+                                    <p>{{indexData.grkqrs}}</p>
                                     <span>今日考勤人数</span>
                                 </li>
                             </ul>
@@ -43,15 +43,15 @@
                             <div class="title">管理人员情况</div>
                             <ul>
                                 <li>
-                                    <p>90</p>
+                                    <p>{{indexData.glzrs}}</p>
                                     <span>管理人员总数</span>
                                 </li>
                                 <li>
-                                    <p>0</p>
+                                    <p>{{indexData.glzcrs}}</p>
                                     <span>在场管理人员</span>
                                 </li>
                                 <li>
-                                    <p>0</p>
+                                    <p>{{indexData.glkqrs}}</p>
                                     <span>今日考勤人数</span>
                                 </li>
                             </ul>
@@ -66,13 +66,12 @@
                     <div class="title">
                         <span>最近10天考勤统计</span>
                         <div class="select-box">
-                            <el-select v-model="attendanceValue" placeholder="请选择" size="mini">
+                            <el-select v-model="attendanceValue" placeholder="请选择" size="mini" @change="attendanceChange">
                                 <el-option
                                 v-for="item in attendanceOptions"
                                 :key="item.value"
                                 :label="item.label"
-                                :value="item.value"
-                                >
+                                :value="item.value">
                                 </el-option>
                             </el-select>
                         </div>
@@ -93,7 +92,8 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="attendance" id="attendance"></div>
+                    <div class="attendance" id="attendanceGr" v-show="attendanceShow"></div>
+                    <div class="attendance" id="attendanceGl" v-show="!attendanceShow" style="width:8.04rem"></div>
                 </div>
                 <div class="right-box">
                     <!-- 分账情况 -->
@@ -103,17 +103,17 @@
                             <li>
                                 <i class="dot"></i>
                                 <span>三方协议：</span>
-                                <a class="blue-color">点击上传</a>
+                                <!-- <a class="blue-color">点击上传</a> -->
                             </li>
                             <li>
                                 <i class="dot"></i>
                                 <span>工资专户：</span>
-                                <span class="green-color">已上传</span>
+                                <!-- <span class="green-color">已上传</span> -->
                             </li>
                             <li>
                                 <i class="dot"></i>
                                 <span>工资保证金：</span>
-                                <span class="green-color">已上传</span>
+                                <!-- <span class="green-color">已上传</span> -->
                             </li>
                         </ul>
                     </div>
@@ -124,12 +124,12 @@
                             <li>
                                 <i class="dot"></i>
                                 <span>在场劳务工人未培训数：</span>
-                                <span class="blue-color">0人</span>
+                                <span class="blue-color">{{indexData.grwpx}}人</span>
                             </li>
                             <li>
                                 <i class="dot"></i>
                                 <span>在场劳务工人未培训率：</span>
-                                <span class="blue-color">0%</span>
+                                <span class="blue-color">{{indexData.grwpxl}}%</span>
                             </li>
                         </ul>
                     </div>
@@ -141,7 +141,7 @@
                 <div class="title">
                     <span>工资发放统计</span>
                     <div class="select-box">
-                        <el-select v-model="grantValue" placeholder="请选择" size="mini">
+                        <el-select v-model="grantValue" placeholder="请选择" size="mini" @change="grantChange">
                             <el-option
                             v-for="item in grantOptions"
                             :key="item.value"
@@ -538,35 +538,42 @@ export default {
     data() {
         return {
             attendanceOptions: [{
-                value: '选项1',
+                value: '劳务工人',
                 label: '劳务工人'
             }, {
-                value: '选项2',
+                value: '管理人员',
                 label: '管理人员'
             }], // 考勤统计选项
             attendanceValue: '劳务工人', // 考勤统计显示的人员类型
             grantOptions: [{
-                value: '选项1',
+                value: '劳务工人',
                 label: '劳务工人'
             }, {
-                value: '选项2',
+                value: '管理人员',
                 label: '管理人员'
             }], // 工资发放统计选项
             grantValue: '劳务工人', // 工资发放统计显示的人员类型
             year: 2019, // 工资发放统计年份
+            pid: 4, // 项目id
+            indexData: {}, // 页面数据
+            attendanceShow: true, // 考勤统计表显示状态
         }
     },
     mounted() {
-        this.attendance()
+        // this.attendanceGr()
+        // this.attendanceGl()
         this.grant()
+    },
+    created() {
+        this.selectIndex()
     },
     methods: {
         // 考勤统计统计模块：ECharts图渲染
-        attendance(aMTotal, aMZc, aMDay, aMZcGly) {
-            let attendance = this.$echarts.init(
-              document.getElementById("attendance")
+        attendanceGr(zcrs,kqrs,day) {
+            let attendanceGr = this.$echarts.init(
+              document.getElementById("attendanceGr")
             )
-            attendance.setOption({
+            attendanceGr.setOption({
                 // backgroundColor: "#FBFBFB",
                 grid: {
                     x: 60,
@@ -593,27 +600,26 @@ export default {
                         },
                         type: "category",
                         boundaryGap: false,
-                        data: [
-                          "05-02",
-                          "05-03",
-                          "05-04",
-                          "05-05",
-                          "05-06",
-                          "05-07",
-                          "05-08",
-                          "05-09",
-                          "05-10",
-                          "05-11"
-                        ]
-                        // data: aMDay
+                        // data: [
+                        //   "05-02",
+                        //   "05-03",
+                        //   "05-04",
+                        //   "05-05",
+                        //   "05-06",
+                        //   "05-07",
+                        //   "05-08",
+                        //   "05-09",
+                        //   "05-10",
+                        //   "05-11"
+                        // ],
+                        data: day
                     }
                 ],
                 yAxis: [
                     {
                         type: "value",
-                        max: 1000,
                         min: 0,
-                        interval: 200,
+                        interval: 20,
                         axisLabel: {
                             textStyle: {
                                 color: "#000"
@@ -628,7 +634,7 @@ export default {
                         splitLine: {
                             show: true,
                             lineStyle: {
-                                color: ["#132e6d"],
+                                color: ["#ccc"],
                                 width: 1,
                                 type: "dashed"
                             }
@@ -642,8 +648,8 @@ export default {
                         symbolSize: 10,
                         smooth: 0.2,
                         color: ["#fd5101"],
-                        data: [600, 500, 500, 500, 400, 500, 500, 400, 400, 500]
-                        // data: aMTotal
+                        // data: [600, 500, 500, 500, 400, 500, 500, 400, 400, 500]
+                        data: zcrs
                     },
                     {
                         name: "考勤总人数",
@@ -651,8 +657,112 @@ export default {
                         symbolSize: 10,
                         smooth: 0.2,
                         color: ["#0090ff"],
-                        data: [300, 200, 100, 500, 300, 300, 400, 300, 100, 300],
-                        // data: aMZc
+                        // data: [300, 200, 100, 500, 300, 300, 400, 300, 100, 300],
+                        data: kqrs
+                    },
+                    // {
+                    //     name: "管理人员出勤人数",
+                    //     type: "line",
+                    //     symbolSize: 4,
+                    //     smooth: 0.2,
+                    //     color: ["#33577c"],
+                    //     data: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+                    //     // data: aMZcGly
+                    // }
+                ]
+            });
+        },
+        // 考勤统计统计模块管理人员：ECharts图渲染
+        attendanceGl(zcrs,kqrs,day) {
+            let attendanceGl = this.$echarts.init(
+              document.getElementById("attendanceGl")
+            )
+            attendanceGl.setOption({
+                // backgroundColor: "#FBFBFB",
+                grid: {
+                    x: 60,
+                    y: 30,
+                    x2: 50,
+                    y2: 50,
+                    containLabel: true
+                },
+                tooltip: {
+                    trigger: "axis"
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        axisLabel: {
+                            rotate: 0,
+                            interval: 0,
+                            color: "#000"
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: "#132e6d"
+                            }
+                        },
+                        type: "category",
+                        boundaryGap: false,
+                        // data: [
+                        //   "05-02",
+                        //   "05-03",
+                        //   "05-04",
+                        //   "05-05",
+                        //   "05-06",
+                        //   "05-07",
+                        //   "05-08",
+                        //   "05-09",
+                        //   "05-10",
+                        //   "05-11"
+                        // ],
+                        data: day
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: "value",
+                        min: 0,
+                        interval: 20,
+                        axisLabel: {
+                            textStyle: {
+                                color: "#000"
+                            }
+                            //   formatter: "{value} 度"
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: "#132e6d"
+                            }
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: ["#ccc"],
+                                width: 1,
+                                type: "dashed"
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: "当日在场人数",
+                        type: "line",
+                        symbolSize: 10,
+                        smooth: 0.2,
+                        color: ["#fd5101"],
+                        // data: [600, 500, 500, 500, 400, 500, 500, 400, 400, 500]
+                        data: zcrs
+                    },
+                    {
+                        name: "考勤总人数",
+                        type: "line",
+                        symbolSize: 10,
+                        smooth: 0.2,
+                        color: ["#0090ff"],
+                        // data: [300, 200, 100, 500, 300, 300, 400, 300, 100, 300],
+                        data: kqrs
                     },
                     // {
                     //     name: "管理人员出勤人数",
@@ -725,6 +835,48 @@ export default {
         // 下一年 
         nextYear() {
             this.year = this.year+1
+        },
+
+        // 获取页面数据
+        selectIndex() {
+            this.$axios.post(`/api/pcLzIndex/selectIndex?pid=${this.pid}`).then(
+                res => {
+                    console.log(res.data)
+                    this.indexData = res.data.data
+                    let grzcrs = []
+                    let grkqrs = []
+                    let grday = []
+                    let glzcrs = []
+                    let glkqrs = []
+                    let glday = []
+                    for (let i = 0; i < res.data.data.grkqtj.length; i++) {
+                        grzcrs.push(res.data.data.grkqtj[i].numberOne)
+                        grkqrs.push(res.data.data.grkqtj[i].numberTwo)
+                        grday.push(res.data.data.grkqtj[i].time.split(' ')[0])
+                    }
+                    for (let i = 0; i < res.data.data.glkqtj.length; i++) {
+                        glzcrs.push(res.data.data.glkqtj[i].numberOne)
+                        glkqrs.push(res.data.data.glkqtj[i].numberTwo)
+                        glday.push(res.data.data.glkqtj[i].time.split(' ')[0])
+                    }
+                    this.attendanceGr(grzcrs,grkqrs,grday)
+                    this.attendanceGl(glzcrs,glkqrs,glday)
+                }
+            )
+        },
+
+        attendanceChange() {
+            console.log(this.attendanceValue)
+            if (this.attendanceValue == '劳务工人') {
+                this.attendanceShow = true
+            } else {
+                this.attendanceShow = false
+                // console.log(`123`)
+            }
+        },
+
+        grantChange() {
+            console.log(this.grantValue)
         }
     }
 }

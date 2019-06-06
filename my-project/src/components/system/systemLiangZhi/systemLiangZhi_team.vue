@@ -6,16 +6,23 @@
                 <div class="left-box">
                     <ul>
                         <li>
-                            <span>参建单位名称：</span>
-                            <input type="text">
+                            <span>所属参建单位：</span>
+                            <el-select v-model="contractorValue" placeholder="请选择">
+                                <el-option
+                                v-for="item in contractor"
+                                :key="item.id"
+                                :label="item.constructionName"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
                         </li>
                         <li>
                             <span class="margin">班组名称：</span>
-                            <input type="text">
+                            <input type="text" v-model="searchTeamName">
                         </li>
                     </ul>
                 </div>
-                <a class="search-button">搜索</a>
+                <a class="search-button" @click="searchClick">搜索</a>
             </div>
             <!-- 主体区域 -->
             <div class="main-box">
@@ -25,15 +32,15 @@
                         <i class="icon"></i>
                         新增
                     </a>
-                    <a class="compile">
+                    <a class="compile" @click="compileClick">
                         <i class="icon"></i>
                         编辑
                     </a>
-                    <a class="delete">
+                    <a class="delete" @click="deleteClick">
                         <i class="icon"></i>
                         删除
                     </a>
-                    <a class="derive">
+                    <a class="derive" @click="deriveClick">
                         <i class="icon"></i>
                         导出Excel
                     </a>
@@ -43,7 +50,8 @@
                     <el-table
                     :data="tableData"
                     stripe
-                    border>
+                    border
+                    @selection-change="handleSelectionChange">
                         <el-table-column
                         type="selection"
                         width="35">
@@ -54,43 +62,23 @@
                         width="50">
                         </el-table-column>
                         <el-table-column
+                        prop="name"
+                        label="班组名称"
+                        width="200">
+                        </el-table-column>
+                        <el-table-column
                         prop="project"
                         label="所属项目"
                         width="200">
                         </el-table-column>
                         <el-table-column
-                        prop="licence"
-                        label="施工许可证"
-                        width="150">
-                        </el-table-column>
-                        <el-table-column
-                        prop="name"
-                        label="班组名称"
-                        width="150">
-                        </el-table-column>
-                        <el-table-column
-                        prop="groupLeader"
-                        label="班组长"
-                        width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="people"
-                        label="人数"
-                        width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="contractorNumber"
-                        label="参建单位编号"
-                        width="150">
-                        </el-table-column>
-                        <el-table-column
                         prop="contractorName"
-                        label="参建单位名称"
+                        label="所属参建单位"
                         width="200">
                         </el-table-column>
                         <el-table-column
-                        prop="startDate"
-                        label="入场日期">
+                        prop="contractorNumber"
+                        label="参建单位编号">
                         </el-table-column>
                     </el-table>
                 </div>
@@ -99,11 +87,11 @@
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage"
+                        :current-page="pageNum"
                         :page-sizes="[15, 30, 45]"
-                        :page-size="15"
+                        :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="3">
+                        :total="pageTotal">
                     </el-pagination>
                 </div>
             </div>
@@ -125,9 +113,9 @@
                             <el-select v-model="contractorValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in contractor"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.constructionName"
+                                :value="item.id">
                                 </el-option>
                             </el-select>
                         </li>
@@ -136,31 +124,61 @@
                                 班组名称
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                入场日期
-                                <div class="required">*</div>
-                            </span>
-                            <el-date-picker
-                            v-model="startDate"
-                            type="date"
-                            placeholder="选择日期">
-                            </el-date-picker>
+                            <input type="text" v-model="teamName">
                         </li>
                         <li>
                             <span>备注</span>
-                            <input type="text">
+                            <input type="text" v-model="remark">
                         </li>
                     </ul>
                 </div>
                 <div class="confirm">
-                    <a class="button" @click="dialogClick">确定</a>
+                    <a class="button" @click="insertHjTeam">确定</a>
+                </div>
+            </div>
+            <!-- 编辑班组 -->
+            <div class="dialog-box" v-show="compileShow">
+                <div class="title">
+                    编辑班组
+                    <a class="close" @click="compileShow = false">
+                        <i class="el-icon-close"></i>
+                    </a>
+                </div>
+                <div class="form">
+                    <ul>
+                        <li>
+                            <span>
+                                所属参建单位
+                                <div class="required">*</div>
+                            </span>
+                            <el-select v-model="contractorValue" placeholder="请选择">
+                                <el-option
+                                v-for="item in contractor"
+                                :key="item.id"
+                                :label="item.constructionName"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </li>
+                        <li>
+                            <span>
+                                班组名称
+                                <div class="required">*</div>
+                            </span>
+                            <input type="text" v-model="teamName">
+                        </li>
+                        <li>
+                            <span>备注</span>
+                            <input type="text" v-model="remark">
+                        </li>
+                    </ul>
+                </div>
+                <div class="confirm">
+                    <a class="button" @click="updateHjTeam">确定</a>
                 </div>
             </div>
             <!-- 遮罩层 -->
-            <div class="shade-box" v-show="dialogShow"></div>
+            <div class="shade-box" v-show="dialogShow || compileShow"></div>
         </div>
     </div>
 </template>
@@ -183,6 +201,9 @@
                         li {
                             float: left;
                             margin-right: .35rem;
+                            .el-input {
+                                height: .6rem;
+                            }
                             span {
                                 float: left;
                                 height: .8rem;
@@ -330,7 +351,6 @@
                 top: 2.14rem;
                 z-index: 200;
                 width: 6.84rem;
-                height: 4.92rem;
                 overflow: hidden;
                 position: absolute;
                 border-radius: .1rem;
@@ -354,8 +374,8 @@
                     }
                 }
                 .form {
-                    height: 3.52rem;
                     ul{
+                        padding-bottom: .3rem;
                         li {
                             display: flex;
                             height: .71rem;
@@ -434,58 +454,256 @@
 export default {
     data() {
         return {
-            tableData: [{
-                number: 1, // 序号
-                project: '福田区易涝风险区整改', // 所属项目
-                licence: '123456', // 施工许可证
-                name: '粤帽一班', // 班组名称
-                groupLeader: '某某某', // 班组长
-                people: 21, // 人数
-                contractorNumber: '9527', // 参建单位编号
-                contractorName: '深圳市市政工程总公司', // 参建单位名称
-                startDate: '2019-05-13', // 入场日期
-            },{
-                number: 2, // 序号
-                project: '福田区易涝风险区整改', // 所属项目
-                licence: '123456', // 施工许可证
-                name: '粤帽一班', // 班组名称
-                groupLeader: '某某某', // 班组长
-                people: 21, // 人数
-                contractorNumber: '9527', // 参建单位编号
-                contractorName: '深圳市市政工程总公司', // 参建单位名称
-                startDate: '2019-05-13', // 入场日期
-            },{
-                number: 3, // 序号
-                project: '福田区易涝风险区整改', // 所属项目
-                licence: '123456', // 施工许可证
-                name: '粤帽一班', // 班组名称
-                groupLeader: '某某某', // 班组长
-                people: 21, // 人数
-                contractorNumber: '9527', // 参建单位编号
-                contractorName: '深圳市市政工程总公司', // 参建单位名称
-                startDate: '2019-05-13', // 入场日期
-            }], // 表格数据
-            currentPage: 1, // 当前页码
-            dialogShow: false, // 新增单位对话框状态
-            contractor: [{
-                value: '选项1',
-                label: '深圳市市政工程总公司'
-            }], // 所属参建单位选项
-            contractorValue: '', // 所属参建单位
-            startDate: '', // 入场日期
+            tableData: [], // 表格数据
+            pageNum: 1, // 当前页码
+            pageSize: 15, // 每页显示条数
+            pageTotal: 0, // 总条数
+            dialogShow: false, // 新增对话框状态
+            compileShow: false, // 编辑对话框状态
+            contractor: [], // 所属参建单位选项
+            contractorValue: '', // 所属参建单位id
+            pid: 4, // 项目id
+            teamName: '', // 班组名
+            remark: '', // 备注
+            selectionId: '', // 当前选中的id
+            searchTeamName: '', // 搜索的班组名称
         }
     },
+    created() {
+        this.getContractorList()
+        this.selectHjTeamList()
+    },
     methods: {
+        // 每页条数切换
         handleSizeChange(val) {
-            console.log(`每页${val}条`)
+            // console.log(`每页 ${val} 条`)
+            this.pageSize = val
         },
+
+        // 当前页
         handleCurrentChange(val) {
-            console.log(`当前页：${val}`)
+            // console.log(`当前页: ${val}`)
+            this.pageNum = val
+        },
+
+        // 当前选中的行数
+        handleSelectionChange(val) {
+            // console.log(val)
+            let temp = ''
+            for (let i = 0; i < val.length; i++) {
+                if (i == val.length-1) {
+                    temp+=(val[i].id)
+                } else {
+                    temp+=(val[i].id+',')
+                }
+            }
+            this.selectionId = temp
+            console.log(this.selectionId)
+        },
+
+        // 获取参建单位
+        getContractorList() {
+            this.$axios.post(`/api/constructionCompanyApi/selectConstructionCompanyList?projectId=${this.pid}`).then(
+                res => {
+                    // console.log(res.data.data.rows)
+                    this.contractor = res.data.data.rows
+                }
+            )
         },
 
         // 新增对话框状态切换
         dialogClick() {
+            this.remark = ''
+            this.teamName = ''
+            this.contractorValue = ''
             this.dialogShow = !this.dialogShow
+        },
+
+        // 新增班组
+        insertHjTeam() {
+            if (this.contractorValue && this.teamName) {
+                this.$axios.post(`/api/pcCompanyLibrary/insertHjTeam?projectId=${this.pid}&teamName=${this.teamName}&constructionId=${this.contractorValue}&remark=${this.remark}`).then(
+                    res => {
+                        // console.log(res.data)
+                        if (res.data.code == 0) {
+                            this.$message({
+                                message: '新增成功',
+                                type: 'success'
+                            })
+                            this.dialogShow = false
+                            this.pageNum = 1
+                            this.selectHjTeamList()
+                        } else {
+                            this.$message({
+                                message: '添加失败，请重试',
+                                type: 'error'
+                            })
+                        }
+                    }
+                )
+            } else {
+                this.$message({
+                    message: '带 * 号的输入框不得为空',
+                    type: 'warning'
+                })
+            }
+        },
+
+        // 获取班组列表
+        selectHjTeamList() {
+            this.$axios.post(`/api/pcCompanyLibrary/selectHjTeamList?projectId=${this.pid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
+                res => {
+                    console.log(res.data.data.rows)
+                    let temp = []
+                    for (let i = 0; i < res.data.data.rows.length; i++) {
+                        temp.push({
+                            number: (this.pageNum-1)*this.pageSize+i+1,
+                            project: res.data.data.rows[i].projectName,
+                            contractorName: res.data.data.rows[i].companyName,
+                            contractorNumber: res.data.data.rows[i].constructionId,
+                            name: res.data.data.rows[i].teamName,
+                            id: res.data.data.rows[i].id
+                        })
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+        // 删除
+        deleteClick() {
+            // console.log(this.selectionId)
+            if (this.selectionId == '') {
+                this.$message({
+                    message: '未选择班组',
+                    type: 'warning'
+                })
+            } else {
+                this.$confirm('是否要删除选中的班组？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$axios.post(`/api/pcCompanyLibrary/deleteHjTeam?ids=${this.selectionId}`).then(
+                        res => {
+                            console.log(res.data)
+                            if (res.data.code == 0) {
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功'
+                                })
+                                this.selectHjTeamList()
+                            } else {
+                                this.$message({
+                                    message: '删除失败，请重试',
+                                    type: 'error'
+                                })
+                            }
+                        }
+                    )
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    })         
+                })
+            }
+        },
+
+        // 根据id获取班组信息
+        selectHjTeamId() {
+            this.$axios.post(`/api/pcCompanyLibrary/selectHjTeamId?id=${Number(this.selectionId)}`).then(
+                res => {
+                    this.contractorValue = res.data.data.constructionId
+                    this.teamName = res.data.data.teamName
+                    this.remark = res.data.data.remark
+                    // console.log(res.data)
+                }
+            )
+        },
+
+        // 编辑
+        compileClick() {
+            // this.compileShow = !this.compileShow
+            if (this.selectionId == '') {
+                this.$message({
+                    message: '未选择班组',
+                    type: 'warning'
+                })
+            } else if (this.selectionId.includes(',')) {
+                this.$message({
+                    message: '一次只能编辑一个班组',
+                    type: 'warning'
+                })
+            } else {
+                // console.log(Number(this.selectionId))
+                this.compileShow = true
+                this.selectHjTeamId()
+            }
+        },
+
+        // 编辑信息
+        updateHjTeam() {
+            if (this.contractorValue && this.teamName) {
+                this.$axios.post(`/api/pcCompanyLibrary/updateHjTeam?id=${Number(this.selectionId)}&projectId=${this.pid}&teamName=${this.teamName}&constructionId=${this.contractorValue}&remark=${this.remark}`).then(
+                    res => {
+                        console.log(res.data)
+                        if (res.data.code == 0) {
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            })
+                            this.compileShow = false
+                            this.pageNum = 1
+                            this.selectHjTeamList()
+                        } else {
+                            this.$message({
+                                message: '修改失败，请重试',
+                                type: 'error'
+                            })
+                        }
+                    }
+                )
+            } else {
+                this.$message({
+                    message: '带 * 号的输入框不得为空',
+                    type: 'warning'
+                })
+            }
+        },
+
+        // 搜索
+        searchClick() {
+            this.$axios.post(`/api/pcCompanyLibrary/selectHjTeamList?projectId=${this.pid}&pageNum=1&pageSize=${this.pageSize}&teamName=${this.searchTeamName}&constructionId=${this.contractorValue}`).then(
+                res => {
+                    if (res.data.data.rows.length) {
+                        let temp = []
+                        for (let i = 0; i < res.data.data.rows.length; i++) {
+                            temp.push({
+                                number: (this.pageNum-1)*this.pageSize+i+1,
+                                project: res.data.data.rows[i].projectName,
+                                contractorName: res.data.data.rows[i].companyName,
+                                contractorNumber: res.data.data.rows[i].constructionId,
+                                name: res.data.data.rows[i].teamName,
+                                id: res.data.data.rows[i].id
+                            })
+                        }
+                        this.pageTotal = res.data.data.total
+                        this.tableData = temp
+                    } else {
+                        this.$message({
+                            message: '没有找到相关班组',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 导出Excel
+        deriveClick() {
+            location.href=`/api/pcCompanyLibrary/export?projectId=${this.pid}&teamName=${this.searchTeamName}&constructionId=${this.contractorValue}`
         },
     }
 }

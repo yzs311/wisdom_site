@@ -3,12 +3,15 @@
         <div class="float-left">
             <a class="logo"></a>
             <div class="line"></div>
-            <div class="project-name">中国市政建筑深圳某某某项目</div>
+            <div class="project-name">布吉消除黑臭工程</div>
         </div>
         <div class="float-right">
             <a class="message">
                 消息
             </a>
+            <!-- <a class="home">
+                首页
+            </a> -->
             <router-link to="/systemHome" class="home">
                 首页
             </router-link>
@@ -20,7 +23,7 @@
                     </a>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>个人设置</el-dropdown-item>
-                        <el-dropdown-item>退出</el-dropdown-item>
+                        <el-dropdown-item @click="$router.push({ pata: '/login' })">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </a>

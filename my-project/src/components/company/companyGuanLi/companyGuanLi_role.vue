@@ -328,14 +328,23 @@ export default {
             }], // 表格数据
             currentPage: 1, // 当前页码
             dialogShow: false, // 对话框显示状态
+            belong: 1, // 所属公司id
+            hierarchy: 1, // 所属层级
         }
     },
     methods: {
+        // 每页条数切换
         handleSizeChange(val) {
-            console.log(`每页${val}条`)
+            // console.log(`每页 ${val} 条`)
+            this.pageSize = val
+            // this.selectConstructionCompanyList()
         },
+
+        // 当前页
         handleCurrentChange(val) {
-            console.log(`当前页：${val}`)
+            // console.log(`当前页: ${val}`)
+            this.pageNum = val
+            // this.selectConstructionCompanyList()
         },
 
         // 新增对话框状态切换

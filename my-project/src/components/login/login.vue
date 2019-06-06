@@ -48,10 +48,10 @@
         <div class="login-title">用户登录</div>
         <div class="from">
           <i class="user"></i>
-          <input type="text" placeholder="请输入账号" v-model="user_name" @keyup.enter="logined">
+          <input type="text" placeholder="请输入账号" v-model="user_name" @keyup.enter="login">
           <i class="password"></i>
-          <input type="password" placeholder="请输入密码" v-model="pwd" @keyup.enter="logined">
-          <a @click="logined"></a>
+          <input type="password" placeholder="请输入密码" v-model="pwd" @keyup.enter="login">
+          <a @click="login"></a>
         </div>
         <div class="logo"></div>
         <!-- <div class="copyright">虎匠公司版权所有©1997-2019</div> -->
@@ -130,30 +130,30 @@ export default {
             this.pwd = "";
           }
         });
-    }
+    },
 
     // 2.0登录
-    // login() {
-    //   this.$axios.post(`http://192.168.1.36:8080/api/system/computer/login?userAccount=${this.user_name}&userPassword=${this.$md5(this.pwd)}&entry=1`).then(res => {
-    //     // console.log(res.data.data.userType)
-    //     if (this.user_name==''||this.pwd=='') {
-    //       alert("账号或密码不得为空")
-    //     } else {
-    //       if (res.data.code == -1) {
-    //         alert("账号或密码错误！请重新输入");
-    //         this.pwd = "";
-    //       } else {
-    //         sessionStorage.setItem("islogin", "true");
-    //         sessionStorage.setItem("pid", res.data.data.projectId);
-    //         if (res.data.data.userType == 2) {
-    //           this.$router.push({ path: "/systemHome" })
-    //         } else {
-    //           this.$router.push({ path: "/homePage" })
-    //         }
-    //       }
-    //     }
-    //   })
-    // }
+    login() {
+      this.$axios.post(`/api/system/computer/login?userAccount=${this.user_name}&userPassword=${this.$md5(this.pwd)}&entry=1`).then(res => {
+        // console.log(res.data.data.userType)
+        if (this.user_name==''||this.pwd=='') {
+          alert("账号或密码不得为空")
+        } else {
+          if (res.data.code == -1) {
+            alert("账号或密码错误！请重新输入");
+            this.pwd = "";
+          } else {
+            sessionStorage.setItem("islogin", "true");
+            sessionStorage.setItem("pid", res.data.data.projectId);
+            if (res.data.data.userType == 2) {
+              this.$router.push({ path: "/systemLiangZhi" })
+            } else {
+              this.$router.push({ path: "/homePage" })
+            }
+          }
+        }
+      })
+    }
   }
 };
 </script>

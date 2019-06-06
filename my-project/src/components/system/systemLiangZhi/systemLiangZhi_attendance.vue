@@ -7,68 +7,75 @@
                     <ul class="top-input">
                         <li>
                             <span>&#12288;&#12288;姓名：</span>
-                            <input type="text">
+                            <input type="text" v-model="name">
                         </li>
                         <li>
                             <span>&#12288;证件号：</span>
-                            <input type="text">
+                            <input type="text" v-model="idCode">
                         </li>
                         <li>
                             <span>&#12288;&#12288;工种：</span>
                             <el-select v-model="professionValue" placeholder="请选择">
                                 <el-option
-                                v-for="item in professionOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                v-for="item in profession"
+                                :key="item.id"
+                                :label="item.title"
+                                :value="item.tag">
                                 </el-option>
                             </el-select>
                         </li>
                         <li>
                             <span>&#12288;&#12288;班组：</span>
-                            <input type="text">
+                            <el-select v-model="teamValue" placeholder="请选择">
+                                <el-option
+                                v-for="item in team"
+                                :key="item.id"
+                                :label="item.teamName"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
                         </li>
                     </ul>
                     <ul class="bottom-input">
                         <li>
-                            <span>&#12288;&#12288;设备：</span>
-                            <input type="text">
-                        </li>
-                        <li>
                             <span>所属单位：</span>
                             <el-select v-model="contractorValue" placeholder="请选择">
                                 <el-option
-                                v-for="item in contractorOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                v-for="item in contractor"
+                                :key="item.id"
+                                :label="item.constructionName"
+                                :value="item.id">
                                 </el-option>
                             </el-select>
                         </li>
                         <li class="date">
                             <span>&#12288;&#12288;日期：</span>
                             <el-date-picker
+                                unlink-panels
                                 v-model="dateValue"
                                 type="daterange"
                                 range-separator="至"
                                 start-placeholder="开始日期"
-                                end-placeholder="结束日期">
+                                end-placeholder="结束日期"
+                                @change="getTime"
+                                value-format="yyyy-MM-dd">
                             </el-date-picker>
                         </li>
                         <li style="width:3.5rem"></li>
+                        <li style="width:3.5rem"></li>
                     </ul>
                 </div>
-                <a class="search-button">搜索</a>
+                <a class="search-button" @click="searchClick">搜索</a>
             </div>
             <!-- 主体区域 -->
             <div class="main-box">
                 <!-- 功能栏 -->
                 <div class="button-box">
-                    <a class="delete">
+                    <!-- <a class="delete">
                         <i class="icon"></i>
                         删除
-                    </a>
-                    <a class="derive">
+                    </a> -->
+                    <a class="derive" @click="deriveClick">
                         <i class="icon"></i>
                         导出Excel
                     </a>
@@ -117,11 +124,9 @@
                         prop="turnover"
                         label="进出标识"
                         width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="equipment"
-                        label="考勤设备"
-                        width="150">
+                        <template slot-scope="scope">
+                            {{ scope.row.turnover == 'in' ? '进' : '出'}}
+                        </template>
                         </el-table-column>
                         <el-table-column
                         prop="time"
@@ -134,68 +139,14 @@
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage"
+                        :current-page="pageNum"
                         :page-sizes="[15, 30, 45]"
-                        :page-size="15"
+                        :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="2">
+                        :total="pageTotal">
                     </el-pagination>
                 </div>
             </div>
-            <!-- 新增班组 -->
-            <div class="dialog-box" v-show="dialogShow">
-                <div class="title">
-                    新增班组
-                    <a class="close" @click="dialogClick">
-                        <i class="el-icon-close"></i>
-                    </a>
-                </div>
-                <div class="form">
-                    <ul>
-                        <li>
-                            <span>
-                                所属参建单位
-                                <div class="required">*</div>
-                            </span>
-                            <el-select v-model="contractorValue" placeholder="请选择">
-                                <el-option
-                                v-for="item in contractor"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </li>
-                        <li>
-                            <span>
-                                班组名称
-                                <div class="required">*</div>
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                入场日期
-                                <div class="required">*</div>
-                            </span>
-                            <el-date-picker
-                            v-model="startDate"
-                            type="date"
-                            placeholder="选择日期">
-                            </el-date-picker>
-                        </li>
-                        <li>
-                            <span>备注</span>
-                            <input type="text">
-                        </li>
-                    </ul>
-                </div>
-                <div class="confirm">
-                    <a class="button" @click="dialogClick">确定</a>
-                </div>
-            </div>
-            <!-- 遮罩层 -->
-            <div class="shade-box" v-show="dialogShow"></div>
         </div>
     </div>
 </template>
@@ -484,53 +435,133 @@
 export default {
     data() {
         return {
-            tableData: [{
-                number: 1, // 序号
-                name: '某某某', // 姓名
-                jobNumber: '123456', // 工号
-                project: '2019排污项目布吉街道', // 项目名称
-                contractor: '悦心劳务公司', // 所属参建单位
-                profession: '普工', // 工种
-                turnover: '进', // 进出标识
-                equipment: 'IOS001', // 考勤设备
-                time: '2019-04-29 10：51：43', // 打开卡时间
-            },{
-                number: 2, // 序号
-                name: '某某某', // 姓名
-                jobNumber: '123456', // 工号
-                project: '2019排污项目布吉街道', // 项目名称
-                contractor: '深圳市市政工程总公司', // 所属参建单位
-                profession: '木工', // 工种
-                turnover: '出', // 进出标识
-                equipment: '安卓001', // 考勤设备
-                time: '2019-04-29 10：51：43', // 打卡时间
-            }], // 表格数据
-            currentPage: 1, // 当前页码
-            dialogShow: false, // 新增单位对话框状态
-            contractor: [{
-                value: '选项1',
-                label: '深圳市市政工程总公司'
-            }], // 所属参建单位选项
-            contractorValue: '', // 所属参建单位
-            startDate: '', // 入场日期
-            professionOptions: [], // 工种选项
+            tableData: [], // 表格数据
+            pageNum: 1, // 当前页码
+            pageSize: 15, // 每页显示条数
+            pageTotal: 0, // 总条数
+            profession: [], // 工种选项
             professionValue: '', // 工种值
-            contractorOptions: [], // 所属参建单位选项
+            contractor: [], // 所属参建单位选项
             contractorValue: '', // 所属参建单位值
+            team: [], // 班组选项
+            teamValue: '', // 班组值
             dateValue: '', // 日期
+            pid: 4, // 项目id
+            name: '', // 姓名
+            idCode: '', // 证件号
+            teamName: '', // 所属班组
+            startTime: '', // 开始时间
+            endTime: '', // 结束时间
         }
     },
+    created() {
+        this.getAttendanceList()
+        this.getContractorList()
+        this.getTeamList()
+        this.getWorkList()
+    },
     methods: {
+        // 每页条数切换
         handleSizeChange(val) {
-            console.log(`每页${val}条`)
-        },
-        handleCurrentChange(val) {
-            console.log(`当前页：${val}`)
+            // console.log(`每页 ${val} 条`)
+            this.pageSize = val
+            this.getAttendanceList()
         },
 
-        // 新增对话框状态切换
-        dialogClick() {
-            this.dialogShow = !this.dialogShow
+        // 当前页
+        handleCurrentChange(val) {
+            // console.log(`当前页: ${val}`)
+            this.pageNum = val
+            this.getAttendanceList()
+        },
+
+        // 获取考勤记录列表
+        getAttendanceList() {
+            this.$axios.post(`/api/attendanceRecordPcApi/selectAttendanceRecordList?projectId=${this.pid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
+                res => {
+                    // console.log(res.data)
+                    let temp = []
+                    for (let i = 0; i < res.data.data.rows.length; i++) {
+                        temp.push({
+                            number: (this.pageNum-1)*this.pageSize+i+1, // 序号
+                            name: res.data.data.rows[i].name, // 姓名
+                            jobNumber: res.data.data.rows[i].id, // 工号
+                            project: res.data.data.rows[i].projectName, // 项目名称
+                            contractor: res.data.data.rows[i].companyName, // 所属参建单位
+                            profession: res.data.data.rows[i].jobName, // 工种
+                            turnover: res.data.data.rows[i].direction, // 进出标识
+                            time: res.data.data.rows[i].passedTie, // 打开卡时间
+                        })
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+        // 获取参建单位
+        getContractorList() {
+            this.$axios.post(`/api/constructionCompanyApi/selectConstructionCompanyList?projectId=${this.pid}`).then(
+                res => {
+                    // console.log(res.data.data.rows)
+                    this.contractor = res.data.data.rows
+                }
+            )
+        },
+
+        // 获取班组
+        getTeamList() {
+            this.$axios.post(`/api/pcCompanyLibrary/selectHjTeamList?projectId=${this.pid}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.team = res.data.data.rows
+                }
+            )
+        },
+
+        // 获取工种
+        getWorkList() {
+            this.$axios.post(`/api/dictionariesApi/selectDictionaries?category=WORK_TYPE`).then(
+                res => {
+                    // console.log(res.data)
+                    this.profession = res.data.data
+                }
+            )
+        },
+
+        // 获取开始时间与结束时间
+        getTime() {
+            // console.log(this.dateValue[0])
+            this.startTime = this.dateValue[0]
+            this.endTime = this.dateValue[1]
+        },
+
+        // 搜索
+        searchClick() {
+            this.$axios.post(`/api/attendanceRecordPcApi/selectAttendanceRecordList?projectId=${this.pid}&pageNum=1&pageSize=${this.pageSize}&name=${this.name}&idCode=${this.idCode}&jobCode=${this.professionValue}&teamName=${this.teamValue}&companyId=${this.contractorValue}&startTime=${this.startTime}&endTime=${this.endTime}`).then (
+                res => {
+                    let temp = []
+                    for (let i = 0; i < res.data.data.rows.length; i++) {
+                        temp.push({
+                            number: (this.pageNum-1)*this.pageSize+i+1, // 序号
+                            name: res.data.data.rows[i].name, // 姓名
+                            jobNumber: res.data.data.rows[i].id, // 工号
+                            project: res.data.data.rows[i].projectName, // 项目名称
+                            contractor: res.data.data.rows[i].companyName, // 所属参建单位
+                            profession: res.data.data.rows[i].jobName, // 工种
+                            turnover: res.data.data.rows[i].direction, // 进出标识
+                            time: res.data.data.rows[i].passedTie, // 打开卡时间
+                        })
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+         // 导出Excel
+        deriveClick() {
+            location.href = `http://47.106.71.3:8080/api/attendanceRecordPcApi/export?projectId=${this.pid}&name=${this.name}&idCode=${this.idCode}&jobCode=${this.professionValue}&teamName=${this.teamValue}&companyId=${this.contractorValue}&startTime=${this.startTime}&endTime=${this.endTime}`
         },
     }
 }

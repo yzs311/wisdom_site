@@ -10,9 +10,13 @@ import axios from 'axios'
 
 // 本地
 // axios.defaults.baseURL = "http://192.168.0.142:8989"
+axios.defaults.baseURL = "http://192.168.1.42:8888"
 // 网络
-axios.defaults.baseURL = "http://39.108.103.150:8989"
-axios.defaults.withCredentials=true //让ajax携带cookie
+// axios.defaults.baseURL = "http://39.108.103.150:8989"
+// axios.defaults.baseURL = "http://47.106.71.3:8080"
+// axios.defaults.withCredentials=true //让ajax携带cookie
+// axios.defaults.headers={'Access-Control-Allow-Credentials':true}
+// axios.defaults.headers.post['Access-Control-Allow-Credentials']='/*'
 Vue.prototype.$axios = axios
 
 import home from '../components/home/home.vue'
@@ -77,6 +81,8 @@ import systemLiangZhi_attendance from '../components/system/systemLiangZhi/syste
 import systemLiangZhi_exception from '../components/system/systemLiangZhi/systemLiangZhi_exception'
 import systemLiangZhi_blacklist from '../components/system/systemLiangZhi/systemLiangZhi_blacklist'
 import systemLiangZhi_equipment from '../components/system/systemLiangZhi/systemLiangZhi_equipment'
+import systemLiangZhi_permission_user from '../components/system/systemLiangZhi/systemLiangZhi_permission_user'
+import systemLiangZhi_permission_role from '../components/system/systemLiangZhi/systemLiangZhi_permission_role'
 import systemGreen from '../components/system/systemGreen/systemGreen.vue'
 import systemGreen_TSP from '../components/system/systemGreen/systemGreen_TSP.vue'
 import systemSet from '../components/system/systemSet/systemSet.vue'
@@ -176,6 +182,8 @@ const router = new VueRouter({
             {path:'/systemLiangZhi_fw_two',meta:{needLogin:true},component:systemLiangZhi_fw_two},
             {path:'/systemLiangZhi_fw_three',meta:{needLogin:true},component:systemLiangZhi_fw_three},
             {path:'/systemLiangZhi_fw_four',meta:{needLogin:true},component:systemLiangZhi_fw_four},
+            {path:'/systemLiangZhi_permission_user',meta:{needLogin:true},component:systemLiangZhi_permission_user},
+            {path:'/systemLiangZhi_permission_role',meta:{needLogin:true},component:systemLiangZhi_permission_role},
         ]},
         {path:'/systemZhiHui',meta:{needLogin:true},component:systemZhiHui,children:[
             {path:'',meta:{needLogin:true},component:systemZhiHui_taDiao},
@@ -253,8 +261,22 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to,from,next)=>{
+    // 1.0
+    // if (to.meta.needLogin) {
+    //     const islogin = localStorage.getItem('islogin')
+    //     if (islogin) {
+    //         next()
+    //     }else{
+    //         next('/login')
+    //     }
+    // }else{
+    //     next()
+    // }
+
+    // 2.0
     if (to.meta.needLogin) {
-        const islogin = localStorage.getItem('islogin')
+        const islogin = sessionStorage.getItem('islogin')
+        // const islogin = localStorage.getItem('islogin')
         if (islogin) {
             next()
         }else{
