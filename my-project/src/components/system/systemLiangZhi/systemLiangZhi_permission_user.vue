@@ -632,7 +632,7 @@ export default {
 
         // 获取角色列表
         querySystemRole() {
-            this.$axios.post(`http://192.168.1.42:8888/api/systemRoleApi/querySystemRole?hierarchy=${this.hierarchy}&belong=${this.belong}`).then(
+            this.$axios.post(`/api/systemRoleApi/querySystemRole?hierarchy=${this.hierarchy}&belong=${this.belong}`).then(
                 res => {
                     // console.log(res.data)
                     this.cities = res.data.data

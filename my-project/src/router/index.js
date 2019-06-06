@@ -10,7 +10,7 @@ import axios from 'axios'
 
 // 本地
 // axios.defaults.baseURL = "http://192.168.0.142:8989"
-axios.defaults.baseURL = "http://192.168.1.42:8888"
+axios.defaults.baseURL = "http://192.168.1.42:8080"
 // 网络
 // axios.defaults.baseURL = "http://39.108.103.150:8989"
 // axios.defaults.baseURL = "http://47.106.71.3:8080"
