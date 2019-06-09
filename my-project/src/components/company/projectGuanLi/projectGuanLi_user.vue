@@ -77,18 +77,18 @@
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage"
+                        :current-page="pageNum"
                         :page-sizes="[10, 20, 30]"
-                        :page-size="10"
+                        :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="2">
+                        :total="pageTotal">
                     </el-pagination>
                 </div>
             </div>
             <!-- 新增对话框 -->
             <div class="dialog-box" v-show="dialogShow">
                 <div class="title">
-                    新增公司
+                    新增用户
                     <a class="close" @click="dialogClick">
                         <i class="el-icon-close"></i>
                     </a>
@@ -97,42 +97,64 @@
                     <ul>
                         <li>
                             <span>
-                                账号
-                                <div class="required">*</div>
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
                                 姓名
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="userName">
+                        </li>
+                        <li>
+                            <span>
+                                手机号
+                                <div class="required">*</div>
+                            </span>
+                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))" v-model="userPhone">
+                        </li>
+                        <li>
+                            <span>
+                                账号
+                                <div class="required">*</div>
+                            </span>
+                            <input type="text" v-model="userAccount" @blur="selectSystemUser">
                         </li>
                         <li>
                             <span>
                                 密码
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="userPassword">
                         </li>
-                        <!-- <li>
-                            <span>
-                                项目角色
-                                <div class="required">*</div>
-                            </span>
-                            <input type="text">
-                        </li> -->
                         <li>
                             <span>
-                                手机号
+                                账户状态
+                                <div class="required">*</div>
                             </span>
-                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
+                            <el-select v-model="userState" placeholder="请选择">
+                                <el-option
+                                v-for="item in userStateOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </li>
+                        <li>
+                            <span>
+                                登录项
+                                <div class="required">*</div>
+                            </span>
+                            <el-select v-model="entry" placeholder="请选择">
+                                <el-option
+                                v-for="item in entryOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
                         </li>
                     </ul>
                 </div>
                 <div class="confirm">
-                    <a class="button" @click="dialogClick">确定</a>
+                    <a class="button" @click="querySystemUser">确定</a>
                 </div>
             </div>
             <!-- 遮罩层 -->
@@ -382,21 +404,127 @@ export default {
                 role: '项目管理员', // 项目角色
                 state: '无效', // 状态
             }], // 表格数据
-            currentPage: 1, // 当前页码
+            pageNum: 1, // 当前页码
+            pageSize: 10, // 每页显示条数
+            pageTotal: 0, // 总条数
             dialogShow: false, // 对话框显示状态
+
+            // 对话框数据
+            id: '', // 当前选中的账号id
+            userName: '', // 姓名
+            userPhone: '', // 联系电话
+            userAccount: '', // 账号
+            userPassword: '', // 密码
+            userState: '', // 账户状态
+            userType: 2, // 账户类型
+            entry: '', // 登录权限
+            ids: '', // 角色id字符串
+            userStateOptions: [
+                {
+                    value: '1',
+                    label: '启用'
+                },
+                {
+                    value: '0',
+                    label: '禁用'
+                }
+            ], // 账户状态选项
+            entryOptions: [
+                {
+                    value: '0',
+                    label: 'APP'
+                },
+                {
+                    value: '1',
+                    label: 'PC'
+                },
+                {
+                    value: '2',
+                    label: 'APP+PC'
+                }
+            ], // 登录项选项
         }
     },
     methods: {
+        // 每页条数切换
         handleSizeChange(val) {
-            console.log(`每页${val}条`)
+            // console.log(`每页 ${val} 条`)
+            this.pageSize = val
+            // this.selectConstructionCompanyList()
         },
+
+        // 当前页
         handleCurrentChange(val) {
-            console.log(`当前页：${val}`)
+            // console.log(`当前页: ${val}`)
+            this.pageNum = val
+            // this.selectConstructionCompanyList()
         },
 
         // 新增对话框状态切换
         dialogClick() {
             this.dialogShow = !this.dialogShow
+        },
+
+        // 验证账号是否存在
+        selectSystemUser() {
+            this.$axios.post(`/api/system/computer/selectSystemUser?userAccount=${this.userAccount}`).then(
+                res => {
+                    console.log(res.data.code)
+                    if (res.data.code != 0) {
+                        this.$message({
+                            message: `${res.data.msg}`,
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 获取账号列表
+        querySystemUserList () {
+            this.$axios.post(`/api/system/computer/querySystemUser?userType=1&parameterId=1&page=${this.page}&pageSize=${this.pageSize}`).then(
+                res => {
+                    console.log(res.data)
+                }
+            )
+        },
+
+        // 获取所有权限
+        querySystemPrivileges() {
+            this.$axios.post(`/provider/systemPrivileges/pc/querySystemPrivileges`).then(
+                res => {
+                    console.log(res.data)
+                }
+            )
+        },
+
+        // 创建账号
+        querySystemUser() {
+            if (this.userName && this.userPhone && this.userAccount && this.userPassword && this.userState && this.entry) {
+                this.$axios.post(`/api/system/computer/insertSystemUser?publicId=1&userName=${this.userName}&userPhone=${this.userPhone}&userAccount=${this.userAccount}&userPassword=${this.userPassword}&userState=${this.userState}&userType=${this.userType}&entry=${this.entry}&ids=${this.ids}`).then(
+                    res => {
+                        if (res.data.code == 0) {
+                            this.$message({
+                                message: '添加成功',
+                                type: 'success'
+                            })
+                            this.dialogShow = false
+                            this.pageNum = 1
+                            this.querySystemUserList()
+                        } else {
+                            this.$message({
+                                message: `${res.data.msg}`,
+                                type: 'warning'
+                            })
+                        }
+                    }
+                )
+            } else {
+                this.$message({
+                    message: '带 * 号的输入框不得为空',
+                    type: 'warning'
+                })
+            }
         },
     }
 }

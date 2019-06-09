@@ -77,11 +77,11 @@
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage"
+                        :current-page="page"
                         :page-sizes="[10, 20, 30]"
-                        :page-size="10"
+                        :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="2">
+                        :total="pageTotal">
                     </el-pagination>
                 </div>
             </div>
@@ -154,7 +154,7 @@
                     </ul>
                 </div>
                 <div class="confirm">
-                    <a class="button" @click="dialogClick">确定</a>
+                    <a class="button" @click="querySystemUser">确定</a>
                 </div>
             </div>
             <!-- 遮罩层 -->
@@ -404,7 +404,9 @@ export default {
                 role: '公司管理员', // 公司角色
                 state: '无效', // 状态
             }], // 表格数据
-            currentPage: 1, // 当前页码
+            page: 1, // 当前页码
+            pageSize: 10, // 每页显示条数
+            pageTotal: 0, // 总条数
             dialogShow: false, // 对话框显示状态
 
             // 对话框数据
@@ -443,6 +445,10 @@ export default {
             ], // 登录项选项
         }
     },
+    created() {
+        this.querySystemUserList()
+        this.querySystemPrivileges()
+    },
     methods: {
         // 每页条数切换
         handleSizeChange(val) {
@@ -478,6 +484,52 @@ export default {
             )
         },
 
+        // 获取账号列表
+        querySystemUserList () {
+            this.$axios.post(`/api/system/computer/querySystemUser?userType=1&parameterId=1&page=${this.page}&pageSize=${this.pageSize}`).then(
+                res => {
+                    console.log(res.data)
+                }
+            )
+        },
+
+        // 获取所有权限
+        querySystemPrivileges() {
+            this.$axios.post(`/provider/systemPrivileges/pc/querySystemPrivileges`).then(
+                res => {
+                    console.log(res.data)
+                }
+            )
+        },
+
+        // 创建账号
+        querySystemUser() {
+            if (this.userName && this.userPhone && this.userAccount && this.userPassword && this.userState && this.entry) {
+                this.$axios.post(`/api/system/computer/insertSystemUser?publicId=1&userName=${this.userName}&userPhone=${this.userPhone}&userAccount=${this.userAccount}&userPassword=${this.userPassword}&userState=${this.userState}&userType=${this.userType}&entry=${this.entry}&ids=${this.ids}`).then(
+                    res => {
+                        if (res.data.code == 0) {
+                            this.$message({
+                                message: '添加成功',
+                                type: 'success'
+                            })
+                            this.dialogShow = false
+                            this.pageNum = 1
+                            this.querySystemUserList()
+                        } else {
+                            this.$message({
+                                message: `${res.data.msg}`,
+                                type: 'warning'
+                            })
+                        }
+                    }
+                )
+            } else {
+                this.$message({
+                    message: '带 * 号的输入框不得为空',
+                    type: 'warning'
+                })
+            }
+        },
     }
 }
 </script>

@@ -63,127 +63,23 @@
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage"
+                        :current-page="pageNum"
                         :page-sizes="[10, 20, 30]"
-                        :page-size="10"
+                        :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="2">
+                        :total="pageTotal">
                     </el-pagination>
                 </div>
             </div>
             <!-- 新增对话框 -->
             <div class="dialog-box" v-show="dialogShow">
                 <div class="title">
-                    新增公司
+                    新增项目
                     <a class="close" @click="dialogClick">
                         <i class="el-icon-close"></i>
                     </a>
                 </div>
-                <!-- <div class="form">
-                    <ul>
-                        <li>
-                            <span>
-                                企业名称
-                                <div class="required">*</div>
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                企业简称
-                                <div class="required">*</div>
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                负责人
-                                <div class="required">*</div>
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                联系电话
-                                <div class="required">*</div>
-                            </span>
-                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
-                        </li>
-                        <li>
-                            <span>
-                                企业类型
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                注册资金（万元）
-                            </span>
-                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
-                        </li>
-                        <li>
-                            <span>
-                                地址
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                法人代表
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                企业组织机构代码
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                组织机构信用代码
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                联系地址
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                电子邮箱
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                开户行
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                开户地址
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
-                                开户账号
-                            </span>
-                            <input type="number" onkeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))">
-                        </li>
-                        <li>
-                            <span>
-                                备注
-                            </span>
-                            <input type="text">
-                        </li>
-                    </ul>
-                </div> -->
-                <div class="form">
+                <div class="form1" v-show="dialogPageShow">
                     <ul>
                         <li>
                             <div class="left-box">
@@ -191,23 +87,23 @@
                                     项目名称
                                     <span class="required">*</span>
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="projectName">
                             </div>
                             <div class="right-box">
                                 <div class="text-box">
                                     项目简称
                                     <span class="required">*</span>
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="shortName">
                             </div>
                         </li>
                         <li>
                             <div class="left-box">
                                 <div class="text-box">
-                                    项目类别
+                                    项目类型
                                     <span class="required">*</span>
                                 </div>
-                                <el-select v-model="type" placeholder="请选择">
+                                <el-select v-model="projectType" placeholder="请选择">
                                     <el-option
                                     v-for="item in typeOptions"
                                     :key="item.value"
@@ -221,7 +117,7 @@
                                     项目状态
                                     <span class="required">*</span>
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="projectState">
                             </div>
                         </li>
                         <li>
@@ -238,7 +134,7 @@
                                     <span class="required">*</span>
                                 </div>
                                 <el-date-picker
-                                v-model="startWorkTime"
+                                v-model="startingTime"
                                 type="date"
                                 placeholder="选择日期">
                                 </el-date-picker>
@@ -251,7 +147,7 @@
                                     <span class="required">*</span>
                                 </div>
                                 <el-date-picker
-                                v-model="completedTime"
+                                v-model="finishTime"
                                 type="date"
                                 placeholder="选择日期">
                                 </el-date-picker>
@@ -261,10 +157,10 @@
                                     施工许可证
                                     <span class="required">*</span>
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="builderLicense">
                             </div>
                         </li>
-                        <li>
+                        <!-- <li>
                             <div class="left-box">
                                 <div class="text-box">
                                     总包单位
@@ -279,21 +175,21 @@
                                 </div>
                                 <input type="text">
                             </div>
-                        </li>
+                        </li> -->
                         <li>
                             <div class="left-box">
                                 <div class="text-box">
                                     建筑面积
                                     <span class="required">*</span>
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="acreage">
                             </div>
                             <div class="right-box">
                                 <div class="text-box">
                                     工程造价
                                     <span class="required">*</span>
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="projectCost">
                             </div>
                         </li>
                         <li>
@@ -309,7 +205,7 @@
                                     负责人
                                     <span class="required">*</span>
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="projectPrincipal">
                             </div>
                         </li>
                         <li>
@@ -318,7 +214,7 @@
                                     联系电话
                                     <span class="required">*</span>
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="phone">
                             </div>
                             <div class="right-box">
                                 <div class="text-box">
@@ -337,7 +233,7 @@
                                 详细地址
                                 <span class="required">*</span>
                             </div>
-                            <input type="text">
+                            <input type="text" v-model="projectAddress">
                         </li>
                         <li>
                             <div class="text-box">
@@ -355,16 +251,16 @@
                                 <div class="text-box">
                                     安全报检编号
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="securityCode">
                             </div>
                             <div class="right-box">
                                 <div class="text-box">
                                     质量报检编号
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="qualityNumber">
                             </div>
                         </li>
-                        <li>
+                        <!-- <li>
                             <div class="left-box">
                                 <div class="text-box">
                                     施工机构代码
@@ -377,8 +273,8 @@
                                 </div>
                                 <input type="text">
                             </div>
-                        </li>
-                        <li>
+                        </li> -->
+                        <!-- <li>
                             <div class="left-box">
                                 <div class="text-box">
                                     监督机构
@@ -391,26 +287,26 @@
                                 </div>
                                 <input type="text">
                             </div>
-                        </li>
+                        </li> -->
                         <li>
                             <div class="left-box">
                                 <div class="text-box">
                                     设计单位
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="designOrganization">
                             </div>
                             <div class="right-box">
                                 <div class="text-box">
                                     勘察单位
                                 </div>
-                                <input type="text">
+                                <input type="text" v-model="explorationUnit">
                             </div>
                         </li>
                         <li>
                             <div class="text-box">
                                 备注
                             </div>
-                            <input type="text">
+                            <input type="text" v-model="remark">
                         </li>
                         <li class="upload-pic">
                             <div class="text-box">
@@ -420,8 +316,110 @@
                         </li>
                     </ul>
                 </div>
+                <div class="form2" v-show="!dialogPageShow">
+                    <ul>
+                        <li>
+                            <div>
+                                <span>
+                                    单位名称
+                                    <div class="required">*</div>
+                                </span>
+                                <input type="text" v-model="constructionName">
+                            </div>
+                            <div>
+                                <span>
+                                    简称
+                                    <div class="required">*</div>
+                                </span>
+                                <input type="text" v-model="shortName">
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span>
+                                    社会统一信用代码
+                                    <div class="required">*</div>
+                                </span>
+                                <input type="text" v-model="suid">
+                            </div>
+                            <div>
+                                <span>
+                                    法人代表
+                                    <div class="required">*</div>
+                                </span>
+                                <input type="text" v-model="legalPerson">
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span>
+                                    单位类型
+                                    <div class="required">*</div>
+                                </span>
+                                <el-select v-model="companyType" placeholder="请选择">
+                                    <el-option
+                                    v-for="item in contractorType"
+                                    :key="item.id"
+                                    :label="item.title"
+                                    :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div>
+                                <span>
+                                    负责人
+                                    <div class="required">*</div>
+                                </span>
+                                <input type="text" v-model="contacts">
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span>
+                                    联系电话
+                                    <div class="required">*</div>
+                                </span>
+                                <input type="number" v-model="mobilePhone">
+                            </div>
+                            <div>
+                                <span>电子邮箱</span>
+                                <input type="text" v-model="email">
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span>开户银行</span>
+                                <input type="text" v-model="bankOpen">
+                            </div>
+                            <div>
+                                <span>注册资金</span>
+                                <input type="number" v-model="capital">
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span>开户地址</span>
+                                <input type="text" v-model="bankAddress">
+                            </div>
+                            <div>
+                                <span>开户账号</span>
+                                <input type="text" v-model="bankNum">
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <span>单位详细地址</span>
+                                <input type="text" v-model="address">
+                            </div>
+                            <div>
+                                <span>备注说明</span>
+                                <input type="text" v-model="remark">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
                 <div class="confirm">
-                    <a class="button" @click="dialogClick">确定</a>
+                    <a class="button" @click="dialogPageShow=false">下一页</a>
                 </div>
             </div>
             <!-- 遮罩层 -->
@@ -555,7 +553,7 @@
                 top: .48rem;
                 z-index: 200;
                 width: 12.15rem;
-                height: 7rem;
+                // height: 7rem;
                 overflow: hidden;
                 position: absolute;
                 border-radius: .1rem;
@@ -578,7 +576,7 @@
                         transform: translateY(-50%);
                     }
                 }
-                .form {
+                .form1 {
                     overflow: auto;
                     height: 5.6rem;
                     // ul{
@@ -724,6 +722,57 @@
                         }
                     }
                 }
+                .form2 {
+                    padding-left: .43rem;
+                    padding-bottom: .3rem;
+                    ul{
+                        li {
+                            display: flex;
+                            height: .71rem;
+                            padding-top: .3rem;
+                            >div {
+                                width: 5.38rem;
+                                >span {
+                                    width: 1.72rem;
+                                    height: .41rem;
+                                    font-size: .16rem;
+                                    text-align: right;
+                                    position: relative;
+                                    line-height: .41rem;
+                                    padding-right: .32rem;
+                                    display: inline-block;
+                                    .required {
+                                        top: -0.01rem;
+                                        right: .22rem;
+                                        color: #f00;
+                                        position: absolute;
+                                    }
+                                }
+                                input {
+                                    width: 3.66rem;
+                                    height: .41rem;
+                                    padding-left: .1rem;
+                                    border-radius: .02rem;
+                                    border: .01rem solid #b1b1b1;
+                                    &::-webkit-outer-spin-button,
+                                    &::-webkit-inner-spin-button {
+                                        appearance: none;
+                                    }
+                                    &[type="number"] {
+                                        appearance: textfield;
+                                    }
+                                }
+                                .el-date-editor {
+                                    width: 3.66rem;
+                                    height: .41rem;
+                                    input {
+                                        padding-left: .3rem;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 .confirm {
                     height: .8rem;
                     background-color: #f8f8f8;
@@ -783,8 +832,11 @@ export default {
                 project: '深圳市某某某项目', // 项目名称
                 state: '审核未通过', // 状态
             }], // 表格数据
-            currentPage: 1, // 当前页码
+            pageNum: 1, // 当前页码
+            pageSize: 10, // 每页显示条数
+            pageTotal: 0, // 总条数
             dialogShow: false, // 对话框显示状态
+            dialogPageShow: true, // 当前对话框的页数
             amapManager,
             zoom: 12,
             center: [114.014129,22.571492],
@@ -854,7 +906,7 @@ export default {
             // 对话框数据
             selectedRegion: [], // 当前选中地区
             cid: '', // 所属公司id
-            projectName: '', // 项目名
+            projectName: '', // 项目名称
             shortName: '', // 简称
             projectPrincipal: '', // 项目负责人
             phone: '', // 联系方式
@@ -876,17 +928,42 @@ export default {
             explorationUnit: '', // 勘察单位
             remark: '', // 	备注
             projectImage: '', // 项目效果图
+            // 建立单位参数
+            contractorType: [], // 单位类型选项
+            constructionName: '', // 参建单位名称
+            shortName: '', // 简称
+            capital: '', // 注册资金
+            companyType: '', // 单位类型 
+            legalPerson: '', // 法人代表
+            suid: '', // 社会统一信用代码
+            organizationCode: '', // 组织机构代码
+            bankOpen: '', // 开户银行
+            bankNum: '', // 开户账号
+            bankAddress: '', // 开户地址
+            address: '', // 单位详细地址
+            contacts: '', // 负责人
+            mobilePhone: '', // 电话
+            email: '', // 电子邮箱
+            remark: '', // 备注
         }
     },
     created() {
         this.getArea()
+        this.selectProjectList()
     },
     methods: {
+        // 每页条数切换
         handleSizeChange(val) {
-            console.log(`每页${val}条`)
+            // console.log(`每页 ${val} 条`)
+            this.pageSize = val
+            // this.selectConstructionCompanyList()
         },
+
+        // 当前页
         handleCurrentChange(val) {
-            console.log(`当前页：${val}`)
+            // console.log(`当前页: ${val}`)
+            this.pageNum = val
+            // this.selectConstructionCompanyList()
         },
 
         // 新增对话框状态切换
@@ -947,7 +1024,11 @@ export default {
 
         // 获取项目列表
         selectProjectList() {
-            this.$axios.post(`/api/project/selectProjectList`)
+            this.$axios.post(`/api/project/selectProjectList?cid=1&pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
+                res => {
+                    console.log(res.data)
+                }
+            )
         }
     }
 }

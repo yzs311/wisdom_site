@@ -176,8 +176,8 @@ export default {
     };
   },
   created() {
-    this.getName()
-    this.getWeather()
+    // this.getName()
+    // this.getWeather()
     this.setTime()
     this.setActive()
     // this.getliuyong()

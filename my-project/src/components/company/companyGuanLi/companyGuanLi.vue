@@ -52,12 +52,12 @@
                             <span>公司用户</span>
                         </router-link>
                     </li>
-                    <li @click="isActiveShow('/companyGuanLi_role')">
+                    <!-- <li @click="isActiveShow('/companyGuanLi_role')">
                         <router-link to="/companyGuanLi_role" :class="activeShow=='/companyGuanLi_role'?'active':''">
                             <div class="icon"></div>
                             <span>公司角色</span>
                         </router-link>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <!-- 内容 -->
