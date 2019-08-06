@@ -1,35 +1,38 @@
 <template>
     <div id="car">
         <div class="content">
-            <div class="content-box" v-for="(val,key,index) in carData" :key="index">
+            <div class="content-box" v-for="(item,index) in carData" :key="index">
                 <div class="title bolder">
-                    {{val.door}}
+                    {{item.name}}
                 </div>
-                <div class="status bolder" :class="val.State==0?'normal':'anomaly'">
-                    {{val.State==0?'正常运行':'异常运行'}}
+                <!-- :class="item.State==0?'normal':'anomaly'" -->
+                <div class="status bolder normal" >
+                    <!-- {{item.State==0?'正常运行':'异常运行'}} -->
+                    正常运行
                 </div>
                 <div class="top-data">
-                    <div class="amount border-blue" style="font-size:.24rem" :class="val.State==0?'border-blue normal':'border-red anomaly'">
-                        {{val.InOutData}}
+                    <!-- :class="val.State==0?'border-blue normal':'border-red anomaly'" -->
+                    <div class="amount border-blue normal" style="font-size:.24rem" >
+                        {{item.todaycount.count}}
                         <p style="font-size:.18rem">今日进出</p>
                     </div>
-                    <div class="truck-space" :class="val.Remaining>=1&&val.State==0?'border-blue normal':'border-red anomaly'" style="font-size:.24rem">
-                        {{val.Remaining}}
+                    <div class="truck-space" :class="item.pkcount>=1?'border-blue normal':'border-red anomaly'" style="font-size:.24rem">
+                        {{item.pkcount}}
                         <p style="font-size:.18rem">剩余车位</p>
                     </div>
                 </div>
                 <div class="bottom-data">
                     <p class="bolder">实时进出</p>
-                    <div class="licence" :id="key">
-                        <ul :id="key+1">
-                            <li v-for="(item,index) in val.Data" :key="index">
-                                <span>{{item.Plate}}</span>
-                                <span>{{item.Inout}}</span>
-                                <span>{{item.Time}}</span>
-                                <span>{{item.CarType}}</span>
+                    <div class="licence" :id="item.name">
+                        <ul :id="item.name+1">
+                            <li v-for="item2 in item.todaycount.vehicleList" :key="item2.id">
+                                <span>{{item2.vehicleNo}}</span>
+                                <span>{{item2.gateinname}}</span>
+                                <span>{{item2.liftTime}}</span>
+                                <!-- <span>{{item2.CarType}}</span> -->
                             </li>
                         </ul>
-                        <ul :id="key+2"></ul>
+                        <ul :id="item.name+2"></ul>
                     </div>
                 </div>
             </div>
@@ -42,36 +45,32 @@ export default {
     data() {
         return {
             carData:'', // 车辆出入数据
-            xmid:'',
+            projectId: '', // 项目id
         }
     },
     created() {
-        // 发送请求
+        this.getProjectId()
         this.getCarData()
     },
     methods: {
         // 请求车辆出入数据
         getCarData() {
             this.xmid = this.getQueryString('xmid')
-            this.$axios.get(`http://gd.17hr.net:8018/APP/XMPage/DeviceData.ashx?method=GetPkData&xmid=${this.xmid}`).then(res=>{
-                if(res.data.success == 1){
-                    this.$router.push('unopen')
-                }else{
-                    // console.log(res.data)
-                    this.carData = res.data;
-
-                    if (res.data.InOutOne.Data.length >=15) {
-                        this.scrollStart('InOutOne','InOutOne1','InOutOne2')
-                    }
-                    if (res.data.InOutTwo.Data.length >=15) {
-                        this.scrollStart('InOutTwo','InOutTwo1','InOutTwo2')
-                    }
-                    if (res.data.InOutThree.Data.length >=15) {
-                        this.scrollStart('InOutThree','InOutThree1','InOutThree2')
-                    }
+            this.$axios.get(`http://gd.17hr.net:8018/APP/XMPage/DeviceData.ashx?method=GetPkData&xmid=DV2mxBGL1Ao%3D`).then(res=>{
+                // console.log(res.data)
+                this.carData = res.data;
+                if (res.data.InOutOne.Data.length >=15) {
+                    this.scrollStart('InOutOne','InOutOne1','InOutOne2')
+                }
+                if (res.data.InOutTwo.Data.length >=15) {
+                    this.scrollStart('InOutTwo','InOutTwo1','InOutTwo2')
+                }
+                if (res.data.InOutThree.Data.length >=15) {
+                    this.scrollStart('InOutThree','InOutThree1','InOutThree2')
                 }
             })
         },
+
         // 滚动启动函数
         scrollStart(id,id1,id2) {
           setTimeout(() => {
@@ -102,6 +101,8 @@ export default {
             };
           }, 1000);
         },
+
+        // 获取url中的项目id
         getQueryString(name) {
           var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
           var r = window.location.search.substr(1).match(reg);
@@ -109,6 +110,21 @@ export default {
             return unescape(r[2]);
           }
           return null;
+        },
+
+        // 获取项目id
+        getProjectId() {
+            this.projectId = sessionStorage.getItem('pid')
+        },
+
+        // 获取车辆出入数据
+        getCarData() {
+            this.$axios.post(`/api/parkings/todaycount?projectId=${this.projectId}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.carData = res.data.data
+                }
+            )
         },
     },
 }

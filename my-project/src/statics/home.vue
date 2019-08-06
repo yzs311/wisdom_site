@@ -215,12 +215,12 @@ export default {
     this.aaa("colee2", "colee1", "colee");
   },
   created() {
-    this.getSummary(),
-      this.renderBaifenbi(),
-      this.getCardid(),
-      this.getCrash(),
-      this.getLift();
-    this.getCenterInfo();
+    this.getSummary()
+    this.renderBaifenbi()
+    this.getCardid()
+    this.getCrash()
+    this.getLift()
+    this.getCenterInfo()
   },
   methods: {
     aaa(a, b, c) {

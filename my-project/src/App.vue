@@ -4,7 +4,7 @@
     <baseHeader v-show="isLogin"></baseHeader>
 
     <!-- 后台管理系统导航栏 -->
-    <systemHeader v-show="systemShow"></systemHeader>
+    <systemHeader v-if="systemShow"></systemHeader>
 
     <!-- 主题其他模块 -->
     <router-view></router-view>
@@ -44,7 +44,8 @@ export default {
         this.$route.path.includes("/projectShouquan") ||
         this.$route.path.includes("/system") ||
         this.$route.path.includes("/companyGuanLi") ||
-        this.$route.path.includes("/projectGuanLi")
+        this.$route.path.includes("/projectGuanLi") ||
+        this.$route.path.includes("/spectaculars") 
       ) {
         this.isLogin = false
       } else {

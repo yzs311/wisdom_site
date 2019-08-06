@@ -1,7 +1,7 @@
 <template>
     <div id="q_particulars">
         <!-- 主体区域 -->
-        <div class="centent-box">
+        <div class="content-box">
             <!-- 面包屑导航 -->
             <div class="crumbs-nav">
                 <router-link to="/quality/q_statistics">首页</router-link>
@@ -174,7 +174,7 @@
 
 <style lang="less">
     #q_particulars {
-        .centent-box {
+        .content-box {
             width: 18.4rem;
             margin: 0 auto;
             margin-top: .5rem;

@@ -622,7 +622,7 @@ export default {
             multipleSelection: [],
             activeName: '',
             noData: true, // 判断有没有数据
-            pid: 0, // 项目id
+            pid: 2977, // 项目id
             folderData: '', // 文件夹
             folderDataList: [], // 文件夹列表
             folderId: '', // 文件夹id
@@ -639,7 +639,7 @@ export default {
         }
     },
     created() {
-        this.getPid()
+        // this.getPid()
         this.getQueryFolderData()
         // this.getFileDataList()
     },
@@ -713,7 +713,7 @@ export default {
             let file = e.target.files[0]
             this.file = new FormData() //创建form对象
             this.file.append('file',file) // 通过append向form对象添加数据
-            console.log(this.file.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+            // console.log(this.file.get('file')) //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         },
 
         // 上传点击事件

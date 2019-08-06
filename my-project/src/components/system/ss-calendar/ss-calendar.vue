@@ -2,7 +2,7 @@
   <div class="calendar__wrap">
     <div class="header">
       <!-- <div class="current-date">{{currentDate}}</div> -->
-      <div class="current-date">五月上工情况</div>
+      <div class="current-date">七月上工情况</div>
     </div>
     <div class="body">
       <div class="weeks">
@@ -11,7 +11,7 @@
       <div class="day__list">
         <div class="day__item" v-for="(item,index) in dateData" :key="index">
           <!-- <span class="checked" v-if="item==='checked'">√</span> -->
-          <span :class="{current:item===10}">{{item}}</span>
+          <span :class="{current:item===3}">{{item}}</span>
         </div>
       </div>
     </div>

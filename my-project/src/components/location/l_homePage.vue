@@ -85,7 +85,7 @@ export default {
     data() {
         return {
             KQCountData: '', //今日考勤数据
-            pid: 0, //项目id
+            pid: 2977, //项目id
             amapManager,
             zoom: 12,
             center: [114.083372,22.544146],
@@ -128,7 +128,7 @@ export default {
         }
     },
     created() {
-        this.getPid()
+        // this.getPid()
         this.getKQCountData()
     },
     methods: {

@@ -1,6 +1,6 @@
 <template>
     <div id="q_infopath">
-        <div class="centent-box">
+        <div class="content-box">
             <!-- 搜索区域 -->
             <div class="search-box">
                 <div class="search-left">
@@ -167,7 +167,7 @@
 <style lang="less">
     #q_infopath {
         color: #fff;
-        .centent-box {
+        .content-box {
             width: 15rem;
             height: 9.42rem;
             padding: .2rem .18rem 0 .18rem;

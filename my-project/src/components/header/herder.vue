@@ -14,8 +14,8 @@
               <img v-else src="../../../static/images/g_wan.png">
         </div>
         <ul class="nav">
-          <li v-on:click="isActive('/home')">
-            <div class="Lactive-box" v-show="active=='/home'||active=='/login'">
+          <li v-on:click="isActive('/home');personnelClick5()">
+            <div class="Lactive-box" v-show="active=='/home'|| active=='/login'">
               <img src="../../../static/images/Lactive.png" alt="" class="Lactive-img">
               <span>项目总况</span>
             </div>
@@ -44,14 +44,14 @@
               </ul>
             </div>
           </li>
-          <li  v-on:click="isActive('/safety')">
+          <li  v-on:click="isActive('/safety');personnelClick5()">
             <div class="Lactive-box" v-show="active.includes('/safety')">
               <img src="../../../static/images/Lactive.png" alt="" class="Lactive-img">
               <span>设备管理</span>
             </div>
             <router-link to="/safety">设备管理</router-link>
           </li>
-          <li  v-on:click="isActive('/monitoring')">
+          <li  v-on:click="isActive('/monitoring');personnelClick5()">
             <div class="Lactive-box" v-show="active=='/monitoring'" style="left:-.04rem">
               <img src="../../../static/images/Lactive.png" alt="" class="Lactive-img">
               <span>视频监控</span>
@@ -109,7 +109,7 @@
               </ul>
             </div>
           </li>
-          <li  v-on:click="isActive('/information')">
+          <li  v-on:click="isActive('/information');personnelClick5()">
             <div class="Lactive-box" v-show="active=='/information'">
               <img src="../../../static/images/Ractive.png" alt="" class="Lactive-img">
               <span>资料管理</span>
@@ -144,7 +144,7 @@
           </li>
         </ul>
         <span v-on:click="isActive('/home')">
-          <router-link to="/home">
+          <router-link to="/systemHome">
             <h2 class="head-title">深圳河消除黑臭项目</h2>
           </router-link>
         </span>
@@ -168,7 +168,6 @@ export default {
       timeId: "",
       active: "/home",
       nowWeather:'',
-      xmid:'',
       dropDownState: true, // 人员管理下拉框状态
       dropDownState2: true, // 安全管理下拉框状态
       dropDownState3: true, // 智能应用下拉框状态
@@ -176,20 +175,19 @@ export default {
     };
   },
   created() {
-    // this.getName()
-    // this.getWeather()
+    this.getName()
+    this.getWeather()
     this.setTime()
     this.setActive()
     // this.getliuyong()
   },
   methods: {
     getName() {
-      this.xmid = this.getQueryString('xmid')
       this.$axios
-        .get(`http://gd.17hr.net:8018/APP/XMPage/XmData.ashx?method=XMData&xmid=${this.xmid}`)
+        .get(`http://gd.17hr.net:8018/APP/XMPage/XmData.ashx?method=XMData&xmid=DV2mxBGL1Ao%3D`)
         .then(res => {
           if(res.data.success == 1){
-            this.$router.push('unopen')
+            // this.$router.push('unopen')
           }else{
             this.project = res.data.project;
             this.nowWeather=res.data.weather[0].results[0].weather_data[0].weather
@@ -197,10 +195,9 @@ export default {
         });
     },
     getWeather() {
-      this.xmid = this.getQueryString('xmid')
-      this.$axios.get(`http://gd.17hr.net:8018/APP/XMPage/XmData.ashx?method=XMData&xmid=${this.xmid}`).then(res=>{
+      this.$axios.get(`http://gd.17hr.net:8018/APP/XMPage/XmData.ashx?method=XMData&xmid=DV2mxBGL1Ao%3D`).then(res=>{
         if(res.data.success == 1){
-          this.$router.push('unopen')
+          // this.$router.push('unopen')
         }else{
           this.weather = res.data.weather
         }
@@ -243,65 +240,134 @@ export default {
     // 人员管理下拉事件
     personnelClick() {
       // console.log(`123`)
+      $('.drop-down2').animate({
+        height:'0'
+      },500)
+      $('.drop-down3').animate({
+        height:'0'
+      },500)
+      $('.drop-down4').animate({
+        height:'0'
+      },500)
+      this.dropDownState2 = true
+      this.dropDownState3 = true
+      this.dropDownState4 = true
+
       if (this.dropDownState) {
         $('.drop-down1').animate({
           height:'1.92rem'
         },500)
-        this.dropDownState = !this.dropDownState
+        this.dropDownState = false
       } else {
         $('.drop-down1').animate({
           height:'0'
         },500)
-        this.dropDownState = !this.dropDownState
+        this.dropDownState = true
       }
     },
 
     // 安全管理下拉事件
     personnelClick2() {
-      // console.log(`123`)
+      $('.drop-down1').animate({
+        height:'0'
+      },500)
+      $('.drop-down3').animate({
+        height:'0'
+      },500)
+      $('.drop-down4').animate({
+        height:'0'
+      },500)
+      this.dropDownState = true
+      this.dropDownState3 = true
+      this.dropDownState4 = true
+
       if (this.dropDownState2) {
         $('.drop-down2').animate({
           height:'2.4rem'
         },500)
-        this.dropDownState2 = !this.dropDownState2
+        this.dropDownState2 = false
       } else {
         $('.drop-down2').animate({
           height:'0'
         },500)
-        this.dropDownState2 = !this.dropDownState2
+        this.dropDownState2 = true
       }
     },
 
     // 智能应用下拉事件
     personnelClick3() {
-      // console.log(`123`)
+      $('.drop-down1').animate({
+        height:'0'
+      },500)
+      $('.drop-down2').animate({
+        height:'0'
+      },500)
+      $('.drop-down4').animate({
+        height:'0'
+      },500)
+      this.dropDownState = true
+      this.dropDownState2 = true
+      this.dropDownState4 = true
+
       if (this.dropDownState3) {
         $('.drop-down3').animate({
           height:'2.4rem'
         },500)
-        this.dropDownState3 = !this.dropDownState3
+        this.dropDownState3 = false
       } else {
         $('.drop-down3').animate({
           height:'0'
         },500)
-        this.dropDownState3 = !this.dropDownState3
+        this.dropDownState3 = true
       }
     },
 
     // 绿色施工下拉事件
     personnelClick4() {
-      // console.log(`123`)
+      $('.drop-down1').animate({
+        height:'0'
+      },500)
+      $('.drop-down2').animate({
+        height:'0'
+      },500)
+      $('.drop-down3').animate({
+        height:'0'
+      },500)
+      this.dropDownState = true
+      this.dropDownState2 = true
+      this.dropDownState3 = true
+
       if (this.dropDownState4) {
         $('.drop-down4').animate({
           height:'2.4rem'
         },500)
-        this.dropDownState4 = !this.dropDownState4
+        this.dropDownState4 = false
       } else {
         $('.drop-down4').animate({
           height:'0'
         },500)
-        this.dropDownState4 = !this.dropDownState4
+        this.dropDownState4 = true
       }
+    },
+
+    // 其他按钮下拉框缩回
+    personnelClick5() {
+      $('.drop-down1').animate({
+        height:'0'
+      },500)
+      $('.drop-down2').animate({
+        height:'0'
+      },500)
+      $('.drop-down3').animate({
+        height:'0'
+      },500)
+      $('.drop-down4').animate({
+        height:'0'
+      },500)
+      this.dropDownState = true
+      this.dropDownState2 = true
+      this.dropDownState3 = true
+      this.dropDownState4 = true
     },
 
     // 功能未开发

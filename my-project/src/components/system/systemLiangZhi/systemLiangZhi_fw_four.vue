@@ -1,6 +1,6 @@
 <template>
   <div id="fw_four">
-    <div class="centent-box">
+    <div class="content-box">
       <div class="title">工作汇报</div>
 
       <!-- 搜索栏 -->
@@ -33,15 +33,15 @@
       <div class="main-box">
         <!-- 功能栏 -->
         <div class="button-box">
-          <a class="new" @click="dialogClick">
+          <a class="contract" @click="dialogClick">
             <i class="icon"></i>
-            生产报表
+            生成报表
           </a>
           <a class="delete">
             <i class="icon"></i>
             删除
           </a>
-          <a class="derive">
+          <a class="derive" @click="deriveClick()">
             <i class="icon"></i>
             导出
           </a>
@@ -50,15 +50,19 @@
         <div class="table-box">
           <el-table :data="tableData" stripe border>
             <el-table-column type="selection" width="35"></el-table-column>
-            <el-table-column prop="number" label="序号" width="100"></el-table-column>
-            <el-table-column prop="name" label="报告名称" width="400"></el-table-column>
-            <el-table-column prop="person" label="生成人" width="150"></el-table-column>
-            <el-table-column prop="time" label="生成时间" width="300"></el-table-column>
-            <el-table-column prop="type" label="类型" width="100"></el-table-column>
+            <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
+            <el-table-column prop="reportDesignation" label="报告名称" width="400"></el-table-column>
+            <el-table-column prop="reportName" label="生成人" width="150"></el-table-column>
+            <el-table-column prop="reportDate" label="生成时间" width="300"></el-table-column>
+            <el-table-column label="类型" width="100">
+              <template slot-scope="scope">
+                <div>{{scope.row.reportType==2?'月报':scope.row.reportType==1?'周报':'日报'}}</div>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" align="right">
               <template slot-scope="scope">
                 <el-button type="text" size="small">查看</el-button>
-                <el-button type="text" size="small" :info="scope.row">删除</el-button>
+                <el-button type="text" size="small" @click="deleteClick(scope.row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -68,18 +72,18 @@
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage"
+            :current-page="pageNum"
             :page-sizes="[15, 30, 45]"
-            :page-size="15"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="3"
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="pageTotal"
           ></el-pagination>
         </div>
       </div>
       <!-- 生产报表 -->
       <div class="dialog-box" v-show="dialogShow">
         <div class="title">
-          生产报表
+          生成报表
           <a class="close" @click="dialogClick">
             <i class="el-icon-close"></i>
           </a>
@@ -92,7 +96,7 @@
                   选择类型
                   <div class="required">*</div>
                 </span>
-                <el-select v-model="cstatementTypeValue" placeholder="请选择">
+                <el-select v-model="reportType" placeholder="请选择">
                   <el-option
                     v-for="item in statementType"
                     :key="item.value"
@@ -109,7 +113,7 @@
                   <div class="required">*</div>
                 </span>
                 <el-date-picker
-                  v-model="dateValue"
+                  v-model="time"
                   type="daterange"
                   range-separator="至"
                   start-placeholder="开始日期"
@@ -123,7 +127,7 @@
                   报告名称
                   <div class="required">*</div>
                 </span>
-                <input type="text" class="name">
+                <input type="text" class="name" v-model="reportDesignation">
               </div>
             </li>
           </ul>
@@ -131,21 +135,21 @@
             <img src="../../../../static/images/fw_jiantou.jpg">
             <div class="left">
               <p>两制问题</p>
-              <textarea cols="30" rows="10" placeholder="两制工作中遇到的问题......."></textarea>
+              <textarea v-model="issue" cols="30" rows="10" placeholder="两制工作中遇到的问题......."></textarea>
             </div>
             <div class="right">
               <p>解决方案</p>
-              <textarea cols="30" rows="10" placeholder="遇到问题的解决办法......."></textarea>
+              <textarea v-model="solution" cols="30" rows="10" placeholder="遇到问题的解决办法......."></textarea>
             </div>
           </div>
           <div class="bz">
             <p>备注</p>
-            <textarea cols="30" rows="10" placeholder="请输入备注......."></textarea>
+            <textarea v-model="remark" cols="30" rows="10" placeholder="请输入备注......."></textarea>
           </div>
         </div>
 
         <div class="confirm">
-          <a class="button" @click="dialogClick">确定</a>
+          <a class="button" @click="getAddReport()">确定</a>
         </div>
       </div>
       <!-- 遮罩层 -->
@@ -157,50 +161,46 @@
 export default {
   data() {
     return {
-      tableData: [
-        {
-          number: 1, // 序号
-          name: "2019.11.11~11.12日报", // 报告名称
-          person: "某某管理员", // 生成人
-          time: "2019.01.01 11：11:11", // 生成时间
-          type: "日报" // 类型
-        },
-        {
-          number: 2, // 序号
-          name: "2019.11.11~11.18周报", // 报告名称
-          person: "某某管理员", // 生成人
-          time: "2019.01.01 11：11:11", // 生成时间
-          type: "周报" // 类型
-        },
-        {
-          number: 3, // 序号
-          name: "2019.11.11~12.12月报", // 报告名称
-          person: "某某管理员", // 生成人
-          time: "2019.01.01 11：11:11", // 生成时间
-          type: "月报" // 类型
-        }
-      ], // 表格数据
+      tableData: [], // 表格数据
       currentPage: 1, // 当前页码
       dialogShow: false, // 新增单位对话框状态
       statementType: [
         {
-          value: "选项1",
+          value: 0,
           label: "日报"
         },
         {
-          value: "选项2",
+          value: 1,
           label: "周报"
         },
         {
-          value: "选项3",
+          value: 2,
           label: "月报"
         }
       ], // 报表类型选项
-      cstatementTypeValue: "", // 报表类型
       startDate: "", // 入场日期
       finishDate: "", // 退场日期
-      dateValue: "" // 日期
+      dateValue: "", // 日期
+
+      projectId: '', // 项目id
+      userName: '', // 报告人
+      pageTotal: 0, // 总条数
+      pageNum: 1, // 当前页
+      pageSize: 15, // 每页显示条数
+      time: '', // 选择日期值
+      beginTime: '2019-08-01', // 报告开始时间
+      finishTime: '2019-08-02', // 报告结束时间
+      reportDesignation: '', // 报告名称
+      reportType: '', // 报表类型
+      issue: '', // 两制问题
+      solution: '', // 解决方案
+      remark: '', // 备注
     };
+  },
+  created() {
+    this.getProjectId()
+    this.getUserName()
+    this.getReportList()
   },
   methods: {
     handleSizeChange(val) {
@@ -210,16 +210,110 @@ export default {
       console.log(`当前页: ${val}`);
     },
 
+    // 序号
+    indexMethod(index) {
+      return (this.pageNum - 1) * this.pageSize + index + 1;
+    },
+
     // 新增单位对话框状态切换
     dialogClick() {
       this.dialogShow = !this.dialogShow;
+    },
+
+    // 获取项目id
+    getProjectId() {
+      this.projectId = sessionStorage.getItem(`pid`)
+    },
+
+    // 获取用户名
+    getUserName() {
+      this.userName = sessionStorage.getItem('userName')
+    },
+
+    // 获取报告列表
+    getReportList() {
+      this.$axios.post(`/api/baogao/select?projectId=${this.projectId}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`).then(
+        res => {
+          // console.log(res.data)
+          this.tableData = res.data.data
+          this.pageTotal = res.data.total 
+        }
+      )
+    },
+
+    // 添加报告
+    getAddReport() {
+      if (this.reportDesignation&&(this.reportType==0||this.reportType)&&this.issue&&this.solution) {
+        this.$axios.post(`/api/baogao/add?beginTime=${this.beginTime}&finishTime=${this.finishTime}&reportDesignation=${this.reportDesignation}&reportName=${this.userName}&reportType=${this.reportType}&issue=${this.issue}&solution=${this.solution}&remark=${this.remark}&projectId=${this.projectId}`).then(
+          res => {
+            // console.log(res.data)
+            if (res.data.data == 1) {
+               this.$message({
+                  type: "success",
+                  message: "生成成功"
+                })
+                this.getReportList()
+                this.dialogShow = false
+            } else {
+              this.$message({
+                message: "生成失败",
+                type: "error"
+              });
+            }
+          }
+        )
+      } else {
+        this.$message({
+          message: "输入框不得为空",
+          type: "error"
+        });
+      }
+    },
+
+    // 删除
+    deleteClick(id) {
+      this.$confirm("是否要删除资料？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        // console.log(id)
+        this.$axios.post(`/api/baogao/delete?id=${id}`).then(
+          res => {
+            // console.log(res.data)
+            if (res.data.msg == '删除成功') {
+              this.$message({
+                type: "success",
+                message: "删除成功"
+              });
+              this.getReportList()
+            } else {
+              this.$message({
+                message: "删除失败",
+                type: "error"
+              });
+            }
+          }
+        )
+      })
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消删除"
+        });
+      })
+    },
+
+    // 导出
+    deriveClick() {
+      location.href=`http://47.106.71.3:8080/api/baogao/export?projectId=${this.projectId}`
     }
   }
 };
 </script>
 <style lang="less">
 #fw_four {
-  .centent-box {
+  .content-box {
     border-radius: 0.04rem;
     background-color: #fff;
     box-shadow: 0 0 0.5rem -0.3rem #666;
@@ -320,11 +414,44 @@ export default {
             background-color: #0090ff;
           }
           .icon {
-            width: 0.37rem;
-            height: 0.28rem;
+            width: .37rem;
+            height: .28rem;
+            transition: all .5s;
             display: inline-block;
             vertical-align: middle;
+            background-repeat: no-repeat;
+            background-position: center center;
           }
+        }
+        .derive {
+            .icon {
+                background-image: url('../../../../static/images/system-derive.png');
+            }
+            &:hover {
+                .icon {
+                    background-image: url('../../../../static/images/system-deriveHover.png');
+                }
+            }
+        }
+        .contract {
+            .icon {
+                background-image: url('../../../../static/images/system-contract.png');
+            }
+            &:hover {
+                .icon {
+                    background-image: url('../../../../static/images/system-contractHover.png');
+                }
+            }
+        }
+        .delete {
+            .icon {
+                background-image: url('../../../../static/images/system-delete.png');
+            }
+            &:hover {
+                .icon {
+                    background-image: url('../../../../static/images/system-deleteHover.png');
+                }
+            }
         }
       }
       .table-box {

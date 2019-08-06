@@ -18,13 +18,13 @@
           </el-table-column>
           <el-table-column label="操作" align="right">
             <template slot-scope="scope">
-              <el-button @click="openUploading(scope.row.name)" type="text" size="small">上传</el-button>
-              <el-button type="text" size="small" v-if="scope.row.status=='已上传'">编辑</el-button>
+              <el-button @click="openUploading(scope.row.id)" type="text" size="small">上传</el-button>
+              <!-- <el-button type="text" size="small" v-if="scope.row.status=='已上传'">编辑</el-button> -->
               <el-button
                 type="text"
                 size="small"
                 v-if="scope.row.status=='已上传'"
-                @click="openLookInfo(scope.row.name)"
+                @click="getParticulars(scope.row.id);lookInfo=true"
               >点击查看</el-button>
             </template>
           </el-table-column>
@@ -32,20 +32,20 @@
       </div>
       <!-- 分页 -->
       <div class="fenye">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
+        <!-- @size-change="handleSizeChange"
+          @current-change="handleCurrentChange" -->
+        <!-- <el-pagination
           :current-page="1"
           :page-sizes="[10, 20, 30, 40]"
           :page-size="10"
           layout="total, sizes, prev, pager, next, jumper"
           :total="8"
-        ></el-pagination>
+        ></el-pagination> -->
       </div>
       <!-- 上传弹框 -->
       <div id="uploading">
         <el-dialog :title="uploadingTitle" :visible.sync="uploading" width="34.5%">
-          <div>
+          <!-- <div>
             <span class="checkDate">
               参建单位
               <span style="color:red">*</span>
@@ -66,17 +66,17 @@
               <span style="color:red">*</span>
             </span>
             <el-date-picker type="date" placeholder="选择日期" v-model="gongZidate"></el-date-picker>
-          </div>
+          </div> -->
           <div class="top">
             <div class="name">
               上传附件
               <span style="color:red">*</span>
             </div>
             <div class="checkImg">
-              <div class="lxSb" v-if="file==''">
+              <div class="lxSb">
                 <input type="file" class="lxSbfile" @change="fileUp">
               </div>
-              <div class="lxsupserSb" v-if="file !=''">
+              <!-- <div class="lxsupserSb" v-if="file !=''">
                 <div class="info">
                   <span class="text">选 中 1 个 文 件，共 120 K。</span>
                   <el-tooltip content="最多一次性添加12张图片！" placement="top">
@@ -94,15 +94,15 @@
                     <img src="../../../../static/images/fw_upImg2.jpg">
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="bottom">
             <div class="name">添加备注</div>
-            <textarea class="bz" cols="86" rows="10" placeholder="请输入备注信息......."></textarea>
+            <textarea v-model="remark" class="bz" cols="86" rows="10" placeholder="请输入备注信息......."></textarea>
           </div>
           <span slot="footer" class="dialog-footer">
-            <button @click="uploading = false" class="uploadingBtn">确认上传</button>
+            <button @click="uploadingClick" class="uploadingBtn">确认上传</button>
             <button @click="uploading = false" class="closeBtn">取 消</button>
           </span>
         </el-dialog>
@@ -113,28 +113,28 @@
           <div class="lookInfoTable">
             <el-table :data="lookInfoTable" stripe>
               <el-table-column type="selection" width="35"></el-table-column>
-              <el-table-column prop="number" label="序号" width="100" align="center"></el-table-column>
-              <el-table-column prop="name" label="文件名" width="300" align="center"></el-table-column>
-              <el-table-column prop="time" label="发放时间" width="120" align="center"></el-table-column>
+              <el-table-column type="index" label="序号" width="100" :index="indexMethod" align="center" ></el-table-column>
+              <el-table-column prop="fileName" label="文件名" width="300" align="center"></el-table-column>
+              <el-table-column prop="uploadingDate" label="上传时间" width="200" align="center"></el-table-column>
               <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                  <el-button type="text" size="small">查看</el-button>
-                  <el-button type="text" size="small">下载</el-button>
-                  <el-button type="text" size="small" :info="scope.row">编辑</el-button>
-                  <el-button type="text" size="small" :info="scope.row">删除</el-button>
+                  <!-- <el-button type="text" size="small">查看</el-button> -->
+                  <el-button type="text" size="small" @click="downloadClick(scope.row.filePath)">下载</el-button>
+                  <!-- <el-button type="text" size="small" :info="scope.row">编辑</el-button> -->
+                  <el-button type="text" size="small" :info="scope.row" @click="deleteClick(scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </div>
           <div class="lookInfoFenye">
+            <!-- @size-change="handleSizeChange"
+              @current-change="handleCurrentChange" -->
             <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="1"
+              :current-page="pageNum"
               :page-sizes="[10, 20, 30, 40]"
-              :page-size="10"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="8"
+              :page-size="pageSize"
+              layout="total, prev, pager, next, jumper"
+              :total="pageToral"
             ></el-pagination>
           </div>
         </el-dialog>
@@ -148,6 +148,7 @@ export default {
     return {
       tableData: [
         {
+          id: "", // id
           number: 1, // 序号
           name: "分包合同", // 资料名称
           person: "某某某", // 上传人
@@ -155,6 +156,7 @@ export default {
           status: "已上传" // 状态
         },
         {
+          id: "", // id
           number: 2, // 序号
           name: "专业分包合同", // 资料名称
           person: "某某某", // 上传人
@@ -162,6 +164,7 @@ export default {
           status: "未上传" // 状态
         },
         {
+          id: "", // id
           number: 3, // 序号
           name: "农民工工资委托发放协议", // 资料名称
           person: "某某某", // 上传人
@@ -169,6 +172,7 @@ export default {
           status: "已上传" // 状态
         },
         {
+          id: "", // id
           number: 4, // 序号
           name: "劳务工花名册", // 资料名称
           person: "某某某", // 上传人
@@ -177,48 +181,7 @@ export default {
         }
       ], // 表格数据,
       //   点击查看的表格数据
-      lookInfoTable: [
-        {
-          number: "1",
-          name: "3月工资考勤表.jpg",
-          time: "2019.03"
-        },
-        {
-          number: "2",
-          name: "3月工资考勤表.jpg",
-          time: "2019.03"
-        },
-        {
-          number: "3",
-          name: "3月工资考勤表.jpg",
-          time: "2019.03"
-        },
-        {
-          number: "4",
-          name: "3月工资考勤表.jpg",
-          time: "2019.03"
-        },
-        {
-          number: "5",
-          name: "3月工资考勤表.jpg",
-          time: "2019.03"
-        },
-        {
-          number: "6",
-          name: "3月工资考勤表.jpg",
-          time: "2019.03"
-        },
-        {
-          number: "7",
-          name: "3月工资考勤表.jpg",
-          time: "2019.03"
-        },
-        {
-          number: "8",
-          name: "3月工资考勤表.jpg",
-          time: "2019.03"
-        }
-      ],
+      lookInfoTable: [],
       // 上传弹框的头部文字信息
       uploadingTitle: "",
       // 查看弹框的头部文字信息
@@ -244,25 +207,167 @@ export default {
           label: "深圳路桥总公司"
         }
       ],
-      canJian: ""
+      canJian: "",
+
+      projectId: '', // 项目id
+      pageToral: 1, // 查看菜单总条数
+      pageSize: 8, // 查看菜单每页显示条数
+      pageNum: 1, // 查看菜单当前页
+      activeId: '', // 当前查看的菜单id
+      userName: '', // 上传人名称
+      uploadingId: '', // 上传菜单的id
+      remark: '', // 备注
+      file: '', // 文件
     };
   },
+  created() {
+    this.getProjecId()
+    this.getUserName()
+    this.getProjectList()
+  },
   methods: {
+    // 序号
+    indexMethod(index) {
+      return (this.pageNum - 1) * this.pageSize + index + 1;
+    },
+
+    // 获取项目id
+    getProjecId() {
+      this.projectId = sessionStorage.getItem(`pid`)
+    },
+
+    // 获取用户名
+    getUserName() {
+      this.userName = sessionStorage.getItem('userName')
+      // console.log(this.userName)
+    },
+
     //   打开上传弹框
-    openUploading(text) {
-      this.uploadingTitle = text;
+    openUploading(id) {
+      
+      // this.file.delete('file')
+      this.uploadingId = id;
       this.uploading = true;
     },
+
     // 上传文件处理
     fileUp(e) {
-      let file = e.target.files;
-      //   this.file = new FormData();
-      this.file.push(file);
+      let file = e.target.files[0]
+      this.file = new FormData()
+      this.file.append('file',file)
+      // console.log(file)
+      if (this.file.get('file')) {
+        console.log(this.file.get('file'))
+      }
     },
+
     // 打开查看弹框
     openLookInfo(text) {
       this.lookInfoTitle = text;
       this.lookInfo = true;
+    },
+
+    // 获取分包消息列表
+    getProjectList() {
+      this.$axios.post(`/api/menu/seleall?projectId=${this.projectId}&typeId=2`).then(
+        res => {
+          // console.log(res.data.list)
+          for (let i = 0; i < this.tableData.length; i++) {
+            for (let i2 = 0; i2 < res.data.list.length; i2++) {
+              if (this.tableData[i].number == res.data.list[i2].size) {
+                this.tableData[i].person = res.data.list[i2].uploadingname
+                this.tableData[i].time = res.data.list[i2].uploadingDate
+                this.tableData[i].status = res.data.list[i2].uploadingType
+                this.tableData[i].id = res.data.list[i2].id;
+              }
+            }
+          }
+        }
+      )
+    },
+
+    // 查看上传资料
+    getParticulars(id) {
+      this.activeId = id
+      this.$axios
+        .post(`/api/lzfw/particulars?projectId=${this.projectId}&menuId=${this.activeId}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`)
+        .then(res => {
+          // console.log(res.data)
+          this.lookInfoTable = res.data.data;
+          this.pageToral = res.data.total;
+        });
+    },
+
+    // 删除资料
+    deleteClick(id) {
+      this.$confirm("是否要删除资料？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          // console.log(id)
+          this.$axios.post(`/api/lzfw/deleteHjInformationById?id=${id}`).then(
+            res => {
+              // console.log(res.data)
+              if (res.data.msg == '删除成功') {
+                this.$message({
+                  type: "success",
+                  message: "删除成功"
+                });
+                this.getParticulars(this.activeId)
+                this.getProjectList()
+              } else {
+                this.$message({
+                  message: "删除失败",
+                  type: "error"
+                });
+              }
+            }
+          )
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+
+    // 上传资料
+    uploadingClick() {
+      if (this.file) {
+        let headers = {headers: {"Content-Type": "multipart/form-data"}}
+        this.$axios.post(`/api/lzfw/instadd?menuId=${this.uploadingId}&uploadingName=${this.userName}&projectId=${this.projectId}&remark=${this.remark}`,this.file,headers).then(
+          res => {
+            // console.log(res.data)
+            if (res.data.msg == '添加成功') {
+                this.$message({
+                  type: "success",
+                  message: "上传成功"
+                });
+                this.uploading = false
+                this.getProjectList()
+              } else {
+                this.$message({
+                  message: "上传失败",
+                  type: "error"
+                });
+              }
+          }
+        )
+      } else {
+        this.$message({
+          message: "请选择需要上传的文件",
+          type: "error"
+        });
+      }
+    },
+
+    // 下载
+    downloadClick(fileName) {
+      // console.log(fileName)
+      location.href=`/api/lzfw/testDownload?fileName=${fileName}`
     }
   }
 };
@@ -532,6 +637,7 @@ export default {
               background-color: #fff;
             }
             .bz {
+              width: 6.22rem;
               border: 1px solid #7b7b7b;
               border-radius: 0.05rem;
               padding-left: 0.1rem;

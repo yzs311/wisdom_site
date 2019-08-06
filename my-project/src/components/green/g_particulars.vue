@@ -469,7 +469,7 @@
 export default {
     data() {
         return {
-            pid: 0, // 项目id
+            pid: 2977, // 项目id
             dustEmissionListData: "", // 扬尘设备列表
             dustEmissionData: "", // 扬尘监测数据
             dustPicMax: 60, // 污染度最大值
@@ -477,7 +477,7 @@ export default {
         }
     },
     created() {
-        this.getPid()
+        // this.getPid()
         // 发送请求
         this.getDustEmissionListData()
     },
@@ -570,7 +570,7 @@ export default {
 
         // 获取扬尘设备列表
         getDustEmissionListData() {
-            this.$axios.get(`/dustEmission/get/getDustEmissionList?pid=${this.pid}`).then(
+            this.$axios.get(`/api/dustEmission/get/getDustEmissionList?pid=21`).then(
                 res => {
                     // console.log(res.data)
                     this.dustEmissionListData = res.data.dustEmissionList
@@ -588,7 +588,7 @@ export default {
 
         // 获取扬尘监测数据
         getDustEmissionData(sid) {
-            this.$axios.get(`/dustEmission/get/DustEmissionDatas?sid=${sid}`).then(
+            this.$axios.get(`/api/dustEmission/get/DustEmissionDatas?sid=${sid}`).then(
                 res => {
                     console.log(res.data)
                     this.dustEmissionData = res.data

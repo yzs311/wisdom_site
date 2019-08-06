@@ -10,19 +10,19 @@
           <span class="bolder">操作员</span>
           <span>{{item.name}}</span>
           <span class="bolder">上班时间</span>
-          <span>{{item.startTime!=null?item.startTime.split(' ')[1]:''}}</span>
+          <span>{{item.time!=null?item.time.split(' ')[1]:''}}</span>
         </div>
         <!-- <img :src="`${imgUrl}/${item.photo}`" alt class="pic"> -->
-        <img :src="item.image" alt="" class="pic">
+        <img :src="item.img" alt="" class="pic">
       </div>
     </div>
     <div class="buttom">
       <div class="main" v-for="(item,index) in elevatorData" :key="index">
-        <div class="title">{{item.dname}}</div>
+        <div class="title">{{item.operator_name}}</div>
         <div class="info" >
           <div class="manyInfo">
             <div class="num">
-              <p class="noml small noml-border">{{item.weight}}t</p>
+              <p class="noml small noml-border">{{item.laod}}t</p>
             </div>
             <!-- <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_zz}}t</p>
@@ -39,7 +39,7 @@
             <div class="subtitle">高度</div>
           </div>
           <div class="manyInfo">
-            <div class="num" v-if="item.fallAlarm==0">
+            <div class="num" v-if="item.falling=='正常'">
               <p class="noml noml-border">正常</p>
             </div>
             <div class="t_num" v-else>
@@ -48,7 +48,7 @@
             <div class="subtitle">防坠在位监测</div>
           </div>
           <div class="manyInfo">
-            <div class="num" v-if="item.bottomAlarm==0">
+            <div class="num" v-if="item.isDown=='正常'">
               <p class="noml noml-border">正常</p>
             </div>
             <div class="t_num" v-else>
@@ -59,7 +59,7 @@
         </div>
         <div class="subtitle">
           <h1 style="display:inline-block">检修倒计时:</h1>
-          <h1 :class="item.ts>=10?'normal':item.ts>=1?'warning':'anomaly'" style="display:inline-block">&nbsp;&nbsp;{{item.ts}}天</h1>
+          <h1 :class="item.residue>=10?'normal':item.residue>=1?'warning':'anomaly'" style="display:inline-block">&nbsp;&nbsp;{{item.residue}}天</h1>
         </div>
       </div>
     </div>
@@ -71,10 +71,13 @@ export default {
     return{
       mainInfo:{},
       imgUrl:'http://gd.17hr.net:8018',
-      xmid:'',
       elevatorData: [], // 升降机数据
-      pid: '', // 项目id
+      pid: 0, // 项目id
     }
+  },
+  created() {
+    this.getPid()
+    this.getElevator()
   },
   methods: {
     getInfo(){
@@ -114,16 +117,23 @@ export default {
 
     // 获取项目id
     getPid() {
-        this.pid = localStorage.getItem('pid')
+      this.pid = sessionStorage.getItem('pid')
     },
-  },
-  created() {
-    // this.getInfo()
-    this.getPid()
-    this.getElevatorData()
-  },
-};
+
+    // 获取升降机数据
+    getElevator() {
+      this.$axios.post(`/api/appElevatorAddRecord/crane?pid=${this.pid}`).then(
+        res => {
+          // console.log(res.data)
+          this.elevatorData = res.data.data
+        }
+      )
+    },
+
+  }
+}
 </script>
+
 <style lang="less" scoped>
 .content {
   padding: 0.51rem 0.3rem 0.4rem 0.4rem;

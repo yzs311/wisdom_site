@@ -569,7 +569,7 @@
 export default {
     data() {
         return {
-            pid: 0, // 项目id
+            pid: 2977, // 项目id
             electricityListData: '', // 设备列表
             electricityBoxId: 1, // 设备id
             time: '', // 日期
@@ -628,14 +628,14 @@ export default {
         }
     },
     created() {
-        this.getPid()
+        // this.getPid()
         // 发送请求
         this.getElectricityListData()
     },
     methods: {
         // 获取设备列表
         getElectricityListData() {
-            this.$axios.get(`/electricityBox/get/list?pid=${this.pid}`).then(
+            this.$axios.get(`/api/electricityBox/get/list?projectId=${this.pid}`).then(
                 res => {
                     // console.log(res.data[0].electricityBoxId)
                     this.electricityListData = res.data
@@ -648,7 +648,7 @@ export default {
         
         // 获取设备信息
         getElectricityMessageData() {
-            this.$axios.get(`/electricityBox/get/message?electricityBoxId=${this.electricityBoxId}&Time=${this.time}`).then(
+            this.$axios.get(`/api/electricityBox/get/message?electricityBoxId=${this.electricityBoxId}&Time=${this.time}`).then(
                 res => {
                     // console.log(res.data)
                     this.electricityMessageData = res.data
@@ -733,7 +733,7 @@ export default {
 
         // 获取项目id
         getPid() {
-          this.pid = localStorage.getItem('pid')
+            this.pid = localStorage.getItem('pid')
         }
     }
 }

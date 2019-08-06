@@ -261,7 +261,7 @@ export default {
             value4: '',
             value5: '',
             value6: '',
-            pid: '', // 项目id
+            pid: 2977, // 项目id
             sum: 0, // 检查总数
             accomplish: 0, // 已完成数量
             rectify: 0, // 未整改数量
@@ -273,7 +273,7 @@ export default {
         // this.temp()
     },
     created() {
-        this.getPid()
+        // this.getPid()
         this.getSelectPolling()
     },
     methods: {

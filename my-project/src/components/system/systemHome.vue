@@ -14,67 +14,73 @@
                 </li>
                 <li>
                     <router-link to="/systemLiangZhi">
-                        <div class="icon"></div>
+                        <div class="icon liangZhi"></div>
                         <span>两制管理</span>
                     </router-link>
                 </li>
-                 <li>
-                    <a>
-                        <div class="icon"></div>
+                <li>
+                    <router-link to="/systemPersonnel">
+                        <div class="icon personnel"></div>
                         <span>人员管理</span>
-                    </a>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/systemSchedule">
+                        <div class="icon schedule"></div>
+                        <span>进度管理</span>
+                    </router-link>
                 </li>
                 <li>
                     <router-link to="/systemZhiHui">
-                        <div class="icon"></div>
+                        <div class="icon equipment"></div>
                         <span>设备管理</span>
                     </router-link>
                 </li>
                 <li>
                     <router-link to="/systemMonitoring">
-                        <div class="icon"></div>
+                        <div class="icon video"></div>
                         <span>视频监控</span>
                     </router-link>
                 </li>
                 <li>
-                    <a>
-                        <div class="icon"></div>
+                    <router-link to="/systemQuality">
+                        <div class="icon quality"></div>
                         <span>质量监督</span>
-                    </a>
+                    </router-link>
                 </li>
                 <li>
-                    <a>
-                        <div class="icon"></div>
+                    <router-link to="/systemSafety">
+                        <div class="icon safety"></div>
                         <span>安全管理</span>
-                    </a>
+                    </router-link>
                 </li>
                 <li>
                     <router-link to="/systemGreen">
-                        <div class="icon"></div>
+                        <div class="icon green"></div>
                         <span>绿色施工</span>
                     </router-link>
                 </li>
                 <li>
-                    <a>
-                        <div class="icon"></div>
+                    <router-link to="/systemInformation">
+                        <div class="icon datum"></div>
                         <span>资料管理</span>
-                    </a>
+                    </router-link>
                 </li>
                 <li>
-                    <a>
-                        <div class="icon"></div>
+                    <a @click="unopenClick">
+                        <div class="icon dormitory"></div>
                         <span>智慧宿舍</span>
                     </a>
                 </li>
                 <li>
-                    <a>
-                        <div class="icon"></div>
+                    <a @click="unopenClick">
+                        <div class="icon use"></div>
                         <span>智能应用</span>
                     </a>
                 </li>
                 <li>
                     <router-link to="/systemSet">
-                        <div class="icon"></div>
+                        <div class="icon set"></div>
                         <span>平台设置</span>
                     </router-link>
                 </li>
@@ -82,7 +88,200 @@
         </div>
         <!-- 内容 -->
         <div class="centent">
-            <div class="centent-box"></div>
+            <div class="content-box">
+                <!-- 上部盒子 -->
+                <div class="top-box">
+                    <div class="top-left">
+                        <div class="title">
+                            <div class="time">15：34：11</div>
+                            <div class="date">
+                                <div>五月</div>
+                                <div>29</div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="weather-icon fine"></div>
+                            <div class="temperature">25℃</div>
+                            <div class="day">
+                                安全文明施工天数：
+                                <span>100</span>
+                                天
+                            </div>
+                        </div>
+                        <div class="main">
+
+                        </div>
+                    </div>
+                    <div class="top-right">
+                        <div class="autonym">
+                            <div class="title">
+                                <i class="icon"></i>
+                                实名制与分账制
+                            </div>
+                            <div class="attendance">
+                                <div class="worker">
+                                    <li class="first">
+                                        <span style="color:#3ada76">劳务人员</span>
+                                        <span class="line green-color"></span>
+                                    </li>
+                                    <li>
+                                        <span>在场人数</span>
+                                        <span>2000</span>
+                                    </li>
+                                    <li>
+                                        <span>考勤人数</span>
+                                        <span>200</span>
+                                    </li>
+                                </div>
+                                <div class="manager" style="margin-top:.56rem;">
+                                    <li class="first">
+                                        <span style="color:#ff7a81">管理人员</span>
+                                        <span class="line pink-color"></span>
+                                    </li>
+                                    <li>
+                                        <span>在场人数</span>
+                                        <span>2000</span>
+                                    </li>
+                                    <li>
+                                        <span>考勤人数</span>
+                                        <span>200</span>
+                                    </li>
+                                </div>
+                            </div>
+                            <div class="attendance-graph">
+                            
+                            </div>
+                        </div>
+                        <div class="TSP">
+                            <div class="title">
+                                <i class="icon"></i>
+                                TSP环境监测系统
+                            </div>
+                            <div class="main-box">
+                                <li>
+                                    <div>
+                                        <div class="name">PM2.5</div>
+                                        <div class="value">40</div>
+                                        <div class="state">优</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <div class="name">PM10</div>
+                                        <div class="value">55</div>
+                                        <div class="state">优</div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <div class="name">PM100</div>
+                                        <div class="value">70</div>
+                                        <div class="state">优</div>
+                                    </div>
+                                </li>
+                            </div>
+                            <div class="bottom-box">
+                                <div class="text-box">
+                                    噪音：
+                                    <span>60</span>
+                                </div>
+                                <div class="img-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 下部盒子 -->
+                <div class="bottom-box">
+                    <li class="car">
+                        <div class="title">
+                            <i class="icon carIcon"></i>
+                            车牌识别系统
+                        </div>
+                        <div class="state">
+                            <span>今日进出：11辆</span>
+                            <span>运行情况：
+                                <span class="green-color">正常</span>
+                            </span>
+                        </div>
+                        <ul>
+                            <li>
+                                <span>粤C CJ537</span>
+                                <span>进</span>
+                                <span class="yellow-color">渣土车</span>
+                                <span>2019-01-01 19：:22</span>
+                            </li>
+                            <li>
+                                <span>粤C CJ537</span>
+                                <span>进</span>
+                                <span>临时车</span>
+                                <span>2019-01-01 19：:22</span>
+                            </li>
+                            <li>
+                                <span>粤C CJ537</span>
+                                <span>进</span>
+                                <span>常驻车</span>
+                                <span>2019-01-01 19：:22</span>
+                            </li>
+                            <li>
+                                <span>粤C CJ537</span>
+                                <span>进</span>
+                                <span>临时车</span>
+                                <span>2019-01-01 19：:22</span>
+                            </li>
+                            <!-- <li>
+                                <span>粤C CJ537</span>
+                                <span>进</span>
+                                <span>临时车</span>
+                                <span>2019-01-01 19：:22</span>
+                            </li> -->
+                        </ul>
+                    </li>
+                    <li class="tower-crane">
+                        <div class="title">
+                            <i class="icon tower-craneIcon"></i>
+                            塔吊防碰撞系统
+                        </div>
+                        <div class="text-box">
+                            <li>塔吊数量：2座</li>
+                            <li>
+                                运行情况：
+                                <span class="pink-color">故障</span>
+                            </li>
+                            <li>报警统计：0</li>
+                        </div>
+                        <div class="right-box" id="towerCrane"></div>
+                    </li>
+                    <li class="elevator">
+                        <div class="title">
+                            <i class="icon elevatorIcon"></i>
+                            升降机系统
+                        </div>
+                        <div class="text-box">
+                            <li>升降机数量数量：2座</li>
+                            <li>
+                                运行情况：
+                                <span class="green-color">正常</span>
+                            </li>
+                            <li>报警统计：0</li>
+                        </div>
+                        <div class="right-box" id="elevator"></div>
+                    </li>
+                    <li class="electricity">
+                        <div class="title">
+                            <i class="icon electricityIcon"></i>
+                            用电检测
+                        </div>
+                        <div class="text-box">
+                            <li>电箱数量：2座</li>
+                            <li>
+                                运行情况：
+                                <span class="green-color">正常</span>
+                            </li>
+                            <li>报警统计：0</li>
+                        </div>
+                        <div class="right-box" id="electricity"></div>
+                    </li>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -131,6 +330,42 @@
                         .home {
                             background-image: url('../../../static/images/system-home.png');
                         }
+                        .liangZhi {
+                            background-image: url('../../../static/images/systemHome-liangZhi.png');
+                        }
+                        .personnel {
+                            background-image: url('../../../static/images/systemHome-personnel.png');
+                        }
+                        .equipment {
+                            background-image: url('../../../static/images/systemHome-equipment.png');
+                        }
+                        .video {
+                            background-image: url('../../../static/images/systemHome-video.png');
+                        }
+                        .quality {
+                            background-image: url('../../../static/images/systemHome-quality.png');
+                        }
+                        .safety {
+                            background-image: url('../../../static/images/systemHome-safety.png');
+                        }
+                        .green {
+                            background-image: url('../../../static/images/systemHome-green.png');
+                        }
+                        .datum {
+                            background-image: url('../../../static/images/systemHome-datum.png');
+                        }
+                        .dormitory {
+                            background-image: url('../../../static/images/systemHome-dormitory.png');
+                        }
+                        .use {
+                            background-image: url('../../../static/images/systemHome-use.png');
+                        }
+                        .set {
+                            background-image: url('../../../static/images/systemHome-set.png');
+                        }
+                        .schedule {
+                            background-image: url('../../../static/images/system-schedule.png');
+                        }
                     }
                     a:hover {
                         background-color: #2d83bb;
@@ -170,15 +405,301 @@
         }
         .centent {
             flex: 1;
-            height: 5rem;
-            padding-top: .4rem;
+            padding-top: .3rem;
             padding-left: .3rem;
             padding-right: .3rem;
             // display: inline-block;
-            .centent-box {
-                height: 100%;
+            .content-box {
+                padding: .3rem;
                 border-radius: .1rem;
                 background-color: #fff;
+                .top-box {
+                    height: 6.4rem;
+                    display: flex;
+                    justify-content: space-between;
+                    .top-left {
+                        width: 10rem;
+                        height: 6.4rem;
+                        // vertical-align: top;
+                        // display: inline-block;
+                        background-color: #f2f9ff;
+                        .title {
+                            height: .78rem;
+                            >div {
+                                vertical-align: top;
+                                display: inline-block;
+                            }
+                            .time {
+                                color: #4a4a4a;
+                                font-size: .2rem;
+                                padding-left: .3rem;
+                                line-height: .78rem;
+                            }
+                            .date {
+                                width: .6rem;
+                                height: .6rem;
+                                font-size: .16rem;
+                                text-align: center;
+                                margin-left: .1rem;
+                                padding-top: .05rem;
+                                border-radius: .6rem;
+                                border: .01rem solid #1097ff;
+                                transform: translateY(.09rem);
+                            }
+                            .line {
+                                height: .59rem;
+                                width: .03rem;
+                                margin-left: .25rem;
+                                // background-color: #1097ff;
+                                transform: translateY(.09rem);
+                                background-image: url('../../../static/images/systemHome-line.png');
+                            }
+                            .weather-icon {
+                                width: .4rem;
+                                height: .4rem;
+                                margin-left: .25rem;
+                                // background-color: #f6c500;
+                                transform: translateY(.2rem);
+                                &.fine {
+                                    background-image: url('../../../static/images/systemHome-fine.png');
+                                }
+                            }
+                            .temperature {
+                                color: #f6c500;
+                                font-size: .2rem;
+                                line-height: .78rem;
+                                margin-left: .06rem;
+                            }
+                            .day {
+                                float: right;
+                                color: #3ada76;
+                                font-size: .24rem;
+                                line-height: .78rem;
+                                padding-right: .3rem;
+                                >span {
+                                    font-size: .3rem;
+                                }
+                            }
+                        }
+                        .main {
+                            height: 5.62rem;
+                            background-size: cover;
+                            background-image: url('../../../static/images/XianMuFenCai.jpg');
+                        }
+                    }
+                    .top-right {
+                        // margin-left: .3rem;
+                        // vertical-align: top;
+                        // display: inline-block;
+                        >div {
+                            width: 5.78rem;
+                            height: 3.05rem;
+                            // background-color: #f2f9ff;
+                            background-image: url('../../../static/images/systemHome-rightBorder.png');
+                            background-size: contain;
+                        }
+                        .autonym {
+                            padding-top: .23rem;
+                            padding-left: .2rem;
+                            margin-bottom: .3rem;
+                            .title {
+                                color: #0090ff;
+                                font-size: .18rem;
+                                .icon {
+                                    width: .23rem;
+                                    height: .2rem;
+                                    margin-right: .04rem;
+                                    display: inline-block;
+                                    // background-color: #0090ff;
+                                    background-image: url('../../../static/images/systemHome-autonymIcon.png');
+                                }
+                            }
+                            .attendance {
+                                margin-top: .3rem;
+                                display: inline-block;
+                                >div {
+                                    li {
+                                        display: flex;
+                                        width: 1.44rem;
+                                        justify-content: space-between;
+                                        >span {
+                                            font-size: .13rem;
+                                        }
+                                        .line {
+                                            width: .7rem;
+                                            height: .02rem;
+                                            transform: translateY(.11rem);
+                                        }
+                                        .green-color {
+                                            background-color: #3ada76;
+                                        }
+                                        .pink-color {
+                                            background-color: #ff7a81;
+                                        }
+                                    }
+                                }
+                            }
+                            .attendance-graph {
+                                display: inline-block;
+                            }
+                        }
+                        .TSP {
+                            padding-top: .23rem;
+                            padding-left: .2rem;
+                            .title {
+                                color: #0090ff;
+                                font-size: .18rem;
+                                .icon {
+                                    width: .23rem;
+                                    height: .2rem;
+                                    margin-right: .04rem;
+                                    display: inline-block;
+                                    // background-color: #0090ff;
+                                    background-image: url('../../../static/images/systemHome-TSPIcon.png');
+                                }
+                            }
+                            .main-box {
+                                display: flex;
+                                margin-top: .4rem;
+                                padding: 0 .3rem 0 .1rem;
+                                justify-content: space-between;
+                                li {
+                                    width: 1.25rem;
+                                    height: 1.25rem;
+                                    padding-top: .13rem;
+                                    border-radius: 1.25rem;
+                                    border: .01rem solid #3dda78;
+                                    >div {
+                                        color: #fff;
+                                        width: .97rem;
+                                        height: .97rem; 
+                                        margin: 0 auto;
+                                        text-align: center;
+                                        padding-top: .12rem;
+                                        border-radius: .97rem;
+                                        background-color: #3ada76;
+                                        .name {
+                                            font-size: .12rem;
+                                        }
+                                        .value {
+                                            font-size: .19rem;
+                                        }
+                                        .state {
+                                            font-size: .13rem;
+                                        }
+                                    }
+                                }
+                            }
+                            .bottom-box {
+                                margin-top: .22rem;
+                                margin-left: 50%;
+                                transform: translate(-50%);
+                                display: inline-block;
+                                .text-box {
+                                    color: #3ada76;
+                                    font-size: .18rem;
+                                    display: inline-block;
+                                    span {
+                                        font-size: .2rem;
+                                    }
+                                }
+                                .img-box {
+                                    width: 1.82rem;
+                                    height: .32rem;
+                                    margin-left: .12rem;
+                                    display: inline-block;
+                                    // background-color: #3ada76;
+                                    background-image: url('../../../static/images/systemHome-noise.png');
+                                    background-size: contain;
+                                }
+                            }
+                        }
+                    }
+                }
+                .bottom-box {
+                    display: flex;
+                    justify-content: space-between;
+                    >li {
+                        width: 3.82rem;
+                        height: 2.2rem;
+                        overflow: hidden;
+                        margin-top: .3rem;
+                        padding-top: .17rem;
+                        padding-left: .17rem;
+                        // background-color: #f2f9ff;
+                        background-image: url('../../../static/images/systemHome-bottmBorder.png');
+                        background-size: contain;
+                        .green-color {
+                            color: #3ada76;
+                        }
+                        .yellow-color {
+                            color: #ffd14f;
+                        }
+                        .pink-color {
+                            color: #ff7a81;
+                        }
+                        .title {
+                            color: #0090ff;
+                            font-size: .18rem;
+                            .icon {
+                                width: .23rem;
+                                height: .2rem;
+                                margin-right: .04rem;
+                                display: inline-block;
+                                // background-color: #0090ff;
+                            }
+                        }
+                    }
+                    .car {
+                        .state {
+                            display: flex;
+                            width: 2.84rem;
+                            font-size: .14rem;
+                            margin-top: .1rem;
+                            justify-content: space-between;
+                        }
+                        ul {
+                            li {
+                                display: flex;
+                                width: 3.18rem;
+                                font-size: .12rem;
+                                line-height: .28rem;
+                                justify-content: space-between;
+                            }
+                        }
+                    }
+                    .tower-crane,
+                    .elevator,
+                    .electricity {
+                        .text-box {
+                            width: 1.8rem;
+                            margin-top: .3rem;
+                            display: inline-block;
+                            li {
+                                font-size: .16rem;
+                                line-height: .38rem;
+                            }
+                        }
+                        .right-box {
+                            width: 1.6rem;
+                            height: 1.2rem;
+                            vertical-align: bottom;
+                            display: inline-block;
+                        }
+                    }
+                    .carIcon {
+                        background-image: url('../../../static/images/systemHome-carIcon.png');
+                    }
+                    .tower-craneIcon {
+                        background-image: url('../../../static/images/systemHome-tower-craneIcon.png');
+                    }
+                    .elevatorIcon {
+                        background-image: url('../../../static/images/systemHome-elevatorIcon.png');
+                    }
+                    .electricityIcon {
+                        background-image: url('../../../static/images/systemHome-electricityIcon.png');
+                    }
+                }
             }
         }
     }
@@ -191,6 +712,11 @@ export default {
             retractState: true, // 侧导航栏状态
             // lzShow: true,
         }
+    },
+    mounted() {
+        this.setTowerCrane()
+        this.setElevator()
+        this.setElectricity()
     },
     methods: {
         // 侧导航栏缩进
@@ -213,6 +739,191 @@ export default {
                 this.retractState = !this.retractState
             }
         },
+
+        // 塔吊ECharts渲染
+        setTowerCrane() {
+            let towerCrane = this.$echarts.init(
+              document.getElementById("towerCrane")
+            );
+            towerCrane.setOption({
+                color: [
+                    "#3ada76",
+                    "#ff7a81",
+                ],
+                tooltip: {
+                    trigger: "item",
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: "vertical",
+                    x: "-5px",
+                    y: "0px",
+                    itemWidth: 10, // 设置图例图形的宽
+                    itemHeight: 10, // 设置图例图形的高
+                    textStyle: {
+                        fontSize: "12",
+                        color: "#000"
+                    },
+                    data: ["载重", "重量"]
+                },
+                series: [
+                    {
+                        name: " ",
+                        type: "pie",
+                        radius: ["50%", "70%"],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: "center"
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: "24"
+                                    // fontWeight: "bold"
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: [
+                            { value: 0, name: "载重" },
+                            { value: 0, name: "重量" },
+                        ]
+                    }
+                ]
+            })
+        },
+
+        // 升降机ECharts渲染
+        setElevator() {
+            let elevator = this.$echarts.init(
+              document.getElementById("elevator")
+            );
+            elevator.setOption({
+                color: [
+                    "#3ada76",
+                    "#ff7a81",
+                ],
+                tooltip: {
+                    trigger: "item",
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: "vertical",
+                    x: "-5px",
+                    y: "0px",
+                    itemWidth: 10, // 设置图例图形的宽
+                    itemHeight: 10, // 设置图例图形的高
+                    textStyle: {
+                        fontSize: "12",
+                        color: "#000"
+                    },
+                    data: ["载重", "重量"]
+                },
+                series: [
+                    {
+                        name: " ",
+                        type: "pie",
+                        radius: ["50%", "70%"],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: "center"
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: "24"
+                                    // fontWeight: "bold"
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: [
+                            { value: 0, name: "载重" },
+                            { value: 0, name: "重量" },
+                        ]
+                    }
+                ]
+            })
+        },
+
+        // 用电ECharts渲染
+        setElectricity() {
+            let electricity = this.$echarts.init(
+              document.getElementById("electricity")
+            );
+            electricity.setOption({
+                color: [
+                    "#3ada76",
+                    "#ff7a81",
+                ],
+                tooltip: {
+                    trigger: "item",
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: "vertical",
+                    x: "-5px",
+                    y: "0px",
+                    itemWidth: 10, // 设置图例图形的宽
+                    itemHeight: 10, // 设置图例图形的高
+                    textStyle: {
+                        fontSize: "12",
+                        color: "#000"
+                    },
+                    data: ["漏电", "温度"]
+                },
+                series: [
+                    {
+                        name: " ",
+                        type: "pie",
+                        radius: ["50%", "70%"],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: "center"
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: "24"
+                                    // fontWeight: "bold"
+                                }
+                            }
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: [
+                            { value: 0, name: "漏电" },
+                            { value: 0, name: "温度" },
+                        ]
+                    }
+                ]
+            })
+        },
+
+        // 该模块暂未开放
+        unopenClick() {
+            this.$message({
+              message: '该功能暂未开放',
+              type: 'warning'
+            })
+        }
     }
 }
 </script>

@@ -21,14 +21,14 @@
                 </ul>
             </div>
             <div class="user">
-                <el-dropdown trigger="click">
+                <el-dropdown @command="handleCommand">
                     <a class="el-dropdown-link">
                         用户名
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </a>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>修改密码</el-dropdown-item>
-                        <el-dropdown-item>退出</el-dropdown-item>
+                        <el-dropdown-item command="login">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -217,15 +217,23 @@ export default {
     },
     methods: {
         // 选择模块
-    isActiveShow(i) {
-        this.activeShow = i;
-        $(".sanjiao").hide();
-        $(".subnav").hide();
-    },
-    // 页面刷新时重新赋值
-    getPath() {
-        this.activeShow = this.$route.path;
-    },
+        isActiveShow(i) {
+            this.activeShow = i;
+            $(".sanjiao").hide();
+            $(".subnav").hide();
+        },
+
+        // 页面刷新时重新赋值
+        getPath() {
+            this.activeShow = this.$route.path;
+        },
+
+        // 退出
+        handleCommand(command) {
+            if (command == 'login') {
+                this.$router.push('login')
+            }
+        },
     }
 }
 </script>

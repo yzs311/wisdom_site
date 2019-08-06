@@ -14,45 +14,63 @@
             to="/systemZhiHui_taDiao"
             :class="activeShow=='/systemZhiHui_taDiao'||activeShow=='/systemZhiHui'?'active':''"
           >
-            <div class="icon"></div>
+            <div class="icon tower-crane"></div>
             <span>塔吊监控</span>
           </router-link>
         </li>
         <li  @click="isActiveShow('/systemZhiHui_shengJiangJi')">
-          <router-link to="/systemZhiHui_shengJiangJi" style="font-size:0.16rem" :class="activeShow=='/systemZhiHui_shengJiangJi'?'active':''">
-            <div class="icon"></div>
+          <router-link to="/systemZhiHui_shengJiangJi" :class="activeShow=='/systemZhiHui_shengJiangJi'?'active':''">
+            <div class="icon elevator"></div>
             <span>升降机监控</span>
           </router-link> 
         </li>
         <li>
           <a>
-            <div class="icon"></div>
-            <span>卸料监控</span>
-          </a>
-        </li>
-        <li>
-          <a style="font-size:0.16rem">
-            <div class="icon"></div>
+            <div class="icon gantry-crane"></div>
             <span>龙门吊监控</span>
           </a>
         </li>
-        <li>
-          <a>
-            <div class="icon"></div>
+        <li @click="isActiveShow('/systemZhiHui_car')">
+          <router-link to="/systemZhiHui_car" :class="activeShow.includes('/systemZhiHui_car')?'active':''">
+            <div class="icon car"></div>
             <span>车辆管理</span>
-          </a>
+          </router-link>
         </li>
         <li  @click="isActiveShow('/systemZhiHui_dianXiang')">
           <router-link to="/systemZhiHui_dianXiang" :class="activeShow=='/systemZhiHui_dianXiang'?'active':''">
-            <div class="icon"></div>
+            <div class="icon electricity"></div>
             <span>智能电箱</span>
          </router-link>
         </li>
-        <li>
-          <a>
-            <div class="icon"></div>
+        <li @click="isActiveShow('/systemZhiHui_gas')">
+          <router-link to="/systemZhiHui_gas" :class="activeShow=='/systemZhiHui_gas'?'active':''">
+            <div class="icon gas"></div>
             <span>气体检测</span>
-          </a>
+          </router-link>
+        </li>
+        <li @click="isActiveShow('/systemZhiHui_gaoZhiMo')">
+          <router-link to="/systemZhiHui_gaoZhiMo" :class="activeShow=='/systemZhiHui_gaoZhiMo'?'active':''">
+            <div class="icon gaoZhiMo"></div>
+            <span>高支模监测</span>
+          </router-link>
+        </li>
+        <li @click="isActiveShow('/systemZhiHui_shuidian')">
+          <router-link to="/systemZhiHui_shuidian" :class="activeShow=='/systemZhiHui_shuidian'?'active':''">
+            <div class="icon shuidian"></div>
+            <span>智能水电</span>
+          </router-link>
+        </li>
+        <li @click="isActiveShow('/systemZhiHui_unloading')">
+          <router-link to="/systemZhiHui_unloading" :class="activeShow=='/systemZhiHui_unloading'?'active':''">
+            <div class="icon unloading"></div>
+            <span>卸料监控</span>
+          </router-link>
+        </li>
+        <li @click="isActiveShow('/systemZhiHui_shenJiKeng')">
+          <router-link to="/systemZhiHui_shenJiKeng" :class="activeShow=='/systemZhiHui_shenJiKeng'?'active':''">
+            <div class="icon shenJiKeng"></div>
+            <span>深基坑监测</span>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -97,9 +115,13 @@
           transition: all 0.5s;
           border-bottom: 0.01rem solid #98c8e7;
           .icon {
-            width: 0.6rem;
-            height: 0.59rem;
+            opacity: .5;
+            width: .6rem;
+            height: .59rem;
+            transition: all .5s;
             display: inline-block;
+            background-repeat: no-repeat;
+            background-position: center center;
           }
           span {
             // width: 0.8rem;
@@ -108,13 +130,46 @@
             // display: inline-block;
             // text-align-last: justify;
           }
+          .tower-crane {
+            background-image: url('../../../../static/images/systemZhiHui-tower-crane.png');
+          }
+          .elevator {
+            background-image: url('../../../../static/images/systemZhiHui-elevator.png');
+          }
+          .gantry-crane {
+            background-image: url('../../../../static/images/systemZhiHui-gantry-crane.png');
+          }
+          .car {
+            background-image: url('../../../../static/images/systemZhiHui-car.png');
+          }
+          .electricity {
+            background-image: url('../../../../static/images/systemZhiHui-electricity.png');
+          }
+          .gas {
+            background-image: url('../../../../static/images/systemZhiHui-gas.png');
+          }
+          .gaoZhiMo {
+            background-image: url('../../../../static/images/system-gaoZhiMo.png');
+          }
+          .shuidian {
+            background-image: url('../../../../static/images/systemZhiHui-shuidian.png');
+          }
+          .unloading {
+            background-image: url('../../../../static/images/systemZhiHui-unloading.png');
+          }
         }
         a:hover {
           background-color: #2d83bb;
+          .icon {
+            opacity: 1;
+          }
         }
         .active {
           z-index: 10;
           background-color: #378dc5;
+          .icon {
+            opacity: 1;
+          }
         }
       }
       .button {

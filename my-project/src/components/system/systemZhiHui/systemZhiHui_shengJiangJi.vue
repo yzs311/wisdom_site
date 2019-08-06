@@ -5,33 +5,33 @@
         <div class="box">
           <div class="info">
             <div class="left">
-              <img>
+              <img src="../../../../static/images/systemZhiHui-shengJiangJiOnLine.png" alt="">
             </div>
             <div class="right">
               <p style="font-size:0.18rem;">在线升降机</p>
-              <p style="font-size:0.26rem;margin-top:0.05rem">10</p>
+              <p style="font-size:0.26rem;margin-top:0.05rem">{{equipmentData.zxElevator}}</p>
             </div>
           </div>
         </div>
         <div class="box">
           <div class="info">
             <div class="left">
-              <img>
+              <img src="../../../../static/images/systemZhiHui-shengJiangJiOffLine.png" alt="">
             </div>
             <div class="right">
               <p style="font-size:0.18rem;">离线升降机</p>
-              <p style="font-size:0.26rem;margin-top:0.05rem">0</p>
+              <p style="font-size:0.26rem;margin-top:0.05rem">{{equipmentData.lxElevator}}</p>
             </div>
           </div>
         </div>
         <div class="box">
           <div class="info">
             <div class="left">
-              <img>
+              <img src="../../../../static/images/systemZhiHui-alertor.png" alt="">
             </div>
             <div class="right">
               <p style="font-size:0.18rem;">报警统计</p>
-              <p style="font-size:0.26rem;margin-top:0.05rem">0</p>
+              <p style="font-size:0.26rem;margin-top:0.05rem">{{equipmentData.bjtj}}</p>
             </div>
           </div>
         </div>
@@ -39,39 +39,37 @@
       <div id="down">
         <div id="left">
           <div class="btnList">
-            <div class="btn">
-              <div class="left">
-                <img>
+            <div class="btn" @click="isShow=!isShow">
+              <div class="left history">
               </div>
-              <div class="right" @click="isShow=!isShow">历史记录</div>
+              <div class="right">历史记录</div>
             </div>
-            <div class="btn">
-              <div class="left">
-                <img>
+            <div class="btn" @click="equipmentShow=!equipmentShow">
+              <div class="left cut">
               </div>
               <div class="right">切换设备</div>
             </div>
-            <div class="btn">
-              <div class="left">
-                <img>
+            <div class="btn" @click="dialogShow=true;excelDate=''">
+              <div class="left derive">
               </div>
               <div class="right">导出Excel</div>
             </div>
           </div>
-          <div class="person">
-            <div class="title">创新工业园东侧升降机设备</div>
+          <!-- 设备信息 -->
+          <div class="person" v-show="!equipmentShow">
+            <div class="title">{{equipmentData.dname}}</div>
             <img
               class="gongren"
-              src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=122221422,432504913&fm=26&gp=0.jpg"
+              :src="equipmentData.rl"
             >
             <div class="gongrenInfo">
               <p style="margin-top:0.2rem">
                 <span style="font-size: .2rem;">操作员</span>
-                <span style="margin-left:0.2rem">某某某</span>
+                <span style="margin-left:0.2rem">{{equipmentData.name}}</span>
               </p>
               <p style="margin-top:0.2rem">
                 <span style="font-size: .2rem;">上班时间</span>
-                <span style="margin-left:0.2rem">07:30:00</span>
+                <span style="margin-left:0.2rem">{{equipmentData.sbTime.split(' ')[1]}}</span>
               </p>
             </div>
             <div class="day">
@@ -80,70 +78,78 @@
             </div>
             <div class="status">
               升降机状体：
-              <span>在线</span>
+              <span>{{equipmentData.record?'在线':'离线'}}</span>
             </div>
+          </div>
+          <!-- 设备列表 -->
+          <div class="equipment-list" v-show="equipmentShow">
+            <ul>
+              <li v-for="(item,index) in equipmentLisData" :key="index">
+                <a @click="selectClick(item.hxzid)">{{item.dname}}</a>
+              </li>
+            </ul>
           </div>
         </div>
         <div id="right" v-show="isShow">
           <div class="information">
             <div class="title">实时数据</div>
             <div class="quan">
-              <p class="num">60t</p>
+              <p class="num">{{equipmentData.record.load}}t</p>
               <p class="text">载重</p>
             </div>
             <div class="six">
               <div class="box">
                 <div class="one">
                   速度
-                  <img>
+                  <img src="../../../../static/images/systemZhiHui-speed.png" alt="">
                 </div>
                 <div class="two"></div>
-                <div class="three">20m/s</div>
+                <div class="three">{{equipmentData.record.speed}}m/s</div>
                 <div class="four" style="background-color:#feb37f;"></div>
               </div>
               <div class="box">
                 <div class="one">
                   风速
-                  <img>
+                  <img src="../../../../static/images/systemZhiHui-taDiaoWindSpeed.png" alt="">
                 </div>
-                <div class="two">风级：8级</div>
-                <div class="three">10.94m/s</div>
+                <div class="two">风级：{{equipmentData.record.windLevel}}级</div>
+                <div class="three">{{equipmentData.record.windSpeed}}m/s</div>
                 <div class="four" style="background-color:#ff7a81;"></div>
               </div>
               <div class="box">
                 <div class="one">
                   高度
-                  <img>
+                  <img src="../../../../static/images/systemZhiHui-taDiaoAltitude.png" alt="">
                 </div>
-                <div class="two">限高：80米</div>
-                <div class="three">60m</div>
+                <div class="two"></div>
+                <div class="three">{{equipmentData.record.height}}m</div>
                 <div class="four" style="background-color:#3ada76;"></div>
               </div>
               <div class="box">
                 <div class="one">
                   楼层
-                  <img>
+                  <img src="../../../../static/images/systemZhiHui-floor.png" alt="">
                 </div>
                 <div class="two"></div>
-                <div class="three">10楼</div>
+                <div class="three">{{equipmentData.record.floor}}楼</div>
                 <div class="four" style="background-color:#3ada76;"></div>
               </div>
               <div class="box">
                 <div class="one">
                   倾角
-                  <img>
+                  <img src="../../../../static/images/systemZhiHui-taDiaoAngle.png" alt="">
                 </div>
                 <div class="two"></div>
-                <div class="three">175°</div>
+                <div class="three">{{equipmentData.record.obliguityX}}°</div>
                 <div class="four" style="background-color:#3ada76;"></div>
               </div>
               <div class="box">
                 <div class="one">
                   人数
-                  <img>
+                  <img src="../../../../static/images/systemZhiHui-people.png" alt="">
                 </div>
                 <div class="two"></div>
-                <div class="three">3人</div>
+                <div class="three">{{equipmentData.record.loadingCapacity}}人</div>
                 <div class="four" style="background-color:#3ada76;"></div>
               </div>
             </div>
@@ -158,49 +164,49 @@
               <li style="background-color: #0090ff;">
                 <p class="name">载重报警</p>
                 <p class="times">
-                  <span class="num">0</span>次
+                  <span class="num">{{equipmentData.zzbj}}</span>次
                 </p>
               </li>
               <li style="background-color: #3ada76;">
                 <p class="name">人数报警</p>
                 <p class="times">
-                  <span class="num">0</span>次
+                  <span class="num">{{equipmentData.rsbj}}</span>次
                 </p> 
               </li>
               <li style="background-color: #ffb079;">
                 <p class="name">速度报警</p>
                 <p class="times">
-                  <span class="num">0</span>次
+                  <span class="num">{{equipmentData.sdbj}}</span>次
                 </p>
               </li>
               <li style="background-color: #ff7a81;">
                 <p class="name">倾斜报警</p>
                 <p class="times">
-                  <span class="num">0</span>次
+                  <span class="num">{{equipmentData.qxbj}}</span>次
                 </p>
               </li>
               <li style="background-color: #ffb079;">
                 <p class="name">上限位警报</p>
                 <p class="times">
-                  <span class="num">0</span>次
+                  <span class="num">{{equipmentData.sxwbj}}</span>次
                 </p>
               </li>
               <li style="background-color: #0090ff;">
                 <p class="name">下限位警报</p>
                 <p class="times">
-                  <span class="num">0</span>次
+                  <span class="num">{{equipmentData.xxwbj}}</span>次
                 </p>
               </li>
               <li style="background-color: #ff7a81;">
                 <p class="name">冲顶警报</p>
                 <p class="times">
-                  <span class="num">0</span>次
+                  <span class="num">{{equipmentData.cdbj}}</span>次
                 </p>
               </li>
               <li style="background-color: #3ada76;">
                 <p class="name">其他警报</p>
                 <p class="times">
-                  <span class="num">0</span>次
+                  <span class="num"></span>无数据
                 </p>
               </li>
             </ul>
@@ -214,11 +220,11 @@
           <div class="header">
             <p class="left">
               时间：
-              <el-date-picker v-model="times" type="date" placeholder="请选择"></el-date-picker>
+              <el-date-picker v-model="time" value-format="yyyy-MM-dd" type="date" placeholder="请选择" @change="searchHistory"></el-date-picker>
             </p>
             <p class="right">
               状态：
-              <el-select v-model="status" placeholder="请选择">
+              <el-select v-model="status" placeholder="请选择" clearable @change="searchHistory">
                 <el-option
                   v-for="item in statusOptions"
                   :key="item.value"
@@ -231,52 +237,52 @@
           <div class="table">
             <el-table :data="tableData" stripe border>
               <el-table-column type="selection" width="35"></el-table-column>
-              <el-table-column prop="number" label="序号" width="80"></el-table-column>
-              <el-table-column prop="load" label="载重" width="100">
+              <el-table-column type="index" label="序号" width="80" :index="indexMethod"></el-table-column>
+              <el-table-column label="载重" width="100">
                 <template slot-scope="scope">
                   <div
                     :class="scope.row.load < 100?'green-color':scope.row.load>=100?'red-color':''"
                   >{{ scope.row.load}}t</div>
                 </template>
               </el-table-column>
-              <el-table-column prop="sudu" label="速度" width="100">
+              <el-table-column label="速度" width="100">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.sudu}}m/s</div>
+                  <div>{{ scope.row.speed}}m/s</div>
                 </template>
               </el-table-column>
-              <el-table-column prop="wind" label="风速" width="110">
+              <el-table-column label="风速" width="110">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.wind}}m/s</div>
+                  <div>{{ scope.row.windSpeed}}m/s</div>
                 </template>
               </el-table-column>
-              <el-table-column prop="height" label="高度" width="110">
+              <el-table-column label="高度" width="110">
                 <template slot-scope="scope">
                   <div>{{ scope.row.height}}m</div>
                 </template>
               </el-table-column>
-              <el-table-column prop="flow" label="楼层" width="110">
+              <el-table-column label="楼层" width="110">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.flow}}楼</div>
+                  <div>{{ scope.row.floor}}楼</div>
                 </template>
               </el-table-column>
-              <el-table-column prop="angle" label="倾角" width="110">
+              <el-table-column label="倾角" width="110">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.angle}}°</div>
+                  <div>{{ scope.row.obliguityX}}°</div>
                 </template>
               </el-table-column>
-              <el-table-column prop="person" label="人数" width="110">
+              <el-table-column label="人数" width="110">
                 <template slot-scope="scope">
-                  <div>{{ scope.row.person}}人</div>
+                  <div>{{ scope.row.loadingCapacity}}人</div>
                 </template>
               </el-table-column>
-              <el-table-column prop="status" label="状态" width="120" sortable="custom">
+              <!-- <el-table-column prop="status" label="状态" width="120" sortable="custom">
                 <template slot-scope="scope">
                   <div
                     :class="scope.row.status=='合格'?'green-color':scope.row.status=='不合格'?'red-color':''"
                   >{{ scope.row.status }}</div>
                 </template>
-              </el-table-column>
-              <el-table-column prop="time" label="时间"></el-table-column>
+              </el-table-column> -->
+              <el-table-column prop="runtime" label="时间"></el-table-column>
             </el-table>
           </div>
           <div class="fenye">
@@ -285,70 +291,90 @@
             <!-- @size-change="handleSizeChange"
             @current-change="handleCurrentChange"-->
             <el-pagination
-              :current-page="1"
+              :current-page="pageNum"
               :page-sizes="[10, 20, 30, 40]"
-              :page-size="10"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="8"
+              :page-size="pageSize"
+              layout="total, prev, pager, next, jumper"
+              :total="pageTotal"
+              @current-change="handleCurrentChange"
             ></el-pagination>
           </div>
         </div>
       </div>
+      <!-- 导出Excel -->
+      <div class="dialog-box" v-show="dialogShow">
+        <div class="title">
+          选择日期
+          <a class="close" @click="dialogShow=false">
+            <i class="el-icon-close"></i>
+          </a>
+        </div>
+        <div class="form">
+          <ul>
+            <li>
+              <span>日期：</span>
+              <el-date-picker
+                v-model="excelDate"
+                value-format="yyyy-MM-dd"
+                type="date"
+                placeholder="请选择"
+              ></el-date-picker>
+            </li>
+          </ul>
+        </div>
+        <div class="confirm">
+          <a class="button" @click="historyRecordExcel">确定</a>
+        </div>
+      </div>
+      <!-- 遮罩层 -->
+      <div class="shade-box" v-show="dialogShow"></div>
     </div>
   </div>
 </template>
 <script>
 import ssCalendar from "../ss-calendar/ss-calendar.vue";
+import { setTimeout } from 'timers';
 export default {
   data() {
     return {
-      isShow: true,
-      times: "",
-      status: "",
+      projectId: "", // 项目id
+      isShow: true, // 历史记录状态
+      equipmentShow: false, // 设备列表状态
+      dialogShow: false, // 导出Excel日期对话框
+      excelDate: "", // 导出Excel日期
+      equipmentData: {}, // 当前设备数据
+      equipmentLisData: [], // 设备列表数据
+      pageNum: 1, // 当前页
+      pageSize: 20, // 每页显示条数
+      pageTotal: 0, // 总条数
+      time: "", // 历史数据时间
+      status: "", // 历史记录状态
       statusOptions: [
         {
-          value: "选项0",
-          label: "全部"
-        },
-        {
-          value: "选项1",
+          value: 0,
           label: "合格"
         },
         {
-          value: "选项2",
+          value: 1,
           label: "不合格"
         }
       ],
-      tableData: [
-        {
-          number: "1", //序号
-          load: 100, //载重
-          sudu: "87", //速度
-          wind: "10", //风速
-          height: "60", //高度
-          flow: "26.57", //楼层
-          angle: "30", //倾角
-          person: "2", //人数
-          status: "合格", //状态
-          time: "2019-10-10 19:19:19" //时间
-        },
-        {
-          number: "2", //序号
-          load: 98, //载重
-          sudu: "87", //速度
-          wind: "10", //风速
-          height: "60", //高度
-          flow: "26.57", //楼层
-          angle: "30", //倾角
-          person: "2", //人数
-          status: "不合格", //状态
-          time: "2019-10-10 19:19:19" //时间
-        }
-      ]
+      tableData: [], // 历史记录列表数据
     };
   },
+  created() {
+    this.getProjectId()
+    this.switchDevice()
+    this.selectIndex()
+  },
   methods: {
-    setProportion() {
+    // 获取项目id
+    getProjectId() {
+      this.projectId = sessionStorage.getItem("pid");
+    },
+
+    // 预警占比图渲染
+    setProportion(data) {
       let myProportion = this.$echarts.init(
         document.getElementById("proportion")
       );
@@ -375,7 +401,7 @@ export default {
             fontSize: "16",
             color: "#000"
           },
-          data: ["载重", "人数", "上限位", "下限位", "速度", "其他"]
+          data: ["载重", "人数", "上限位", "下限位", "速度", "倾斜"]
         },
         series: [
           {
@@ -402,20 +428,115 @@ export default {
               }
             },
             data: [
-              { value: 0, name: "载重" },
-              { value: 0, name: "人数" },
-              { value: 0, name: "上限位" },
-              { value: 0, name: "下限位" },
-              { value: 0, name: "速度" },
-              { value: 0, name: "其他" }
+              { value: data.zztj, name: "载重" },
+              { value: data.rsbj, name: "人数" },
+              { value: data.sxwbj, name: "上限位" },
+              { value: data.xxwbj, name: "下限位" },
+              { value: data.sdbj, name: "速度" },
+              { value: data.qxbj, name: "倾斜" }
             ]
           }
         ]
       });
-    }
+    },
+
+    // 序号
+    indexMethod(index) {
+      return (this.pageNum - 1) * this.pageSize + index + 1;
+    },
+
+    // 获取设备列表
+    switchDevice() {
+      this.$axios.post(`/api/elevatorApi/switchDevice?pid=${this.projectId}`).then(
+        res => {
+          this.equipmentLisData = res.data.data
+        }
+      )
+    },
+
+    // 获取页面数据
+    selectIndex() {
+      this.$axios.post(`/api/elevatorApi/selectIndex?pid=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.equipmentData = res.data.data
+          this.historyRecord()
+          setTimeout(() => {
+            this.setProportion(res.data.data)
+          },100)
+        }
+      )
+    },
+
+    // 选择设备
+    selectClick(hxzid) {
+      this.$axios.post(`/api/elevatorApi/selectIndex?pid=${this.projectId}&hxzid=${hxzid}`).then(
+        res => {
+          // console.log(res.data)
+          this.isShow = true
+          this.equipmentShow = false
+          this.equipmentData = res.data.data
+          this.historyRecord()
+          setTimeout(() => {
+            this.setProportion(res.data.data)
+          },100)
+        }
+      )
+    },
+
+    // 获取历史记录
+    historyRecord() {
+      this.$axios.post(`/api/craneApi/historyRecord?hxzid=${this.equipmentData.hxzid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
+        res => {
+          // console.log(res.data)
+          this.pageTotal = res.data.data.total
+          this.tableData = res.data.data.rows
+        })
+    },
+
+    // 历史记录搜索
+    searchHistory() {
+      this.pageNum = 1
+      this.$axios.post(`/api/craneApi/historyRecord?hxzid=${this.equipmentData.hxzid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&time=${this.time}&status=${this.status}`).then(
+        res => {
+          this.pageTotal = res.data.data.total
+          this.tableData = res.data.data.rows
+        }
+      )
+    },
+
+    // 当前页
+    handleCurrentChange(val) {
+      // console.log(`当前页：${val}`)
+      this.pageNum = val
+      this.pageClick()
+    },
+
+    // 翻页
+    pageClick() {
+      this.$axios.post(`/api/craneApi/historyRecord?hxzid=${this.equipmentData.hxzid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&time=${this.time}&status=${this.status}`).then(
+        res => {
+          this.pageTotal = res.data.data.total
+          this.tableData = res.data.data.rows
+        }
+      )
+    },
+
+    // 导出Excel
+    historyRecordExcel() {
+      if (this.excelDate) {
+        this.dialogShow = false 
+        location.href = `http://47.106.71.3:8080/api/elevatorApi/historyRecordExcel?hxzid=${this.equipmentData.hxzid}&time=${this.excelDate}`
+      } else {
+        this.$message({
+          message: '请选择日期',
+          type: 'warning'
+        })
+      }
+    },
   },
   mounted() {
-    this.setProportion();
+    // this.setProportion();
   },
   components: {
     // 日历组件
@@ -450,7 +571,7 @@ export default {
           .left {
             width: 0.5rem;
             height: 0.52rem;
-            background-color: hotpink;
+            // background-color: hotpink;
           }
           .right {
             p {
@@ -484,10 +605,30 @@ export default {
             .left {
               width: 0.37rem;
               height: 100%;
+              background-repeat: no-repeat;
+              background-position: center center;
             }
             &:hover {
               color: #fff;
               background-color: #0090ff;
+              .history {
+                background-image: url('../../../../static/images/system-dateHover.png');
+              }
+              .cut {
+                background-image: url('../../../../static/images/systemGreen-cutHover.png');
+              }
+              .derive {
+                background-image: url('../../../../static/images/system-deriveHover.png');
+              }
+            }
+            .history {
+              background-image: url('../../../../static/images/system-date.png');
+            }
+            .cut {
+              background-image: url('../../../../static/images/systemGreen-cut.png');
+            }
+            .derive {
+              background-image: url('../../../../static/images/system-derive.png');
             }
           }
         }
@@ -530,6 +671,32 @@ export default {
             }
           }
         }
+        .equipment-list {
+          height: 7.6rem;
+          margin-top: 0.1rem;
+          background-color: #fff;
+          overflow: auto;
+          ul {
+            li {
+              // position: relative;
+              a {
+                color: #333;
+                display: inline-block;
+                width: 100%;
+                height: 0.44rem;
+                font-size: 0.24rem;
+                text-align: center;
+                line-height: 0.43rem;
+                transition: all 0.5s;
+                border-bottom: 0.01rem solid #98c8e7;
+                &:hover {
+                  color: #fff;
+                  background-color: #0090ff;
+                }
+              }
+            }
+          }
+        }
       }
       #right {
         position: relative;
@@ -550,12 +717,14 @@ export default {
           .quan {
             width: 2.46rem;
             height: 2.46rem;
-            background-color: #3ada76;
-            border: 1px solid #3ada76;
-            border-radius: 50%;
+            // background-color: #3ada76;
+            // border: 1px solid #3ada76;
+            // border-radius: 50%;
             margin-top: 0.6rem;
             text-align: center;
-            box-shadow: 0px 0px 0px 0.27rem #fff inset;
+            // box-shadow: 0px 0px 0px 0.27rem #fff inset;
+            background-image: url('../../../../static/images/systemZhiHui-circle.png');
+            background-size: contain;
             .num {
               font-size: 0.32rem;
               color: #fff;
@@ -584,7 +753,7 @@ export default {
                 font-size: 0.24rem;
                 margin-top: 0.15rem;
                 img {
-                  width: 0.4rem;
+                  // width: 0.4rem;
                   height: 0.26rem;
                   margin-left: 0.17rem;
                 }
@@ -680,7 +849,7 @@ export default {
         position: relative;
         flex: 1;
         margin-left: 0.1rem;
-        background-color: #f7f7f7;
+        background-color: #fff;
         margin-top: 0.1rem;
         .header {
           width: 100%;
@@ -748,6 +917,101 @@ export default {
           bottom: 0.3rem;
         }
       }
+    }
+    .dialog-box {
+      left: 50%;
+      top: 2.14rem;
+      z-index: 200;
+      width: 6.84rem;
+      overflow: hidden;
+      position: absolute;
+      border-radius: 0.1rem;
+      transform: translate(-50%);
+      background-color: #fefefe;
+      .title {
+        color: #fff;
+        height: 0.6rem;
+        font-size: 0.24rem;
+        line-height: 0.6rem;
+        text-align: center;
+        position: relative;
+        font-weight: bolder;
+        background: linear-gradient(to right, #6cc4ff, #489cff);
+        a {
+          top: 50%;
+          right: 0.2rem;
+          color: #fff;
+          position: absolute;
+          transform: translateY(-50%);
+        }
+      }
+      .form {
+        ul {
+          padding-bottom: 0.3rem;
+          li {
+            display: flex;
+            height: 0.71rem;
+            padding-top: 0.3rem;
+            > span {
+              width: 2.85rem;
+              height: 0.41rem;
+              font-size: 0.16rem;
+              text-align: right;
+              position: relative;
+              line-height: 0.41rem;
+              padding-right: 0.32rem;
+              display: inline-block;
+              .required {
+                top: -0.01rem;
+                right: 0.22rem;
+                color: #f00;
+                position: absolute;
+              }
+            }
+            .el-range-separator {
+              width: 0.3rem;
+            }
+            input {
+                // width: 3.5rem;
+                height: .4rem;
+                border: .01rem solid #333;
+                border-radius: .04rem;
+              }
+          }
+        }
+      }
+      .confirm {
+        height: 0.8rem;
+        background-color: #f8f8f8;
+        border-top: 0.01rem solid #dedede;
+        .button {
+          color: #fff;
+          display: block;
+          width: 1.63rem;
+          height: 0.49rem;
+          margin: 0 auto;
+          font-size: 0.2rem;
+          margin-top: 0.15rem;
+          text-align: center;
+          line-height: 0.47rem;
+          transition: all 0.5s;
+          border-radius: 0.02rem;
+          background-color: #ffd14f;
+          border: 0.01rem solid #d9b759;
+          &:hover {
+            background-color: #d9b759;
+          }
+        }
+      }
+    }
+    .shade-box {
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      height: 100%;
+      position: fixed;
+      background-color: rgba(0, 0, 0, 0.5);
     }
   }
 }

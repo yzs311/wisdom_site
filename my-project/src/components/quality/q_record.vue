@@ -1,6 +1,6 @@
 <template>
     <div id="q_record">
-        <div class="centent-box">
+        <div class="content-box">
             <!-- 顶部导航栏 -->
             <div class="top-nav">
                 <ul>
@@ -303,7 +303,7 @@
 <style lang="less">
     #q_record {
         color: #fff;
-        .centent-box {
+        .content-box {
             width: 15rem;
             height: 9.42rem;
             padding: .32rem .18rem 0 .18rem;
@@ -767,7 +767,7 @@ export default {
             value9: '',
             value10: '',
             value11: '',
-            pid: 0, // 项目id
+            pid: 2977, // 项目id
             queryPollingInFoData: '', // 检查记录列表
             sum: 0, // 检查总数
             accomplish: 0, // 已完成数量
@@ -775,7 +775,7 @@ export default {
         }
     },
     created() {
-        this.getPid()
+        // this.getPid()
         this.getQueryPollingInFo()
     },
     methods: {

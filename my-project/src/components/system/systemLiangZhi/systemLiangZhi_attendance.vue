@@ -15,7 +15,7 @@
                         </li>
                         <li>
                             <span>&#12288;&#12288;工种：</span>
-                            <el-select v-model="professionValue" placeholder="请选择">
+                            <el-select clearable v-model="professionValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in profession"
                                 :key="item.id"
@@ -26,7 +26,7 @@
                         </li>
                         <li>
                             <span>&#12288;&#12288;班组：</span>
-                            <el-select v-model="teamValue" placeholder="请选择">
+                            <el-select clearable v-model="teamValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in team"
                                 :key="item.id"
@@ -39,7 +39,7 @@
                     <ul class="bottom-input">
                         <li>
                             <span>所属单位：</span>
-                            <el-select v-model="contractorValue" placeholder="请选择">
+                            <el-select clearable v-model="contractorValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in contractor"
                                 :key="item.id"
@@ -78,6 +78,10 @@
                     <a class="derive" @click="deriveClick">
                         <i class="icon"></i>
                         导出Excel
+                    </a>
+                    <a class="derive" @click="getbb">
+                        <i class="icon"></i>
+                        导出近30天考勤报表
                     </a>
                 </div>
                 <!-- 列表 -->
@@ -131,6 +135,17 @@
                         <el-table-column
                         prop="time"
                         label="打开卡时间">
+                        </el-table-column>
+                        <el-table-column
+                        label="查看考勤照片"
+                        width="150"
+                        overflow="none">
+                        <template slot-scope="scope" style="overflow: none;">
+                            <a class="table-button">
+                                查看
+                                <img :src="scope.row.url" alt="">
+                            </a>
+                        </template>
                         </el-table-column>
                     </el-table>
                 </div>
@@ -292,6 +307,10 @@
                     .el-table {
                         width: 16.28rem;
                         // width: 100%;
+                        overflow: visible;
+                        .el-table__body-wrapper {
+                            overflow: visible;
+                        }
                         th {
                             padding: 0;
                             div {
@@ -307,6 +326,24 @@
                                 height: .35rem;
                                 color: #646464;
                                 line-height: .35rem;
+                            }
+                            .table-button {
+                                color: #0090ff;
+                                padding: 0 .08rem;
+                                text-decoration: underline;
+                                &:hover {
+                                    img {
+                                        width: 2rem;
+                                        height: 2rem;
+                                    }
+                                }
+                            }
+                            img {
+                                width: 0;
+                                height: 0;
+                                position: absolute;
+                                z-index: 200;
+                                left: -2rem;
                             }
                         }
                         .red-color {
@@ -446,7 +483,7 @@ export default {
             team: [], // 班组选项
             teamValue: '', // 班组值
             dateValue: '', // 日期
-            pid: 4, // 项目id
+            pid: 0, // 项目id
             name: '', // 姓名
             idCode: '', // 证件号
             teamName: '', // 所属班组
@@ -455,42 +492,49 @@ export default {
         }
     },
     created() {
+        this.getProjectId()
         this.getAttendanceList()
         this.getContractorList()
         this.getTeamList()
         this.getWorkList()
     },
     methods: {
+        // 获取项目id
+        getProjectId() {
+            this.pid = sessionStorage.getItem('pid')
+        },
+
         // 每页条数切换
         handleSizeChange(val) {
             // console.log(`每页 ${val} 条`)
             this.pageSize = val
-            this.getAttendanceList()
+            this.pageClick()
         },
 
         // 当前页
         handleCurrentChange(val) {
             // console.log(`当前页: ${val}`)
             this.pageNum = val
-            this.getAttendanceList()
+            this.pageClick()
         },
 
         // 获取考勤记录列表
         getAttendanceList() {
             this.$axios.post(`/api/attendanceRecordPcApi/selectAttendanceRecordList?projectId=${this.pid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
                 res => {
-                    // console.log(res.data)
+                    console.log(res.data)
                     let temp = []
                     for (let i = 0; i < res.data.data.rows.length; i++) {
                         temp.push({
                             number: (this.pageNum-1)*this.pageSize+i+1, // 序号
                             name: res.data.data.rows[i].name, // 姓名
-                            jobNumber: res.data.data.rows[i].id, // 工号
+                            jobNumber: res.data.data.rows[i].employeeId, // 工号
                             project: res.data.data.rows[i].projectName, // 项目名称
                             contractor: res.data.data.rows[i].companyName, // 所属参建单位
                             profession: res.data.data.rows[i].jobName, // 工种
                             turnover: res.data.data.rows[i].direction, // 进出标识
-                            time: res.data.data.rows[i].passedTie, // 打开卡时间
+                            time: res.data.data.rows[i].passedTime, // 打开卡时间
+                            url: res.data.data.rows[i].sitePhoto, // 打卡照片
                         })
                     }
                     this.pageTotal = res.data.data.total
@@ -545,12 +589,37 @@ export default {
                         temp.push({
                             number: (this.pageNum-1)*this.pageSize+i+1, // 序号
                             name: res.data.data.rows[i].name, // 姓名
-                            jobNumber: res.data.data.rows[i].id, // 工号
+                            jobNumber: res.data.data.rows[i].employeeId, // 工号
                             project: res.data.data.rows[i].projectName, // 项目名称
                             contractor: res.data.data.rows[i].companyName, // 所属参建单位
                             profession: res.data.data.rows[i].jobName, // 工种
                             turnover: res.data.data.rows[i].direction, // 进出标识
-                            time: res.data.data.rows[i].passedTie, // 打开卡时间
+                            time: res.data.data.rows[i].passedTime, // 打开卡时间
+                            url: res.data.data.rows[i].sitePhoto, // 打卡照片
+                        })
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+        // 翻页
+        pageClick() {
+            this.$axios.post(`/api/attendanceRecordPcApi/selectAttendanceRecordList?projectId=${this.pid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&name=${this.name}&idCode=${this.idCode}&jobCode=${this.professionValue}&teamName=${this.teamValue}&companyId=${this.contractorValue}&startTime=${this.startTime}&endTime=${this.endTime}`).then (
+                res => {
+                    let temp = []
+                    for (let i = 0; i < res.data.data.rows.length; i++) {
+                        temp.push({
+                            number: (this.pageNum-1)*this.pageSize+i+1, // 序号
+                            name: res.data.data.rows[i].name, // 姓名
+                            jobNumber: res.data.data.rows[i].employeeId, // 工号
+                            project: res.data.data.rows[i].projectName, // 项目名称
+                            contractor: res.data.data.rows[i].companyName, // 所属参建单位
+                            profession: res.data.data.rows[i].jobName, // 工种
+                            turnover: res.data.data.rows[i].direction, // 进出标识
+                            time: res.data.data.rows[i].passedTime, // 打开卡时间
+                            url: res.data.data.rows[i].sitePhoto, // 打卡照片
                         })
                     }
                     this.pageTotal = res.data.data.total
@@ -562,6 +631,11 @@ export default {
          // 导出Excel
         deriveClick() {
             location.href = `http://47.106.71.3:8080/api/attendanceRecordPcApi/export?projectId=${this.pid}&name=${this.name}&idCode=${this.idCode}&jobCode=${this.professionValue}&teamName=${this.teamValue}&companyId=${this.contractorValue}&startTime=${this.startTime}&endTime=${this.endTime}`
+        },
+
+        // 导出近30天考勤报表
+        getbb() {
+            location.href = `http://47.106.71.3:8080/api/kqbb/getbb?projectId=${this.pid}`
         },
     }
 }

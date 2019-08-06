@@ -57,10 +57,10 @@
                         <el-table-column
                         prop=""
                         label="操作"
-                        width="300">
+                        width="200">
                         <template slot-scope="scope">
                             <a class="table-button" @click="getIdcompanyList(scope.row.id)">编辑</a>
-                            <a class="table-button">绑定账号</a>
+                            <!-- <a class="table-button">绑定账号</a> -->
                             <a class="table-button" @click="deleteClick(scope.row.id)">删除</a>
                         </template>
                         </el-table-column>
@@ -546,7 +546,7 @@ export default {
             tableData: [], // 表格数据
             dialogShow: false, // 对话框显示状态
             compileShow: false, // 编辑对话框状态
-            companyId: 1, // 所属公司id
+            companyId: 0, // 所属公司id
             pageNum: 1, // 当前页码
             pageSize: 10, // 每页记录数
             pageTotal: 0, // 总条数
@@ -574,22 +574,28 @@ export default {
         }
     },
     created() {
+        this.getCompanyId()
         this.getCompanyList()
         this.getContractorType()
     },
     methods: {
+        // 获取公司id
+        getCompanyId() {
+            this.companyId = sessionStorage.getItem('cid')
+        },
+
         // 每页条数切换
         handleSizeChange(val) {
             // console.log(`每页 ${val} 条`)
             this.pageSize = val
-            this.getCompanyList()
+            this.pageClick()
         },
 
         // 当前页
         handleCurrentChange(val) {
             // console.log(`当前页: ${val}`)
             this.pageNum = val
-            this.getCompanyList()
+            this.pageClick()
         },
 
         // 当前选中的行数
@@ -695,6 +701,29 @@ export default {
             this.$axios.post(`/api/pcCompanyLibrary/companyLibraryList?companyId=${this.companyId}&pageNum=1&pageSize=${this.pageSize}&companyName=${this.searchName}`).then(
                 res => {
                     // console.log(res.data)
+                    let temp = []
+                    for (let i = 0; i < res.data.data.rows.length; i++) {
+                        temp.push({
+                            number: (this.pageNum-1)*this.pageSize+i+1, // 序号
+                            companyName: res.data.data.rows[i].companyName, // 公司名称
+                            shortName: res.data.data.rows[i].shortName, // 公司简称
+                            contacts: res.data.data.rows[i].contacts, // 负责人
+                            mobilePhone: res.data.data.rows[i].mobilePhone, // 电话
+                            companyType: res.data.data.rows[i].dictionaries.title, // 单位类型
+                            id: res.data.data.rows[i].id, // 公司id
+                        })
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+        // 翻页
+        pageClick() {
+            this.$axios.post(`/api/pcCompanyLibrary/companyLibraryList?companyId=${this.companyId}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&companyName=${this.searchName}`).then(
+                res => {
+                    // console.log(res.data)
                     if (res.data.data.rows) {
                         let temp = []
                         for (let i = 0; i < res.data.data.rows.length; i++) {
@@ -710,11 +739,6 @@ export default {
                         }
                         this.pageTotal = res.data.data.total
                         this.tableData = temp
-                    } else {
-                        this.$message({
-                            message: '没有找到相关公司',
-                            type: 'warning'
-                        })
                     }
                 }
             )
@@ -732,17 +756,17 @@ export default {
                         this.shortName = res.data.data.shortName
                         this.contacts = res.data.data.contacts
                         this.mobilePhone = res.data.data.mobilePhone
-                        this.capital = res.data.data.capital
+                        this.capital = res.data.data.capital?res.data.data.capital:''
                         // this.capital = 0
-                        this.legalPerson = res.data.data.legalPerson
-                        this.suid = res.data.data.suid
-                        this.organizationCode = res.data.data.organizationCode
-                        this.bankOpen = res.data.data.bankOpen
-                        this.bankNum = res.data.data.bankNum
-                        this.bankAddress = res.data.data.bankAddress
-                        this.address = res.data.data.address
-                        this.email = res.data.data.email
-                        this.remark = res.data.data.remark
+                        this.legalPerson = res.data.data.legalPerson?res.data.data.legalPerson:''
+                        this.suid = res.data.data.suid?res.data.data.suid:''
+                        this.organizationCode = res.data.data.organizationCode?res.data.data.organizationCode:''
+                        this.bankOpen = res.data.data.bankOpen?res.data.data.bankOpen:''
+                        this.bankNum = res.data.data.bankNum?res.data.data.bankNum:''
+                        this.bankAddress = res.data.data.bankAddress?res.data.data.bankAddress:''
+                        this.address = res.data.data.address?res.data.data.address:''
+                        this.email = res.data.data.email?res.data.data.email:''
+                        this.remark = res.data.data.remark?res.data.data.remark:''
                         this.compileShow = true
                     } else {
                         this.$message({
@@ -766,7 +790,7 @@ export default {
                             })
                             this.compileShow = false
                             this.pageNum = 1
-                            this.getCompanyList()
+                            this.searchClick()
                         } else {
                             this.$message({
                                 message: `${res.data.msg}`,

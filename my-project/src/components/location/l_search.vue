@@ -4,30 +4,30 @@
             <div class="message">
                 <div class="inquire">
                     <el-input v-model="name" placeholder="姓名或设备编号或电话"></el-input>
-                    <button @click="getLocaltionListData">查询</button>
+                    <button @click="getHireSearch">查询</button>
                 </div>
                 <div class="message-box">
                     <ul>
                         <li>
-                            姓名：<span>{{localtionListData.hname}}</span>
+                            姓名：<span>{{personnelData.userName}}</span>
                         </li>
                         <li>
-                            电话：<span>{{localtionListData.phone}}</span>
+                            电话：<span>{{personnelData.userPhone}}</span>
                         </li>
                         <li>
-                            所属公司：<span>{{localtionListData.laowu}}</span>
+                            所属公司：<span>{{personnelData.constructionName}}</span>
                         </li>
                         <li>
-                            设备编号：<span>{{localtionListData.imei}}</span>
+                            设备编号：<span>{{personnelData.imei}}</span>
                         </li>
                         <li>
-                            设备电量：<span>{{localtionListData.localtionList[0].bat}}%</span>
+                            设备电量：<span>{{personnelData.bat}}%</span>
                         </li>
                         <li>
-                            定位时间：<span>{{localtionListData.localtionList[0].createDate}}</span>
+                            定位时间：<span>{{personnelData.watchDate}}</span>
                         </li>
                         <li>
-                            定位地址：<span>{{localtionListData.localtionList[0].address}}</span>
+                            定位地址：<span>{{personnelData.address}}</span>
                         </li>
                     </ul>
                 </div>
@@ -106,46 +106,11 @@ let amapManager = new VueAMap.AMapManager();
 export default {
     data() {
         return {
-            pid: 0, // 项目id
+            projectId: '', // 项目id
             circle: '', // 电子围栏位置信息
             marker: '', // 人员位置坐标点
             name: '', //需要查询的人名或设备编号或手机号码
             createDate: '', //需要查询的定位数据的日期
-            localtionListData: {
-                searchValue: null,
-                createBy: null,
-                createTime: null,
-                updateBy: null,
-                updateTime: null,
-                remark: null,
-                params: {},
-                id: 1,
-                imei: null,
-                hid: null,
-                haid: null,
-                hname: null,
-                phone: null,
-                laowu: null,
-                localtionList: [{
-                    searchValue: null,
-                    createBy: null,
-                    createTime: null,
-                    updateBy: null,
-                    updateTime: null,
-                    remark: null,
-                    params: {},
-                    id: null,
-                    imei: null,
-                    xloc: null,
-                    yloc: null,
-                    bat: null,
-                    rssi: null,
-                    watchDate: null,
-                    createDate: null,
-                    isPosition: null,
-                    address: null
-                }],
-            }, //人员定位默认数据
             polygon: '',
             text: '',
             marker: '',
@@ -260,6 +225,18 @@ export default {
                 }
             }],
             getNameState: 0, // getName状态只调用一次
+            personnelData: {
+                id: 0,
+                userName: '',
+                userPhone: '',
+                constructionName: '',
+                imei: '',
+                bat: '',
+                watchDate: '',
+                xloc: '',
+                yloc: '',
+                address: ''
+            }, // 人员数据
         }
     },
     created() {
@@ -267,43 +244,69 @@ export default {
         this.getName()
     },
     methods: {
+        // 获取项目id
+        getPid() {
+          this.projectId = sessionStorage.getItem('pid')
+        },
+
         // 获取人员定位数据
-        getLocaltionListData() {
-            this.$axios.get(`/lz/hire/localtionList?id=${this.pid}&string=${this.name}&createDate=${this.createDate}`).then(
-                res => {
-                    // console.log(res.data)
-                    if (res.data.length > 0) {
-                        if(res.data[0].localtionList.length>0) {
-                            this.localtionListData = res.data[0]
-                            // 电子围栏渲染
+        getHireSearch() {
+            if (this.name) {
+                this.$axios.post(`/api/hireApi/getHireSearch?filed=${this.name}&projectId=${this.projectId}`).then(
+                    res => {
+                        // console.log(res.data)
+                        if (res.data.code == 0) {
+                            this.personnelData = res.data.data[0]
                             let temp = []
                             let temp2 = []
-                            temp.push(this.localtionListData.areaList[0].xloc)
-                            temp.push(this.localtionListData.areaList[0].yloc)
-                            temp2.push(this.localtionListData.localtionList[0].xloc)
-                            temp2.push(this.localtionListData.localtionList[0].yloc)
-                            this.circle.setCenter(temp)
-                            this.circle.setRadius(this.localtionListData.areaList[0].radius)
-                            // 地图中心点设为电子围栏中心点
+                            temp.push(this.personnelData.xloc)
+                            temp.push(this.personnelData.yloc)
+                            temp2.push(this.personnelData.areaXloc)
+                            temp2.push(this.personnelData.areaYloc)
+                            this.circle.setRadius(this.personnelData.areaRadius)
+                            this.circle.setCenter(temp2)
                             this.center = temp
                             this.zoom = 14
-                            // 渲染人员所在位置坐标点
-                            this.marker.setPosition(temp2)
+                            this.marker.setPosition(temp)
                             this.marker.show()
                         } else {
+                            this.personnelData = {
+                                id: 0,
+                                userName: '',
+                                userPhone: '',
+                                constructionName: '',
+                                imei: '',
+                                bat: '',
+                                watchDate: '',
+                                xloc: '',
+                                yloc: '',
+                                address: ''
+                            }
                             this.$message({
-                                message: '无此人定位数据',
+                                message: '未找到相关人员',
                                 type: 'warning'
                             })
                         }
-                    } else {
-                        this.$message({
-                            message: '无此人定位数据',
-                            type: 'warning'
-                        })
                     }
+                )
+            } else {
+                this.personnelData = {
+                    id: 0,
+                    userName: '',
+                    userPhone: '',
+                    constructionName: '',
+                    imei: '',
+                    bat: '',
+                    watchDate: '',
+                    xloc: '',
+                    yloc: '',
+                    address: ''
                 }
-            )
+                this.$message({
+                    message: '输入框不得为空',
+                    type: 'warning'
+                })
+            }
         },
 
         // 获取实时监控页面传过来的值
@@ -311,15 +314,10 @@ export default {
             // console.log(this.$route.query.orderId)
             if (this.$route.query.orderId != undefined && this.getNameState == 0) {
                 this.name = this.$route.query.orderId
-                this.getLocaltionListData()
+                this.getHireSearch()
                 this.getNameState = 1
             }
         },
-
-        // 获取项目id
-        getPid() {
-          this.pid = localStorage.getItem('pid')
-        }
     },
 }
 </script>

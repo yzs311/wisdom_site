@@ -3,7 +3,7 @@
         <!-- 顶部通栏 -->
         <div class="top-nav">
             <div class="top-nav-box">
-                <div class="logo-box"></div>
+                <!-- <div class="logo-box"></div> -->
                 <a class="return" @click="returnClick">返回</a>
             </div>
         </div>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <!-- 页面主体 -->
-        <div class="centent-box">
+        <div class="content-box">
             <ul>
                 <li v-for="(item,index) in foremanData" :key="index">
                     <a @click="$router.push({ path: '/workerParticular', query: { teamId: item.teamId } })">
@@ -168,7 +168,7 @@
                 }
             }
         }
-        .centent-box {
+        .content-box {
             background-color: #f5f5f5;
             padding-top: 36px;
             min-height: 533px;

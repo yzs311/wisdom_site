@@ -46,46 +46,46 @@
                   </el-collapse-item>
                 </el-collapse> -->
                 <ul>
-                    <li v-for="(item,index) in videoData" :key="index">
-                        <a :class="index==selectActive?'active':''" @click="selectActive=index">{{item.areaName}}</a>
+                    <li v-for="(item,index) in videoList" :key="index">
+                        <a :class="item.id==areaId?'active':''" @click="areaId=item.id">{{item.areaName}}</a>
                     </li>
                 </ul>
             </div>
         </div>
         <!-- 监控显示模块 -->
-        <div class="main" v-for="(item,index) in videoData" :key="index" v-if="index==selectActive&&videoData[selectActive].url.length>1">
+        <div class="main" v-for="(item,index) in videoData" :key="index" v-if="videoData.length>1">
             <div class="main-box" >
                 <div class="no-data">
-                    <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[selectActive].url[0]">
-                        <source :src="videoData[selectActive].url[0].url" type="" />
-                        <source :src="videoData[selectActive].url[0].url" type="application/x-mpegURL" />
+                    <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[0].url">
+                        <source :src="videoData[0].url" type="" />
+                        <source :src="videoData[0].url" type="application/x-mpegURL" />
                     </video>
                     <span v-else>无视频数据</span>
                 </div>
             </div>
             <div class="main-box">
                 <div class="no-data">
-                    <video id="player2" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[selectActive].url[1]">
-                        <source :src="videoData[selectActive].url[1].url" type="" />
-                        <source :src="videoData[selectActive].url[1].url" type="application/x-mpegURL" />
+                    <video id="player2" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[1].url">
+                        <source :src="videoData[1].url" type="" />
+                        <source :src="videoData[1].url" type="application/x-mpegURL" />
                     </video>
                     <span v-else>无视频数据</span>
                 </div>
             </div>
             <div class="main-box" style="margin-top:.3rem">
                 <div class="no-data">
-                    <video id="player3" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[selectActive].url[2]">
-                        <source :src="videoData[selectActive].url[2].url" type="" />
-                        <source :src="videoData[selectActive].url[2].url" type="application/x-mpegURL" />
+                    <video id="player3" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[2].url">
+                        <source :src="videoData[2].url" type="" />
+                        <source :src="videoData[2].url" type="application/x-mpegURL" />
                     </video>
                     <span v-else>无视频数据</span>
                 </div>
             </div>
             <div class="main-box" style="margin-top:.3rem">
                 <div class="no-data">
-                    <video id="player4" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[selectActive].url[3]">
-                        <source :src="videoData[selectActive].url[3].url" type="" />
-                        <source :src="videoData[selectActive].url[3].url" type="application/x-mpegURL" />
+                    <video id="player4" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[3].url">
+                        <source :src="videoData[3].url" type="" />
+                        <source :src="videoData[3].url" type="application/x-mpegURL" />
                     </video>
                     <span v-else>无视频数据</span>
                 </div>
@@ -120,12 +120,12 @@
             </div> -->
         </div>
         <!-- 监控显示模块单个 -->
-        <div class="main" v-for="(item,index) in videoData" :key="index" v-if="index==selectActive&&videoData[selectActive].url.length==1">
+        <div class="main" v-for="(item,index) in videoData" :key="index" v-if="videoData.length==1">
             <div class="main-one" >
                 <div class="no-data-one">
-                    <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[selectActive].url[0]">
-                        <source :src="videoData[selectActive].url[0].url" type="" />
-                        <source :src="videoData[selectActive].url[0].url" type="application/x-mpegURL" />
+                    <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="item.url">
+                        <source :src="item.url" type="" />
+                        <source :src="item.url" type="application/x-mpegURL" />
                     </video>
                     <span v-else>无视频数据</span>
                 </div>
@@ -194,17 +194,19 @@ export default {
             rtmp_url3:"",
             http_url3:"",
             message:'加载中...',
-            videoData: '',
-            pid: 0, // 项目id
+            projectId: '', // 项目id
             selectActive: 0, // 当前选择的区域
+            videoList: '', // 视频区列表
+            areaId: '', // 当前选中视频区id
+            videoData: '', // 视频直播流
         }
     },
     mounted() {
-        this.GetLiveUrl()
+        // this.GetLiveUrl()
     },
     created() {
         this.getPid()
-        this.getProjectVideoAreaData()
+        this.getProjectVideoArea()
     },
     methods: {
         leftMove() {
@@ -251,8 +253,40 @@ export default {
 
         // 获取项目id
         getPid() {
-          this.pid = localStorage.getItem('pid')
-        }
+          this.projectId = sessionStorage.getItem('pid')
+        },
+
+        // 获取视频区列表
+        getProjectVideoArea() {
+            this.$axios.post(`/api/ProjectVideoAreaApi/getProjectVideoArea?projectId=${this.projectId}`).then(
+                res => {
+                    // console.log(res.data)
+                    if (res.data.data) {
+                        // console.log('有视频区域')
+                        this.videoList = res.data.data
+                    } else {
+                        // console.log('无视频区域')
+                        this.videoAreaData = [{
+                            id: 0,
+                            projectid: 0,
+                            areaName: "无监控数据"
+                        }]
+                    }
+                    this.areaId = res.data.data[0].id
+                    this.getProjectVideo()
+                }
+            )
+        },
+
+        // 获取监控直播流
+        getProjectVideo() {
+            this.$axios.post(`/api/ProjectVideo/getProjectVideo?areaId=${this.areaId}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.videoData = res.data.data
+                }
+            )
+        },
     },
     updated() {
         if(this.rtmp_url!=""){

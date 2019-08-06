@@ -7,13 +7,13 @@
                     <ul class="top-input">
                         <li>
                             <span>&#12288;&#12288;姓名：</span>
-                            <input type="text">
+                            <input type="text" v-model="empName">
                         </li>
                         <li>
                             <span>&#12288;证件号：</span>
-                            <input type="text">
+                            <input type="text" v-model="empCode">
                         </li>
-                        <li>
+                        <!-- <li>
                             <span>&#12288;&#12288;工种：</span>
                             <el-select v-model="professionValue" placeholder="请选择">
                                 <el-option
@@ -27,9 +27,11 @@
                         <li>
                             <span>&#12288;&#12288;班组：</span>
                             <input type="text">
-                        </li>
+                        </li> -->
+                        <li style="width:3.5rem"></li>
+                        <li style="width:3.5rem"></li>
                     </ul>
-                    <ul class="bottom-input">
+                    <!-- <ul class="bottom-input">
                         <li>
                             <span>所属单位：</span>
                             <el-select v-model="contractorValue" placeholder="请选择">
@@ -53,17 +55,21 @@
                         </li>
                         <li style="width:3.5rem"></li>
                         <li style="width:3.5rem"></li>
-                    </ul>
+                    </ul> -->
                 </div>
-                <a class="search-button">搜索</a>
+                <a class="search-button" @click="searchClick">搜索</a>
             </div>
             <!-- 主体区域 -->
             <div class="main-box">
                 <!-- 功能栏 -->
                 <div class="button-box">
-                    <a class="blacklist">
+                    <a class="blacklist" @click="dialogShow=true">
                         <i class="icon"></i>
                         拉入黑名单
+                    </a>
+                    <a class="contract" @click="uploadClick">
+                        <i class="icon"></i>
+                        上传通报文件
                     </a>
                 </div>
                 <!-- 列表 -->
@@ -71,54 +77,37 @@
                     <el-table
                     :data="tableData"
                     stripe
-                    border>
+                    border
+                    @selection-change="handleSelectionChange">
                         <el-table-column
                         type="selection"
                         width="35">
                         </el-table-column>
                         <el-table-column
-                        prop="number"
+                        type="index"
                         label="序号"
-                        width="100">
+                        width="50"
+                        :index="indexMethod">
                         </el-table-column>
                         <el-table-column
-                        prop="name"
+                        prop="empName"
                         label="姓名"
-                        width="100">
+                        width="150">
                         </el-table-column>
                         <el-table-column
-                        prop="jobNumber"
-                        label="工号"
-                        width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="contractor"
-                        label="所属参建单位"
-                        width="200">
-                        </el-table-column>
-                        <el-table-column
-                        prop="team"
-                        label="所属班组"
-                        width="180">
-                        </el-table-column>
-                        <el-table-column
-                        prop="profession"
-                        label="工种"
-                        width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="groupLeaderState"
-                        label="是否班组长"
-                        width="100">
-                        </el-table-column>
-                        <el-table-column
-                        prop="time"
-                        label="时间"
-                        width="250">
+                        prop="empCode"
+                        label="身份证">
                         </el-table-column>
                         <el-table-column
                         prop="cause"
                         label="原因">
+                        </el-table-column>
+                        <el-table-column
+                        label="通报文件"
+                        width="100">
+                        <template slot-scope="scope">
+                            <a class="table-button" @click="openClick(scope.row.url)">查看</a>
+                        </template>
                         </el-table-column>
                     </el-table>
                 </div>
@@ -127,18 +116,18 @@
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page="currentPage"
+                        :current-page="pageNum"
                         :page-sizes="[15, 30, 45]"
-                        :page-size="15"
+                        :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
-                        :total="1">
+                        :total="pageTotal">
                     </el-pagination>
                 </div>
             </div>
-            <!-- 新增班组 -->
+            <!-- 拉入黑名单 -->
             <div class="dialog-box" v-show="dialogShow">
                 <div class="title">
-                    新增班组
+                    拉入黑名单
                     <a class="close" @click="dialogClick">
                         <i class="el-icon-close"></i>
                     </a>
@@ -147,48 +136,54 @@
                     <ul>
                         <li>
                             <span>
-                                所属参建单位
+                                姓名
                                 <div class="required">*</div>
                             </span>
-                            <el-select v-model="contractorValue" placeholder="请选择">
-                                <el-option
-                                v-for="item in contractor"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
+                            <input type="text" v-model="addEmpName">
                         </li>
                         <li>
                             <span>
-                                班组名称
+                                身份证号码
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="addEmpCode">
                         </li>
                         <li>
                             <span>
-                                入场日期
+                                闹事原因
                                 <div class="required">*</div>
                             </span>
-                            <el-date-picker
-                            v-model="startDate"
-                            type="date"
-                            placeholder="选择日期">
-                            </el-date-picker>
-                        </li>
-                        <li>
-                            <span>备注</span>
-                            <input type="text">
+                            <input type="text" v-model="addCause">
                         </li>
                     </ul>
                 </div>
                 <div class="confirm">
-                    <a class="button" @click="dialogClick">确定</a>
+                    <a class="button" @click="addBlacklist">确定</a>
+                </div>
+            </div>
+            <!-- 上传通报文件 -->
+            <div class="dialog-box" v-show="uploadShow">
+                <div class="title">
+                    上传通报文件
+                    <a class="close" @click="uploadShow=false">
+                        <i class="el-icon-close"></i>
+                    </a>
+                </div>
+                <div class="form">
+                    <ul>
+                        <li class="file">
+                            <input type="file" @change="Updata">
+                        </li>
+                    </ul>
+                </div>
+                <div class="confirm">
+                    <a class="button" @click="uploadBlacklist">确定</a>
                 </div>
             </div>
             <!-- 遮罩层 -->
-            <div class="shade-box" v-show="dialogShow"></div>
+            <div class="shade-box" v-show="dialogShow || uploadShow"></div>
+            <!-- 加载层 -->
+            <div class="shade-box" v-loading="loading" v-show="loading"></div>
         </div>
     </div>
 </template>
@@ -201,14 +196,14 @@
             background-color: #fff;
             box-shadow: 0 0 .5rem -.3rem #666;
             .search-box {
-                height: 1.5rem;
+                height: .9rem;
                 padding: 0 .2rem;
                 position: relative;
                 border-bottom: .1rem solid #f7f7f7;
                 .left-box {
                     float: left;
                     width: 100%;
-                    height: 1.4rem;
+                    height: .8rem;
                     padding-top: .2rem;
                     ul {
                         width: 100%;
@@ -259,7 +254,7 @@
                     }
                 }
                 .search-button {
-                    top: .8rem;
+                    top: .2rem;
                     right: .2rem;
                     color: #fff;
                     height: .4rem;
@@ -316,6 +311,16 @@
                             }
                         }
                     }
+                    .contract {
+                        .icon {
+                            background-image: url('../../../../static/images/system-contract.png');
+                        }
+                        &:hover {
+                            .icon {
+                                background-image: url('../../../../static/images/system-contractHover.png');
+                            }
+                        }
+                    }
                 }
                 .table-box {
                     width: 100%;
@@ -340,6 +345,11 @@
                                 color: #646464;
                                 line-height: .35rem;
                             }
+                            .table-button {
+                                color: #0090ff;
+                                padding: 0 .08rem;
+                                text-decoration: underline;
+                            }
                         }
                         .red-color {
                             color: #fd5101;
@@ -363,7 +373,7 @@
                 top: 2.14rem;
                 z-index: 200;
                 width: 6.84rem;
-                height: 4.92rem;
+                // height: 4.92rem;
                 overflow: hidden;
                 position: absolute;
                 border-radius: .1rem;
@@ -387,7 +397,8 @@
                     }
                 }
                 .form {
-                    height: 3.52rem;
+                    // height: 3.52rem;
+                    padding-bottom: .3rem;
                     ul{
                         li {
                             display: flex;
@@ -423,6 +434,13 @@
                                     padding-left: .3rem;
                                 }
                             }
+                        }
+                    }
+                    .file {
+                        input {
+                            width: 2rem;
+                            border: none;
+                            margin: 0 auto;
                         }
                     }
                 }
@@ -467,43 +485,187 @@
 export default {
     data() {
         return {
-            tableData: [{
-                number: 1, // 序号
-                name: '某某某', // 姓名
-                jobNumber: '123456', // 工号
-                contractor: '深圳市市政工程总公司', // 所属参建单位
-                team: '永恒信一班', // 所属班组
-                profession: '普工', // 工种
-                groupLeaderState: '是', // 是否班组长
-                time: '2019-04-29 10：51：43', // 时间
-                cause: '闹事', // 原因
-            }], // 表格数据
+            loading: false, // 加载遮罩层状态
+            tableData: [], // 表格数据
             currentPage: 1, // 当前页码
             dialogShow: false, // 新增单位对话框状态
-            contractor: [{
-                value: '选项1',
-                label: '深圳市市政工程总公司'
-            }], // 所属参建单位选项
-            contractorValue: '', // 所属参建单位
-            startDate: '', // 入场日期
-            professionOptions: [], // 工种选项
-            professionValue: '', // 工种值
-            contractorOptions: [], // 所属参建单位选项
-            contractorValue: '', // 所属参建单位值
-            dateValue: '', // 日期
+            uploadShow: false, // 上传对话框状态
+            pageTotal: 0, // 总条数
+            pageSize: 15, // 每页显示条数
+            pageNum: 1, // 当前页
+            empName: '', // 姓名
+            empCode: '', // 身份证号
+            addEmpName: '', // 姓名（添加）
+            addEmpCode: '', // 身份证号(添加)
+            addCause: '', // 闹事原因(添加)
+            ids: '', // 上传通报文件的用户id
+            file: '', // 通报文件
         }
     },
+    created() {
+        this.getBlacklist()
+        // this.getTemp2()
+    },
     methods: {
+        // 每页条数切换
         handleSizeChange(val) {
-            console.log(`每页${val}条`)
+            // console.log(`每页 ${val} 条`)
+            this.pageSize = val
+            this.pageClick()
         },
+
+        // 当前页
         handleCurrentChange(val) {
-            console.log(`当前页：${val}`)
+            // console.log(`当前页: ${val}`)
+            this.pageNum = val
+            this.pageClick()
+        },
+
+        // 当前选中的行数
+        handleSelectionChange(val) {
+            // console.log(val)
+            let temp = ''
+            for (let i = 0; i < val.length; i++) {
+                if (i == val.length-1) {
+                    temp+=(val[i].id)
+                } else {
+                    temp+=(val[i].id+',')
+                }
+            }
+            this.ids = temp
+            // console.log(this.ids)
+        },
+
+        // 序号
+        indexMethod(index) {
+            return (this.pageNum-1)*this.pageSize+index+1
         },
 
         // 新增对话框状态切换
         dialogClick() {
             this.dialogShow = !this.dialogShow
+        },
+
+        // 获取黑名单列表
+        getBlacklist() {
+            this.$axios.post(`/api/hjBlacklist/getBlacklist?pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.tableData = res.data.data.rows
+                    this.pageTotal = res.data.data.total
+                }
+            )
+        },
+
+        // 搜索
+        searchClick() {
+            this.pageNum = 1
+            this.$axios.post(`/api/hjBlacklist/getBlacklist?pageNum=${this.pageNum}&pageSize=${this.pageSize}&empName=${this.empName}&empCode=${this.empCode}`).then(
+                res => {
+                    this.tableData = res.data.data.rows
+                    this.pageTotal = res.data.data.total
+                }
+            )
+        },
+
+        // 翻页
+        pageClick() {
+            this.$axios.post(`/api/hjBlacklist/getBlacklist?pageNum=${this.pageNum}&pageSize=${this.pageSize}&empName=${this.empName}&empCode=${this.empCode}`).then(
+                res => {
+                    this.tableData = res.data.data.rows
+                    this.pageTotal = res.data.data.total
+                }
+            )
+        },
+
+        // 查看通报文件
+        openClick(url) {
+            // console.log(url)
+            if (url) {
+                window.open(url,"_blank")
+            } else {
+                this.$message({
+                    message: '无通报文件',
+                    type: 'error'
+                })
+            }
+            // window.open("https://hujiang.oss-cn-shenzhen.aliyuncs.com/blacklist/%E5%85%B3%E4%BA%8E%E6%85%8E%E7%94%A8%E5%91%A8%E6%96%87%E5%85%B5%E7%AD%89%E4%BA%BA%E7%9A%84%E5%87%BD.pdf","_blank")
+            // window.open(url,"_blank")
+        },
+
+        // 拉入黑名单
+        addBlacklist() {
+            if (this.addEmpName && this.addEmpCode && this.addCause) {
+                this.$axios.post(`/api/hjBlacklist/addBlacklist?empName=${this.addEmpName}&empCode=${this.addEmpCode}&cause=${this.addCause}`).then(
+                    res => {
+                        // console.log(res.data)
+                        if (res.data.code == 0) {
+                            this.$message({
+                                message: '拉入成功',
+                                type: 'success'
+                            })
+                            this.dialogShow = false
+                            this.pageNum = 1
+                            this.getBlacklist()
+                        } else {
+                            this.$message({
+                                message: '拉入失败，请重试',
+                                type: 'error'
+                            })
+                        }
+                    }
+                )
+            } else {
+                this.$message({
+                    message: '带 * 号的输入框不得为空',
+                    type: 'warning'
+                })
+            }
+        },
+
+        // 检测有没有选择人员
+        uploadClick() {
+            // this.file = ''
+            if (this.ids == '') {
+                this.$message({
+                    message: '未选择项目人员',
+                    type: 'warning'
+                })
+            } else {
+                this.uploadShow = true
+            }
+        },
+
+        // 上传通报文件
+        uploadBlacklist() {
+            this.loading = true
+            this.uploadShow = false
+            let headers = {headers: {"Content-Type": "multipart/form-data"}}
+            this.$axios.post(`/api/hjBlacklist/uploadBlacklist?ids=${this.ids}`,this.file,headers).then(
+                res => {
+                    // console.log(res.data)
+                    this.loading = false
+                    if (res.data.code == 0) {
+                        this.$message({
+                            message: '上传成功',
+                            type: 'success'
+                        })
+                    } else {
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 拿到需要上传的文件
+        Updata(e) {
+            let file = e.target.files[0]
+            this.file = new FormData() //创建form对象
+            this.file.append('file',file) // 通过append向form对象添加数据
+            console.log(this.file.get('file')) //FormData私有类对象，访问不到，可以通过get判断值是否传进去
         },
     }
 }

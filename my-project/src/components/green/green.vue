@@ -375,7 +375,6 @@ export default {
       pm10: "",
       pmyd25: "",
       pmyd10: "",
-      xmid: "",
       pid: 0, // 项目id
       dustEmissionCentreData: "", // 扬尘监测器数据
       weatherData: "", // 天气数据
@@ -1065,7 +1064,7 @@ export default {
 
     // 获取扬尘监测数据
     getDustEmissionCentreData() {
-      this.$axios.get(`/dustEmission/get/HomeDustEmissionCentre?pid=${this.pid}`).then(
+      this.$axios.get(`/api/dustEmission/get/HomeDustEmissionCentre?pid=${this.pid}`).then(
         res => {
           // console.log(res.data)
           this.dustEmissionCentreData = res.data
@@ -1116,10 +1115,10 @@ export default {
 
     // 获取天气监测数据
     getWeatherData() {
-      this.$axios.get(`/lz/get/getWeather?pid=${this.pid}`).then(
+      this.$axios.get(`/api/lz/get/getWeather?pid=${this.pid}`).then(
         res => {
           // console.log(res.data)
-          this.weatherData = res.data
+          this.weatherData = res.data.weather
           // console.log(this.weatherData)
         }
       )
@@ -1127,9 +1126,9 @@ export default {
 
     // 获取电箱设备
     getElectricBoxData() {
-      this.$axios.get(`/electricityBox/get/getElectricBoxState?pid=${this.pid}`).then(
+      this.$axios.get(`/api/electricityBox/get/getElectricBoxState?projectId=${this.pid}`).then(
         res => {
-          console.log(res.data)
+          // console.log(res.data)
           this.electricBoxData = res.data
 
           // 开关记录多于4条时 开启滚动
@@ -1174,7 +1173,7 @@ export default {
 
     // 获取项目id
     getPid() {
-      this.pid = localStorage.getItem('pid')
+      this.pid = sessionStorage.getItem('pid')
     }
   }
 };

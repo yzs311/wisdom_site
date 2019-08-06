@@ -1,14 +1,14 @@
 <template>
     <div id="systemLiangZhi_home">
-        <div class="centent-box">
+        <div class="content-box">
             <!-- 顶部盒子 -->
             <div class="top-box">
                 <div class="title">
                     <div class="text">
                         <span>当前工程：</span>
-                        <span class="project-name">
+                        <router-link to="/spectaculars" class="project-name">
                             {{indexData.projectName}}
-                        </span>
+                        </router-link>
                     </div>
                     <!-- 完工=accomplish 正常=normal 停工=lockout -->
                     <div class="state" :class="indexData.status=='ABUILDING'?'normal':indexData.status=='LOCKOUT'?'accomplish':'lockout'">
@@ -182,7 +182,7 @@
 <style lang="less">
     #systemLiangZhi_home {
         width: 100%;
-        .centent-box {
+        .content-box {
             width: 100%;
             padding: .3rem;
             border-radius: .1rem;
@@ -554,7 +554,7 @@ export default {
             }], // 工资发放统计选项
             grantValue: '劳务工人', // 工资发放统计显示的人员类型
             year: 2019, // 工资发放统计年份
-            pid: 4, // 项目id
+            pid: 0, // 项目id
             indexData: {}, // 页面数据
             attendanceShow: true, // 考勤统计表显示状态
         }
@@ -565,9 +565,15 @@ export default {
         this.grant()
     },
     created() {
+        this.getProjectId()
         this.selectIndex()
     },
     methods: {
+        // 获取项目id
+        getProjectId() {
+            this.pid = sessionStorage.getItem('pid')
+        },
+
         // 考勤统计统计模块：ECharts图渲染
         attendanceGr(zcrs,kqrs,day) {
             let attendanceGr = this.$echarts.init(
@@ -841,7 +847,7 @@ export default {
         selectIndex() {
             this.$axios.post(`/api/pcLzIndex/selectIndex?pid=${this.pid}`).then(
                 res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     this.indexData = res.data.data
                     let grzcrs = []
                     let grkqrs = []

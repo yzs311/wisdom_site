@@ -216,7 +216,7 @@
                         <a class="button">入住明细</a>
                         <a class="button">刷新</a>
                     </div>
-                    <div class="centent-box">
+                    <div class="content-box">
                         <ul>
                             <li>
                                 <a>
@@ -678,7 +678,7 @@
                             background-color: #c4e5fa;
                         }
                     }
-                    .centent-box {
+                    .content-box {
                         width: 100%;
                         height: 5.18rem;
                         background-color: #fff;

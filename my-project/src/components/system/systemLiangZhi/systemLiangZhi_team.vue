@@ -7,7 +7,7 @@
                     <ul>
                         <li>
                             <span>所属参建单位：</span>
-                            <el-select v-model="contractorValue" placeholder="请选择">
+                            <el-select clearable v-model="contractorValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in contractor"
                                 :key="item.id"
@@ -462,7 +462,7 @@ export default {
             compileShow: false, // 编辑对话框状态
             contractor: [], // 所属参建单位选项
             contractorValue: '', // 所属参建单位id
-            pid: 4, // 项目id
+            pid: 0, // 项目id
             teamName: '', // 班组名
             remark: '', // 备注
             selectionId: '', // 当前选中的id
@@ -470,20 +470,28 @@ export default {
         }
     },
     created() {
+        this.getProjectId()
         this.getContractorList()
         this.selectHjTeamList()
     },
     methods: {
+        // 获取项目id
+        getProjectId() {
+            this.pid = sessionStorage.getItem('pid')
+        },
+
         // 每页条数切换
         handleSizeChange(val) {
             // console.log(`每页 ${val} 条`)
             this.pageSize = val
+            this.pageClick()
         },
 
         // 当前页
         handleCurrentChange(val) {
             // console.log(`当前页: ${val}`)
             this.pageNum = val
+            this.pageClick()
         },
 
         // 当前选中的行数
@@ -617,7 +625,7 @@ export default {
                 res => {
                     this.contractorValue = res.data.data.constructionId
                     this.teamName = res.data.data.teamName
-                    this.remark = res.data.data.remark
+                    this.remark = res.data.data.remark?res.data.data.remark:''
                     // console.log(res.data)
                 }
             )
@@ -656,7 +664,7 @@ export default {
                             })
                             this.compileShow = false
                             this.pageNum = 1
-                            this.selectHjTeamList()
+                            this.searchClick()
                         } else {
                             this.$message({
                                 message: '修改失败，请重试',
@@ -677,6 +685,29 @@ export default {
         searchClick() {
             this.$axios.post(`/api/pcCompanyLibrary/selectHjTeamList?projectId=${this.pid}&pageNum=1&pageSize=${this.pageSize}&teamName=${this.searchTeamName}&constructionId=${this.contractorValue}`).then(
                 res => {
+                    let temp = []
+                    if (res.data.data.rows) {
+                        for (let i = 0; i < res.data.data.rows.length; i++) {
+                            temp.push({
+                                number: (this.pageNum-1)*this.pageSize+i+1,
+                                project: res.data.data.rows[i].projectName,
+                                contractorName: res.data.data.rows[i].companyName,
+                                contractorNumber: res.data.data.rows[i].constructionId,
+                                name: res.data.data.rows[i].teamName,
+                                id: res.data.data.rows[i].id
+                            })
+                        }
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+        // 翻页
+        pageClick() {
+            this.$axios.post(`/api/pcCompanyLibrary/selectHjTeamList?projectId=${this.pid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&teamName=${this.searchTeamName}&constructionId=${this.contractorValue}`).then(
+                res => {
                     if (res.data.data.rows.length) {
                         let temp = []
                         for (let i = 0; i < res.data.data.rows.length; i++) {
@@ -691,19 +722,14 @@ export default {
                         }
                         this.pageTotal = res.data.data.total
                         this.tableData = temp
-                    } else {
-                        this.$message({
-                            message: '没有找到相关班组',
-                            type: 'warning'
-                        })
-                    }
+                    } 
                 }
             )
         },
 
         // 导出Excel
         deriveClick() {
-            location.href=`/api/pcCompanyLibrary/export?projectId=${this.pid}&teamName=${this.searchTeamName}&constructionId=${this.contractorValue}`
+            location.href=`http://47.106.71.3:8080/api/pcCompanyLibrary/export?projectId=${this.pid}&teamName=${this.searchTeamName}&constructionId=${this.contractorValue}`
         },
     }
 }

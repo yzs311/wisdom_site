@@ -15,7 +15,7 @@
                         </li>
                         <li>
                             <span>&#12288;&#12288;工种：</span>
-                            <el-select v-model="professionValue" placeholder="请选择">
+                            <el-select clearable v-model="professionValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in profession"
                                 :key="item.id"
@@ -26,7 +26,7 @@
                         </li>
                         <li>
                             <span>&#12288;&#12288;班组：</span>
-                            <el-select v-model="teamValue" placeholder="请选择">
+                            <el-select clearable v-model="teamValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in team"
                                 :key="item.id"
@@ -43,7 +43,7 @@
                         </li>
                         <li>
                             <span>所属单位：</span>
-                            <el-select v-model="contractorValue" placeholder="请选择">
+                            <el-select clearable v-model="contractorValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in contractor"
                                 :key="item.id"
@@ -54,7 +54,7 @@
                         </li>
                         <li>
                             <span>在场状态：</span>
-                            <el-select v-model="typeValue" placeholder="请选择">
+                            <el-select clearable v-model="typeValue" placeholder="请选择">
                                 <el-option
                                 v-for="item in typeOptions"
                                 :key="item.value"
@@ -88,10 +88,10 @@
                         <i class="icon"></i>
                         导出人员
                     </a>
-                    <!-- <a class="contract">
+                    <a class="contract" @click="downloadIDCardPDF">
                         <i class="icon"></i>
                         生成合同
-                    </a> -->
+                    </a>
                     <a class="last" @click="lastClick">
                         <i class="icon"></i>
                         进场
@@ -204,7 +204,7 @@
                                         <div class="required">*</div>
                                     </span>
                                     <a v-show="photographShow" class="photographA" @click="aClick('photograph')">+</a>
-                                    <img :src="faceUrl" alt="" id="photographImg" class="photographImg" v-show="!photographShow">
+                                    <img :src="faceUrl" alt="" id="photographImg" class="photographImg" v-show="!photographShow" @click="aClick('photograph')">
                                 </div>
                             </li>
                             <li class="picture">
@@ -214,7 +214,7 @@
                                         <div class="required">*</div>
                                     </span>
                                     <a v-show="faceShow" class="faceA" @click="aClick('face')">+</a>
-                                    <img :src="idphotoScan" alt="" id="faceImg" class="faceImg" v-show="!faceShow">
+                                    <img :src="idphotoScan" alt="" id="faceImg" class="faceImg" v-show="!faceShow"  @click="aClick('face')">
                                 </div>
                             </li>
                             <li class="picture">
@@ -224,7 +224,7 @@
                                         <div class="required">*</div>
                                     </span>
                                     <a v-show="backShow" class="backA" @click="aClick('back')">+</a>
-                                    <img :src="idphotoScan2" alt="" id="backImg" class="backImg" v-show="!backShow">
+                                    <img :src="idphotoScan2" alt="" id="backImg" class="backImg" v-show="!backShow" @click="aClick('back')">
                                 </div>
                             </li>
                             <li class="picture">
@@ -233,7 +233,7 @@
                                         银行卡正面
                                     </span>
                                     <a v-show="cardShow" class="cardA" @click="aClick('card')">+</a>
-                                    <img :src="bankCardUrl" alt="" id="cardImg" class="cardImg" v-show="!cardShow">
+                                    <img :src="bankCardUrl" alt="" id="cardImg" class="cardImg" v-show="!cardShow" @click="aClick('card')">
                                 </div>
                             </li>
                         </ul>
@@ -293,11 +293,7 @@
                                     有效期限
                                     <div class="required">*</div>
                                 </span>
-                                <el-date-picker
-                                v-model="idValiddate"
-                                type="date"
-                                placeholder="选择日期">
-                                </el-date-picker>
+                                <input v-model="idValiddate">
                             </div>
                         </li>
                         <li>
@@ -309,7 +305,8 @@
                                 <el-date-picker
                                 v-model="dateOfBirth"
                                 type="date"
-                                placeholder="选择日期">
+                                placeholder="选择日期"
+                                value-format="yyyy-MM-dd">
                                 </el-date-picker>
                             </div>
                             <div>
@@ -650,11 +647,7 @@
                                     有效期限
                                     <div class="required">*</div>
                                 </span>
-                                <el-date-picker
-                                v-model="idValiddate"
-                                type="date"
-                                placeholder="选择日期">
-                                </el-date-picker>
+                                <input v-model="idValiddate">
                             </div>
                         </li>
                         <li>
@@ -666,7 +659,8 @@
                                 <el-date-picker
                                 v-model="dateOfBirth"
                                 type="date"
-                                placeholder="选择日期">
+                                placeholder="选择日期"
+                                value-format="yyyy-MM-dd">
                                 </el-date-picker>
                             </div>
                             <div>
@@ -890,6 +884,8 @@
             </div>
             <!-- 遮罩层 -->
             <div class="shade-box" v-show="dialogShow || compileShow"></div>
+            <!-- 加载层 -->
+            <div class="shade-box" v-loading="loading" v-show="loading"></div>
         </div>
     </div>
 </template>
@@ -1313,6 +1309,7 @@
 export default {
     data() {
         return {
+            loading: false, // 加载遮罩层
             tableData: [], // 表格数据
             pageNum: 1, // 当前页码
             pageSize: 15, // 每页显示条数
@@ -1338,7 +1335,7 @@ export default {
             typeValue: '', // 在场状态值
             checkedCities: [],
             cities: ['简易劳动合同', '两制确认书', '进场承诺书', '退场承诺书','身份证复印件','安全教育培训'], // 合同签订多选
-            pid: 4, // 项目id
+            pid: 0, // 项目id
             searchName: '', // 搜索框姓名
             searchIdCode: '', // 搜索框身份证
             searchPhon: '', // 搜索框手机
@@ -1421,6 +1418,7 @@ export default {
         }
     },
     created() {
+        this.getProjectId()
         this.getPersonnelList()
         this.getContractorList()
         this.getTeamList()
@@ -1431,6 +1429,11 @@ export default {
         this.selectConstructionCompany()
     },
     methods: {
+        // 获取项目id
+        getProjectId() {
+            this.pid = sessionStorage.getItem('pid')
+        },
+
         // 合同签订状态
         contractSigning(val) {
             // console.log(val)
@@ -1480,14 +1483,14 @@ export default {
         handleSizeChange(val) {
             // console.log(`每页 ${val} 条`)
             this.pageSize = val
-            this.getPersonnelList()
+            this.pageClick()
         },
 
         // 当前页
         handleCurrentChange(val) {
             // console.log(`当前页: ${val}`)
             this.pageNum = val
-            this.getPersonnelList()
+            this.pageClick()
         },
 
         // 当前选中的行数
@@ -1619,6 +1622,32 @@ export default {
         searchClick() {
             this.$axios.post(`/api/pc/projectWorkersApi/list?projectId=${this.pid}&pageNum=1&pageSize=${this.pageSize}&empName=${this.searchName}&idCode=${this.searchIdCode}&empPhon=${this.searchPhon}&enterAndRetreatCondition=${this.typeValue}&constructionId=${this.contractorValue}&workTypenameId=${this.teamValue}&jobName=${this.professionValue}`).then(
                 res => {
+                    let temp = []
+                    if (res.data.data.rows) {
+                        for (let i = 0; i < res.data.data.rows.length; i++) {
+                            temp.push({
+                                number: (this.pageNum-1)*this.pageSize+i+1, // 序号
+                                name: res.data.data.rows[i].empName, // 姓名
+                                jobNumber: res.data.data.rows[i].id, // 工号
+                                contractor: res.data.data.rows[i].constructionName, // 所属参建单位
+                                team: res.data.data.rows[i].teamName, // 所属班组
+                                profession: res.data.data.rows[i].title, // 工种
+                                groupLeaderState: res.data.data.rows[i].isTeam, // 是否班组长
+                                type: res.data.data.rows[i].enterAndRetreatCondition, // 状态
+                                id: res.data.data.rows[i].id, // id
+                            })
+                        }
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+        // 翻页
+        pageClick() {
+            this.$axios.post(`/api/pc/projectWorkersApi/list?projectId=${this.pid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&empName=${this.searchName}&idCode=${this.searchIdCode}&empPhon=${this.searchPhon}&enterAndRetreatCondition=${this.typeValue}&constructionId=${this.contractorValue}&workTypenameId=${this.teamValue}&jobName=${this.professionValue}`).then(
+                res => {
                     if (res.data.data.rows) {
                         let temp = []
                         for (let i = 0; i < res.data.data.rows.length; i++) {
@@ -1631,47 +1660,60 @@ export default {
                                 profession: res.data.data.rows[i].title, // 工种
                                 groupLeaderState: res.data.data.rows[i].isTeam, // 是否班组长
                                 type: res.data.data.rows[i].enterAndRetreatCondition, // 状态
+                                id: res.data.data.rows[i].id, // id
                             })
                         }
                         this.pageTotal = res.data.data.total
                         this.tableData = temp
-                    }else {
-                        this.$message({
-                            message: '没有找到相关人员',
-                            type: 'warning'
-                        })
                     }
                 }
             )
         },
-
+        
         // 进场
         lastClick() {
-            // console.log(this.selectionId)
-            this.$axios.post(`/api/pc/projectWorkersApi/outOrIn?tag=0&ids=${this.selectionId}`).then(
-                res => {
-                    // console.log(res.data.msg)
-                    this.$message({
-                        message: res.data.msg,
-                        // type: 'success'
-                    })
-                    this.getPersonnelList()
-                }
-            )
+            if (this.selectionId == '') {
+                this.$message({
+                    message: '未选择项目人员',
+                    type: 'warning'
+                })
+            } else {
+                this.loading = true
+                this.$axios.post(`/api/pc/projectWorkersApi/outOrIn?tag=0&ids=${this.selectionId}`).then(
+                    res => {
+                        // console.log(res.data.msg)
+                        this.loading = false
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'warning'
+                        })
+                        this.pageClick()
+                    }
+                )
+            }
         },
 
         // 退场
         nextClick() {
-            this.$axios.post(`/api/pc/projectWorkersApi/outOrIn?tag=1&ids=${this.selectionId}`).then(
-                res => {
-                    // console.log(res.data.msg)
-                    this.$message({
-                        message: res.data.msg,
-                        // type: 'success'
-                    })
-                    this.getPersonnelList()
-                }
-            )
+            if (this.selectionId == '') {
+                this.$message({
+                    message: '未选择项目人员',
+                    type: 'warning'
+                })
+            } else {
+                this.loading = true
+                this.$axios.post(`/api/pc/projectWorkersApi/outOrIn?tag=1&ids=${this.selectionId}`).then(
+                    res => {
+                        this.loading = false
+                        // console.log(res.data.msg)
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'warning'
+                        })
+                        this.pageClick()
+                    }
+                )
+            }
         },
 
         // 获取人员类别
@@ -1716,6 +1758,7 @@ export default {
                         // $(".photographImg").attr('src',res.data.data[0].fileimgurl)
                         this.faceUrl = res.data.data[0].fileimgurl 
                     } else {
+                        $(`.backA`).text('+')
                         this.$message({
                             message: '上传失败，请重试',
                             type: 'error'
@@ -1728,6 +1771,7 @@ export default {
         // 拿到实时图片上传的文件
         photographUpdate(e) {
             let file = e.target.files[0]
+            // console.log(e.target.files[0])
             this.photographFile = new FormData() //创建form对象
             this.photographFile.append('file',file) // 通过append向form对象添加数据
             // console.log(this.file.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
@@ -1761,6 +1805,7 @@ export default {
                         this.faceShow = false
                         // $(".faceImg").attr('src',res.data.data.url)
                     } else {
+                        $(`.backA`).text('+')
                         this.$message({
                             message: '上传失败，请重试',
                             type: 'error'
@@ -1777,13 +1822,14 @@ export default {
                     // console.log(res.data)
                     if (res.data.code == 0) {
                         this.idAgency = res.data.data.issue
-                        this.idValiddate = res.data.data.idCardValiditydate
+                        this.idValiddate = res.data.data.idCardStartdate
                         // this.idValiddate = '1983-01-02'
                         this.idphotoScan2 = res.data.data.url
                         $(`.backA`).text('+')
                         this.backShow = false
                         // $(".backImg").attr('src',res.data.data.url)
                     } else {
+                        $(`.backA`).text('+')
                         this.$message({
                             message: '上传失败，请重试',
                             type: 'error'
@@ -1805,6 +1851,7 @@ export default {
                         this.cardShow = false
                         // $(".cardImg").attr('src',res.data.data.url)
                     } else {
+                        $(`.backA`).text('+')
                         this.$message({
                             message: '上传失败，请重试',
                             type: 'error'
@@ -1822,7 +1869,7 @@ export default {
             // console.log(this.file.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
             // console.log(`123`)
             $(`.faceA`).text('上传中')
-            this.getAliOcrIdCardFace()
+            // this.getAliOcrIdCardFace()
         },
         // 拿到身份证反面上传的图片
         updateBack(e) {
@@ -1878,11 +1925,12 @@ export default {
 
         // 人员录入
         insertProjectWorkers() {
-            if (this.empName && this.idCode && this.empSex && this.empNation && this.idAddress && this.idAgency && this.idValiddate && this.dateOfBirth && this.workTypenameId && this.constructionId && this.isTeam && this.jobTypeName && this.jobName && this.empCategory && this.startTime && this.idphotoScan && this.idphotoScan2 && this.empNaticeplace && this.cwrIskeypsn && this.ifContract && this.empPhon) {
-                this.$axios.post(`/api/projectWorkersApi/insertProjectWorkers?empName=${this.empName}&idCode=${this.idCode}&empPhon=${this.empPhon}&empSex=${this.empSex}&empNation=${this.empNation}&idAddress=${this.idAddress}&idAgency=${this.idAgency}&idValiddate=${this.idValiddate}&dateOfBirth=${this.dateOfBirth}&workTypenameId=${this.workTypenameId}&constructionId=${this.constructionId}&projectId=${this.pid}&isTeam=${this.isTeam}&jobTypename=${this.jobTypename}&jobName=${this.jobName}&empCategory=${this.empCategory}&startTime=${this.startTime}&idphotoScan=${this.idphotoScan}&idphotoScan2=${this.idphotoScan2}&empNaticeplace=${this.empNaticeplace}&faceUrl=${this.faceUrl}&cwrIskeypsn=${this.cwrIskeypsn}&ifContract=${this.ifContract}&nativePlace=${this.nativePlace}&endTime=${this.endTime}&contract=${this.contract}&entrance=${this.entrance}&exeunt=${this.exeunt}&workConfirm=${this.workConfirm}&iDCardPDF=${this.iDCardPDF}&information=${this.information}&isTrain=${this.isTrain}&bankCardUrl=${this.bankCardUrl}&empCardnum=${this.empDept}&empDept=${this.empDept}&obDept=${this.obDept}&empBankname=${this.empBankname}&accountType=${this.accountType}&accountAddress=${this.accountAddress}&credential=${this.credential}&remark=${this.remark}&information=${this.information}`).then(
+            if (this.empName && this.idCode && this.empSex && this.empNation && this.idAddress && this.idAgency && this.idValiddate && this.dateOfBirth && this.workTypenameId && this.constructionId && (this.isTeam==1 || this.isTeam==0) && this.jobTypeName && this.jobName && this.empCategory && this.startTime && this.idphotoScan && this.idphotoScan2 && this.empNaticeplace && (this.cwrIskeypsn==1 || this.cwrIskeypsn==0) && (this.ifContract==1 || this.ifContract==0) && this.empPhon) {
+                this.loading = true
+                this.$axios.post(`/api/projectWorkersApi/insertProjectWorkers?empName=${this.empName}&idCode=${this.idCode}&empPhon=${this.empPhon}&empSex=${this.empSex}&empNation=${this.empNation}&idAddress=${this.idAddress}&idAgency=${this.idAgency}&idValiddate=${this.idValiddate}&dateOfBirth=${this.dateOfBirth}&workTypenameId=${this.workTypenameId}&constructionId=${this.constructionId}&projectId=${this.pid}&isTeam=${this.isTeam}&jobTypename=${this.jobTypeName}&jobName=${this.jobName}&empCategory=${this.empCategory}&startTime=${this.startTime}&idphotoScan=${this.idphotoScan}&idphotoScan2=${this.idphotoScan2}&empNaticeplace=${this.empNaticeplace}&faceUrl=${this.faceUrl}&cwrIskeypsn=${this.cwrIskeypsn}&ifContract=${this.ifContract}&nativePlace=${this.nativePlace}&endTime=${this.endTime}&contract=${this.contract}&entrance=${this.entrance}&exeunt=${this.exeunt}&workConfirm=${this.workConfirm}&iDCardPDF=${this.iDCardPDF}&information=${this.information}&isTrain=${this.isTrain}&bankCardUrl=${this.bankCardUrl}&empCardnum=${this.empCardnum}&empDept=${this.empDept}&obDept=${this.obDept}&empBankname=${this.empBankname}&accountType=${this.accountType}&accountAddress=${this.accountAddress}&credential=${this.credential}&remark=${this.remark}`).then(
                     res => {
-                        // console.log(res.data)
                         if (res.data.code == 0) {
+                            this.loading = false
                             this.$message({
                                 message: '添加成功',
                                 type: 'success'
@@ -1911,17 +1959,32 @@ export default {
             // this.compileShow = !this.compileShow
             if (this.selectionId == '') {
                 this.$message({
-                    message: '未选择参建单位',
+                    message: '未选择项目人员',
                     type: 'warning'
                 })
             } else if (this.selectionId.includes(',')) {
                 this.$message({
-                    message: '一次只能编辑一个参建单位',
+                    message: '一次只能编辑一个项目人员',
                     type: 'warning'
                 })
             } else {
-                this.compileShow = true
-                this.getMessage()
+                // console.log(this.tableData)
+                for (let i = 0; i < this.tableData.length; i++) {
+                    if (this.selectionId == this.tableData[i].id) {
+                        // console.log(this.tableData[i])
+                        if (this.tableData[i].type == 0) {
+                            this.$message({
+                                message: '请将该人员退场后再进行编辑',
+                                type: 'warning'
+                            })
+                        } else {
+                            this.compileShow = true
+                            this.getMessage()
+                        }
+                    }
+                }
+                // this.compileShow = true
+                // this.getMessage()
             }
         },
 
@@ -1939,31 +2002,31 @@ export default {
                     this.idAgency = res.data.data.idAgency
                     this.idValiddate = res.data.data.idValiddate
                     this.dateOfBirth = res.data.data.dateOfBirth
-                    this.nativePlace = res.data.data.nativePlace
+                    this.nativePlace = res.data.data.nativePlace?res.data.data.nativePlace:''
                     this.startTime = res.data.data.startTime
                     this.endTime = res.data.data.endTime
+                    this.constructionId = res.data.data.constructionId
                     this.workTypenameId = res.data.data.workTypenameId
                     this.isTeam = res.data.data.isTeam==1?'是':'否'
                     this.cwrIskeypsn = res.data.data.cwrIskeypsn==1?'是':'否'
-                    this.jobTypename = res.data.data.jobTypename
                     this.jobName = res.data.data.jobName
                     this.empCategory = res.data.data.empCategory
                     this.ifContract = res.data.data.ifContract==1?'是':'否'
-                    this.empDept = res.data.data.empDept
-                    this.obDept = res.data.data.obDept
-                    this.empBankname = res.data.data.empBankname
-                    this.empCardnum = res.data.data.empCardnum
-                    this.accountType = res.data.data.accountType
-                    this.accountAddress = res.data.data.accountAddress
-                    this.credential = res.data.data.credential
-                    this.remark = res.data.data.remark
+                    this.empDept = res.data.data.empDept?res.data.data.empDept:''
+                    this.obDept = res.data.data.obDept?res.data.data.obDept:''
+                    this.empBankname = res.data.data.empBankname?res.data.data.empBankname:''
+                    this.empCardnum = res.data.data.empCardnum?res.data.data.empCardnum:''
+                    this.accountType = res.data.data.accountType?res.data.data.accountType:''
+                    this.accountAddress = res.data.data.accountAddress?res.data.data.accountAddress:''
+                    this.credential = res.data.data.credential?res.data.data.credential:''
+                    this.remark = res.data.data.remark?res.data.data.remark:''
                     this.contract = res.data.data.contract
                     this.entrance = res.data.data.entrance
                     this.exeunt = res.data.data.exeunt
                     this.workConfirm = res.data.data.workConfirm
                     this.iDCardPDF = res.data.data.iDCardPDF
                     this.isTrain = res.data.data.isTrain
-                    this.information = res.data.data.information
+                    this.information = res.data.data.information?res.data.data.information:0
                     this.faceUrl = res.data.data.faceUrl
                     this.empNaticeplace = res.data.data.empNaticeplace
                     this.idphotoScan = res.data.data.idphotoScan
@@ -1971,31 +2034,40 @@ export default {
                     this.bankCardUrl = res.data.data.bankCardUrl
                     this.enterAndRetreatCondition = res.data.data.enterAndRetreatCondition
                     this.constructionId = res.data.data.constructionId
-                    this.jobTypename = res.data.data.jobTypename
+                    this.jobTypeName = res.data.data.jobTypename
                     this.photographShow = false
                     this.faceShow = false
                     this.backShow = false
                     this.cardShow = false
+                    
+                    // 所属班组赋值
+                    let temp = []
+                    temp.push(Number(res.data.data.constructionId))
+                    temp.push(Number(res.data.data.workTypenameId))
+                    // console.log(temp)
+                    this.valueaa = temp
                 }
             )
         },
 
         // 编辑人员信息
         editClick() {
-            if (this.empName && this.idCode && this.empSex && this.empNation && this.idAddress && this.idAgency && this.idValiddate && this.dateOfBirth && this.workTypenameId && this.constructionId && this.isTeam && this.jobTypeName && this.jobName && this.empCategory && this.startTime && this.idphotoScan && this.idphotoScan2 && this.empNaticeplace && this.cwrIskeypsn && this.ifContract && this.empPhon) {
+            if (this.empName && this.idCode && this.empSex && this.empNation && this.idAddress && this.idAgency && this.idValiddate && this.dateOfBirth && this.workTypenameId && this.constructionId && this.jobTypeName && this.jobName && this.empCategory && this.startTime && this.idphotoScan && this.idphotoScan2 && this.empNaticeplace && this.empPhon) {
+                this.loading = true
                 this.isTeam=this.isTeam=='是'?1:this.isTeam=='否'?0:this.isTeam 
                 this.cwrIskeypsn=this.cwrIskeypsn=='是'?1:this.cwrIskeypsn=='否'?0:this.cwrIskeypsn 
                 this.ifContract=this.ifContract=='是'?1:this.ifContract=='否'?0:this.ifContract 
-                this.$axios.post(`/api/pc/projectWorkersApi/edit?empName=${this.empName}&idCode=${this.idCode}&empPhon=${this.empPhon}&empSex=${this.empSex}&empNation=${this.empNation}&idAddress=${this.idAddress}&idAgency=${this.idAgency}&idValiddate=${this.idValiddate}&dateOfBirth=${this.dateOfBirth}&workTypenameId=${this.workTypenameId}&constructionId=${this.constructionId}&projectId=${this.pid}&isTeam=${this.isTeam}&jobTypename=${this.jobTypename}&jobName=${this.jobName}&empCategory=${this.empCategory}&startTime=${this.startTime}&idphotoScan=${this.idphotoScan}&idphotoScan2=${this.idphotoScan2}&empNaticeplace=${this.empNaticeplace}&faceUrl=${this.faceUrl}&cwrIskeypsn=${this.cwrIskeypsn}&ifContract=${this.ifContract}&nativePlace=${this.nativePlace}&endTime=${this.endTime}&contract=${this.contract}&entrance=${this.entrance}&exeunt=${this.exeunt}&workConfirm=${this.workConfirm}&iDCardPDF=${this.iDCardPDF}&information=${this.information}&isTrain=${this.isTrain}&bankCardUrl=${this.bankCardUrl}&empCardnum=${this.empDept}&empDept=${this.empDept}&obDept=${this.obDept}&empBankname=${this.empBankname}&accountType=${this.accountType}&accountAddress=${this.accountAddress}&credential=${this.credential}&remark=${this.remark}&information=${this.information}&id=${this.selectionId}`).then(
+                this.$axios.post(`/api/pc/projectWorkersApi/edit?empName=${this.empName}&idCode=${this.idCode}&empPhon=${this.empPhon}&empSex=${this.empSex}&empNation=${this.empNation}&idAddress=${this.idAddress}&idAgency=${this.idAgency}&idValiddate=${this.idValiddate}&dateOfBirth=${this.dateOfBirth}&workTypenameId=${this.workTypenameId}&constructionId=${this.constructionId}&projectId=${this.pid}&isTeam=${this.isTeam}&jobTypename=${this.jobTypeName}&jobName=${this.jobName}&empCategory=${this.empCategory}&startTime=${this.startTime}&idphotoScan=${this.idphotoScan}&idphotoScan2=${this.idphotoScan2}&empNaticeplace=${this.empNaticeplace}&faceUrl=${this.faceUrl}&cwrIskeypsn=${this.cwrIskeypsn}&ifContract=${this.ifContract}&nativePlace=${this.nativePlace}&endTime=${this.endTime}&contract=${this.contract}&entrance=${this.entrance}&exeunt=${this.exeunt}&workConfirm=${this.workConfirm}&iDCardPDF=${this.iDCardPDF}&information=${this.information}&isTrain=${this.isTrain}&bankCardUrl=${this.bankCardUrl}&empCardnum=${this.empCardnum}&empDept=${this.empDept}&obDept=${this.obDept}&empBankname=${this.empBankname}&accountType=${this.accountType}&accountAddress=${this.accountAddress}&credential=${this.credential}&remark=${this.remark}&id=${this.selectionId}`).then(
                     res => {
                         if (res.data.code == 0) {
+                            this.loading = false
                             this.$message({
                                 message: '修改成功',
                                 type: 'success'
                             })
                             this.compileShow = false
                             this.pageNum = 1
-                            this.getPersonnelList()
+                            this.searchClick()
                         } else {
                             this.$message({
                                 message: `${res.data.msg}`,
@@ -2014,8 +2086,22 @@ export default {
 
         // 导出Excel
         deriveClick() {
-            location.href = `/api/pc/projectWorkersApi/export?projectId=${this.pid}&empName=${this.searchName}&idCode=${this.searchIdCode}&empPhon=${this.searchIdCode}&enterAndRetreatCondition=${this.typeValue}&constructionId=${this.contractorValue}&workTypenameId=${this.teamValue}&jobName=${this.professionValue}`
+            location.href = `http://47.106.71.3:8080/api/pc/projectWorkersApi/export?projectId=${this.pid}&empName=${this.searchName}&idCode=${this.searchIdCode}&empPhon=${this.searchIdCode}&enterAndRetreatCondition=${this.typeValue}&constructionId=${this.contractorValue}&workTypenameId=${this.teamValue}&jobName=${this.professionValue}`
         },
+
+        // 导出合同
+        downloadIDCardPDF() {
+            let that = this
+            let i = 1
+            let time = setInterval(function () {
+                console.log(i)
+                location.href = `http://47.106.71.3:8080/pdf/downloadIDCardPDF?ids=${that.selectionId}&tag=${i}`
+                i++
+                if (i==6) {
+                    clearInterval(time)
+                }
+            },1500)
+        }
     }
 }
 </script>

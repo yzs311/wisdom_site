@@ -15,20 +15,20 @@
                     <li>
                         <router-link to="/companyGuanLi" class="active">公司管理</router-link>
                     </li>
-                    <li>
+                    <li v-if="userType == 1">
                         <router-link to="/projectGuanLi">项目管理</router-link>
                     </li>
                 </ul>
             </div>
             <div class="user">
-                <el-dropdown trigger="click">
+                <el-dropdown @command="handleCommand">
                     <a class="el-dropdown-link">
                         用户名
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </a>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>修改密码</el-dropdown-item>
-                        <el-dropdown-item>退出</el-dropdown-item>
+                        <el-dropdown-item command="login">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -215,23 +215,38 @@
 export default {
     data() {
         return {
-            activeShow: "/companyGuanLi_set" // 当前选中的模块
+            activeShow: "/companyGuanLi_set", // 当前选中的模块
+            userType: 1, // 账号状态
         }
     },
     created() {
         this.getPath()
+        this.getUserType()
     },
     methods: {
         // 选择模块
-    isActiveShow(i) {
-        this.activeShow = i;
-        $(".sanjiao").hide();
-        $(".subnav").hide();
-    },
-    // 页面刷新时重新赋值
-    getPath() {
-        this.activeShow = this.$route.path;
-    },
+        isActiveShow(i) {
+            this.activeShow = i;
+            $(".sanjiao").hide();
+            $(".subnav").hide();
+        },
+
+        // 页面刷新时重新赋值
+        getPath() {
+            this.activeShow = this.$route.path;
+        },
+
+        // 获取账号类型
+        getUserType() {
+          this.userType = sessionStorage.getItem('userType')
+        },
+
+        // 退出
+        handleCommand(command) {
+            if (command == 'login') {
+                this.$router.push('login')
+            }
+        },
     }
 }
 </script>

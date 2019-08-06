@@ -60,7 +60,7 @@
             :class="activeShow=='/systemLiangZhi_exception'?'active':''"
           >
             <div class="icon exception"></div>
-            <span>异常处理</span>
+            <span>异常记录</span>
           </router-link>
         </li>
         <li @click="isActiveShow('/systemLiangZhi_blacklist')">
@@ -72,17 +72,17 @@
             <span>黑&#8194;名&#8194;单</span>
           </router-link>
         </li>
-        <li @click="permissionShow=false">
-          <a @click="unopenClick">
+        <li @click="rewardClick">
+          <a :class="activeShow.includes('reward')?'active':''">
             <div class="icon reward"></div>
             <span>奖罚记录</span>
           </a>
         </li>
-        <li @click="permissionShow=false">
-          <a @click="unopenClick">
+        <li @click="isActiveShow('/systemLiangZhi_salary')">
+          <router-link to="/systemLiangZhi_salary" :class="activeShow=='/systemLiangZhi_salary'?'active':''">
             <div class="icon salary"></div>
             <span>工资上传</span>
-          </a>
+          </router-link>
         </li>
         <li @click="isActiveShow('/systemLiangZhi_equipment')">
           <router-link
@@ -99,12 +99,12 @@
             <span>两制服务</span>
           </a>
         </li>
-        <li @click="permissionClick">
+        <!-- <li @click="permissionClick">
           <a :class="activeShow.includes('/systemLiangZhi_permission')?'active':''">
             <div class="icon"></div>
             <span>权限设置</span>
           </a>
-        </li>
+        </li> -->
       </ul>
     </div>
     <!-- 两制服务侧拉框 -->
@@ -141,6 +141,21 @@
     </div>
     <!-- 内容 -->
     <router-view class="router-box"></router-view>
+    <!-- 奖罚记录侧拉框 -->
+    <div class="reward-subNav" v-show="rewardShow">
+      <ul>
+        <li @click="isActiveShow('/reward')">
+          <router-link to="/systemLuabfZhi_reward_inquire">奖罚查询</router-link>
+        </li>
+        <li @click="isActiveShow('/reward')">
+          <router-link to="/systemLiangZhi_reward_record">奖罚记录</router-link>
+        </li>
+        <li @click="isActiveShow('/reward')">
+          <router-link to="/systemLiangZhi_reward_category">奖罚类别</router-link>
+        </li>
+      </ul>
+    </div>
+    <div class="reward-sanjiao" v-show="rewardShow"></div>
   </div>
 </template>
 
@@ -363,6 +378,48 @@
     padding-left: 0.3rem;
     padding-right: 0.3rem;
   }
+  .reward-subNav {
+    position: absolute;
+    left: 1.75rem;
+    top: 4.82rem;
+    z-index: 1000;
+    background-color: #1872ad;
+    // display: none;
+    ul {
+      width: 2rem;
+      height: 1.26rem;
+      li {
+        font-size: 0.18rem;
+        line-height: 0.36rem;
+        padding-left: 0.18rem;
+        margin-top: 0.06rem;
+        width: 1.9rem;
+        margin-left: 0.05rem;
+        z-index: 6;
+        cursor: pointer;
+        &:hover {
+          background-color: #54a4d7;
+        }
+        a {
+          color: #fff;
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+  .reward-sanjiao {
+    position: absolute;
+    top: 4.98rem;
+    left: 1.65rem;
+    width: 25px;
+    height: 0.25rem;
+    background-color: #1872ad;
+    transform: rotate(45deg);
+    z-index: 999;
+    // display: none;
+  }
 }
 </style>
 
@@ -373,6 +430,7 @@ export default {
       retractState: true, // 侧导航栏缩进状态
       activeShow: "/systemLiangZhi_home", // 当前选中的模块
       fwShow: false, // 两制服务系统侧拉框状态
+      rewardShow: false, // 奖罚记录侧拉框状态
       permissionShow: false, // 权限设置侧拉框状态
     };
   },
@@ -399,6 +457,12 @@ export default {
         $(".subnav").animate({
           left: "0.6rem"
         })
+        $(".reward-sanjiao").animate({
+          left: "0.5rem"
+        })
+        $(".reward-subNav").animate({
+          left: "0.6rem"
+        })
         $(".permission-nav").animate({
           left: "0.5rem"
         })
@@ -420,6 +484,12 @@ export default {
         $(".subnav").animate({
           left: "1.75rem"
         })
+        $(".reward-sanjiao").animate({
+          left: "1.65rem"
+        })
+        $(".reward-subNav").animate({
+          left: "1.75rem"
+        })
         $(".permission-nav").animate({
           left: "1.65rem"
         })
@@ -433,6 +503,7 @@ export default {
         this.activeShow = i
         this.permissionShow = false
         this.fwShow = false
+        this.rewardShow = false
     },
 
     // 页面刷新时重新赋值
@@ -444,9 +515,15 @@ export default {
     fw(i) {
         this.fwShow = !this.fwShow
         this.permissionShow = false
+        this.rewardShow = false
         // $(".sanjiao").show();
         // $(".subnav").show();
         // this.activeShow = i;
+    },
+
+    rewardClick() {
+      this.rewardShow = !this.rewardShow
+      this.fwShow = false
     },
     
     // 权限设置侧拉框

@@ -87,18 +87,18 @@
                     </div>
                 </div>
             </div> -->
-            <div class="content-box" v-for="(item,index) in craneData" :key="index">
+            <div class="content-box" v-for="(item,index) in towerCraneData" :key="index">
                 <div class="top-box">
                     <div class="status">
-                        <span :class="item.MotorStatus!=0?'normal':'anomaly'">{{item.MotorStatus!=0?'正常运行':'异常运行'}}</span>
+                        <span :class="item.sb=='正常'?'normal':'anomaly'">{{item.sb}}</span>
                     </div>
                     <div class="employee">
                         <span class="bolder">操作员</span>
                         <span>{{item.name}}</span>
                         <span class="bolder">上班时间</span>
-                        <span>{{item.startTime!=null?item.startTime.split(' ')[1]:''}}</span>
+                        <span>{{item.runtime!=null?item.runtime.split(' ')[1]:''}}</span>
                     </div>
-                    <img :src="item.image" alt="" class="pic">
+                    <img :src="item.img" alt="" class="pic">
                     <!-- <img src="../../../static/images/s_pic.png" alt="" class="pic"> -->
                 </div>
                 <div class="bottom-box">
@@ -112,13 +112,13 @@
                         </div>
                         <div class="middle">
                             <div class="middle-img">
-                                <span style="font-size:.24rem">{{item.weight}}t</span>
+                                <span style="font-size:.24rem">{{item.load}}t</span>
                             </div>
                             <span>重量</span>
                         </div>
-                        <div class="top-right" v-show="item.multiple!=null">
+                        <div class="top-right" v-show="item.magnification!=null">
                             <p class="warning">倍率</p>
-                            <span>{{item.multiple}}倍</span>
+                            <span>{{item.magnification}}倍</span>
                         </div>
                     </div>
                     <div class="bottom-data">
@@ -134,7 +134,7 @@
                                 <img src="../../../static/images/s_range.png" alt="">
                                 <div>
                                     <p class="warning">幅度</p>
-                                    <p>{{item.rrange}}m</p>
+                                    <p>{{item.range}}m</p>
                                 </div>
                             </li>
                             <li>
@@ -148,7 +148,7 @@
                                 <img src="../../../static/images/s_rotation.png" alt="">
                                 <div>
                                     <p class="warning">回转</p>
-                                    <p>{{item.angle}}°</p>
+                                    <p>{{item.slewingSpeed}}°</p>
                                 </div>
                             </li>
                             <li>
@@ -170,7 +170,7 @@
                     </div>
                     <div class="day">
                         <span class="bolder">检修倒计时： </span>
-                        <span class="bolder" :class="item.ts>=10?'normal':item.ts>=1?'warning':'anomaly'">{{item.ts}}天</span>
+                        <span class="bolder" :class="item.residue>=10?'normal':item.residue>=1?'warning':'anomaly'">{{item.residue}}天</span>
                     </div>
                 </div>
             </div>
@@ -185,15 +185,15 @@ export default {
             towerCraneData: '', // 塔吊数据
             craneData: '', // 塔吊数据
             imgUrl:'http://gd.17hr.net:8018/', // 图片地址
-            xmid:'',
-            pid: '', // 项目id
+            pid: 0, // 项目id
         }
     },
     created() {
         // 发送请求
         // this.getTowerCraneData()
         this.getPid()
-        this.getCraneData()
+        // this.getCraneData()
+        this.getTowerCrane()
     },
     methods: {
         // 请求塔吊数据
@@ -233,8 +233,18 @@ export default {
         
         // 获取项目id
         getPid() {
-            this.pid = localStorage.getItem('pid')
+            this.pid = sessionStorage.getItem('pid')
         },
+
+        // 获取塔吊数据
+        getTowerCrane() {
+            this.$axios.post(`/api/appCraneAddRecord/kanban?pid=${this.pid}`).then(
+                res => {
+                    // console.log(res.data.sjjlist)
+                    this.towerCraneData = res.data.sjjlist
+                }
+            )
+        }
     },
 }
 </script>

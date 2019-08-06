@@ -135,18 +135,25 @@ export default {
     // 2.0登录
     login() {
       this.$axios.post(`/api/system/computer/login?userAccount=${this.user_name}&userPassword=${this.$md5(this.pwd)}&entry=1`).then(res => {
-        // console.log(res.data.data.userType)
+        // console.log(res.data)
         if (this.user_name==''||this.pwd=='') {
           alert("账号或密码不得为空")
         } else {
           if (res.data.code == -1) {
             alert("账号或密码错误！请重新输入");
-            this.pwd = "";
+            this.pwd = ""
           } else {
-            sessionStorage.setItem("islogin", "true");
-            sessionStorage.setItem("pid", res.data.data.projectId);
+            sessionStorage.setItem("islogin", "true")
+            sessionStorage.setItem("pid", res.data.data.projectId)
+            sessionStorage.setItem("cid", res.data.data.companyId)
+            sessionStorage.setItem("userType", res.data.data.userType)
+            sessionStorage.setItem("userId", res.data.data.id)
+            sessionStorage.setItem("userAccount",res.data.data.userAccount)
+            sessionStorage.setItem('userName',res.data.data.userName)
+            localStorage.setItem("pid", 2977)
+            localStorage.setItem("islogin", "true")
             if (res.data.data.userType == 2) {
-              this.$router.push({ path: "/systemLiangZhi" })
+              this.$router.push({ path: "/systemHome" })
             } else {
               this.$router.push({ path: "/homePage" })
             }

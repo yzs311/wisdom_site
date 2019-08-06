@@ -1,6 +1,6 @@
 <template>
   <div id="fw_three">
-    <div class="centent-box">
+    <div class="content-box">
       <div class="title">工人信息</div>
 
       <!-- 搜索栏 -->
@@ -74,11 +74,11 @@
       <div class="main-box">
         <!-- 功能栏 -->
         <div class="button-box">
-          <a class="new">
+          <a class="derive">
             <i class="icon"></i>
             导出
           </a>
-          <a class="derive" @click="lookAll=true">
+          <a class="statistics" @click="lookAll=true">
             <i class="icon"></i>
             统计
           </a>
@@ -87,49 +87,49 @@
         <div class="table-box">
           <el-table :data="tableData" stripe border>
             <el-table-column type="selection" width="35"></el-table-column>
-            <el-table-column prop="number" label="序号" width="100"></el-table-column>
-            <el-table-column prop="name" label="姓名" width="150"></el-table-column>
+            <el-table-column type="index" label="序号" width="100" :index="indexMethod"></el-table-column>
+            <el-table-column prop="empName" label="姓名" width="150"></el-table-column>
             <el-table-column prop="jyHt" label="简易劳动合同" width="150" align="center">
               <template slot-scope="scope">
-                <i class="el-icon el-icon-close red-color" v-if="scope.row.jyHt=='0'"></i>
+                <i class="el-icon el-icon-close red-color" v-if="scope.row.laborContract==0"></i>
                 <i class="el-icon el-icon-check green-color" v-else></i>
               </template>
             </el-table-column>
             <el-table-column prop="qrHt" label="两制确认书" width="150" align="center">
               <template slot-scope="scope">
-                <i class="el-icon el-icon-close red-color" v-if="scope.row.qrHt=='0'"></i>
+                <i class="el-icon el-icon-close red-color" v-if="scope.row.towSystems==0"></i>
                 <i class="el-icon el-icon-check green-color" v-else></i>
               </template>
             </el-table-column>
             <el-table-column prop="jcHt" label="进场确认书" width="150" align="center">
               <template slot-scope="scope">
-                <i class="el-icon el-icon-close red-color" v-if="scope.row.jcHt=='0'"></i>
+                <i class="el-icon el-icon-close red-color" v-if="scope.row.enter==0"></i>
                 <i class="el-icon el-icon-check green-color" v-else></i>
               </template>
             </el-table-column>
             <el-table-column prop="tcHt" label="退场确认书" width="150" align="center">
               <template slot-scope="scope">
-                <i class="el-icon el-icon-close red-color" v-if="scope.row.tcHt=='0'"></i>
+                <i class="el-icon el-icon-close red-color" v-if="scope.row.come==0"></i>
                 <i class="el-icon el-icon-check green-color" v-else></i>
               </template>
             </el-table-column>
             <el-table-column prop="renHt" label="身份证正反面复印件" width="150" align="center">
               <template slot-scope="scope">
-                <i class="el-icon el-icon-close red-color" v-if="scope.row.renHt=='0'"></i>
+                <i class="el-icon el-icon-close red-color" v-if="scope.row.identity==0"></i>
                 <i class="el-icon el-icon-check green-color" v-else></i>
               </template>
             </el-table-column>
             <el-table-column prop="status" label="状态" width="150" align="center">
               <template slot-scope="scope">
-                <p class="green-text" v-if="scope.row.status=='0'">齐全</p>
-                <p class="red-text" v-else>未齐全</p>
+                <p class="red-text" v-if="scope.row.material==0">不齐全</p>
+                <p class="green-text" v-else>齐全</p>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="right">
               <template slot-scope="scope">
-                <el-button @click="openUploading('上传凭证')" type="text" size="small">上传</el-button>
+                <el-button @click="openUploading('上传凭证',scope.row.id)" type="text" size="small">上传</el-button>
                 <el-button
-                  @click="openLookInfo(scope.row.name)"
+                  @click="openLookInfo(scope.row.empName,scope.row.id)"
                   type="text"
                   size="small"
                   :info="scope"
@@ -143,11 +143,11 @@
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage"
+            :current-page="pageNum"
             :page-sizes="[15, 30, 45]"
-            :page-size="15"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="2"
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="pageTotal"
           ></el-pagination>
         </div>
       </div>
@@ -177,10 +177,10 @@
               <span style="color:red">*</span>
             </div>
             <div class="checkImg">
-              <div class="lxSb" v-if="file==''">
+              <div class="lxSb">
                 <input type="file" class="lxSbfile" @change="fileUp">
               </div>
-              <div class="lxsupserSb" v-if="file !=''">
+              <!-- <div class="lxsupserSb" v-if="file !=''">
                 <div class="info">
                   <span class="text">选 中 1 个 文 件，共 120 K。</span>
                   <el-tooltip content="最多一次性添加12张图片！" placement="top">
@@ -198,7 +198,7 @@
                     <img src="../../../../static/images/fw_upImg2.jpg">
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="bottom">
@@ -206,7 +206,7 @@
             <textarea class="bz" cols="86" rows="10" placeholder="请输入备注信息......."></textarea>
           </div>
           <span slot="footer" class="dialog-footer">
-            <button @click="uploading = false" class="uploadingBtn">确认上传</button>
+            <button @click="uploadingClick()" class="uploadingBtn">确认上传</button>
             <button @click="uploading = false" class="closeBtn">取 消</button>
           </span>
         </el-dialog>
@@ -221,10 +221,11 @@
               <el-table-column prop="name" label="类型" width="280" align="left"></el-table-column>
               <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                  <el-button type="text" size="small">重新上传</el-button>
-                  <el-button type="text" size="small">删除</el-button>
-                  <el-button type="text" size="small" :info="scope.row">编辑</el-button>
-                  <el-button type="text" size="small">查看</el-button>
+                  <!-- <el-button type="text" size="small">重新上传</el-button> -->
+                  <el-button type="text" size="small" @click="deleteClick(scope.row.type)">删除</el-button>
+                  <el-button type="text" size="small" @click="downloadClcik(scope.row.url)">下载</el-button>
+                  <!-- <el-button type="text" size="small" :info="scope.row">编辑</el-button> -->
+                  <!-- <el-button type="text" size="small">查看</el-button> -->
                 </template>
               </el-table-column>
             </el-table>
@@ -246,7 +247,7 @@
               <div class="text" style="border: 5px solid #55abff;">
                 <p class="biaoti">劳务工总数</p>
                 <p class="info">
-                  <span class="num">34</span>
+                  <span class="num">{{statisticsData.count}}</span>
                   <span class="danwei">人</span>
                 </p>
               </div>
@@ -255,7 +256,7 @@
               <div class="text" style="border: 5px solid #6fe8d2;">
                 <p class="biaoti">在场劳务工数</p>
                 <p class="info">
-                  <span class="num">34</span>
+                  <span class="num">{{statisticsData.zaichang}}</span>
                   <span class="danwei">人</span>
                 </p>
               </div>
@@ -264,7 +265,7 @@
               <div class="text" style="border: 5px solid #ffb299;">
                 <p class="biaoti">资料齐全人数</p>
                 <p class="info">
-                  <span class="num">34</span>
+                  <span class="num">{{statisticsData.ziliao}}</span>
                   <span class="danwei">人</span>
                 </p>
               </div>
@@ -274,7 +275,7 @@
             <div class="box">
               <div class="left">
                 <p class="info">
-                  <span>49</span>人
+                  <span>{{statisticsData.ziliao}}</span>人
                 </p>
                 <p class="biaoti">资料齐全人数</p>
               </div>
@@ -330,7 +331,7 @@
             <div class="box">
               <div class="left">
                 <p class="info">
-                  <span>75</span>人
+                  <span>{{statisticsData.jyht}}</span>人
                 </p>
                 <p class="biaoti">简易劳动合同</p>
               </div>
@@ -386,7 +387,7 @@
             <div class="box">
               <div class="left">
                 <p class="info">
-                  <span>82</span>人
+                  <span>{{statisticsData.lzqrs}}</span>人
                 </p>
                 <p class="biaoti">两制确认书</p>
               </div>
@@ -442,7 +443,7 @@
             <div class="box">
               <div class="left">
                 <p class="info">
-                  <span>99</span>人
+                  <span>{{statisticsData.jcqrs}}</span>人
                 </p>
                 <p class="biaoti">进场确认书</p>
               </div>
@@ -498,7 +499,7 @@
             <div class="box">
               <div class="left">
                 <p class="info">
-                  <span>99</span>人
+                  <span>{{statisticsData.come}}</span>人
                 </p>
                 <p class="biaoti">退场确认书</p>
               </div>
@@ -554,7 +555,7 @@
             <div class="box">
               <div class="left">
                 <p class="info">
-                  <span>37</span>人
+                  <span>{{statisticsData.sfzfyj}}</span>人
                 </p>
                 <p class="biaoti">身份证正反面复印件</p>
               </div>
@@ -617,48 +618,7 @@
 export default {
   data() {
     return {
-      tableData: [
-        {
-          number: 1, // 序号
-          name: "某某某", // 姓名
-          jyHt: "0", // 简易劳动合同
-          qrHt: "1", // 两制确认书
-          jcHt: "1", // 进场确认书
-          tcHt: "1", // 退场确认书
-          renHt: "1", // 身份证正反面复印件
-          status: "0" // 状态
-        },
-        {
-          number: 2, // 序号
-          name: "某某某", // 姓名
-          jyHt: "0", // 简易劳动合同
-          qrHt: "0", // 两制确认书
-          jcHt: "1", // 进场确认书
-          tcHt: "0", // 退场确认书
-          renHt: "1", // 身份证正反面复印件
-          status: "0" // 状态
-        },
-        {
-          number: 3, // 序号
-          name: "某某某", // 姓名
-          jyHt: "1", // 简易劳动合同
-          qrHt: "1", // 两制确认书
-          jcHt: "1", // 进场确认书
-          tcHt: "1", // 退场确认书
-          renHt: "1", // 身份证正反面复印件
-          status: "1" // 状态
-        },
-        {
-          number: 4, // 序号
-          name: "某某某", // 姓名
-          jyHt: "0", // 简易劳动合同
-          qrHt: "1", // 两制确认书
-          jcHt: "0", // 进场确认书
-          tcHt: "1", // 退场确认书
-          renHt: "1", // 身份证正反面复印件
-          status: "0" // 状态
-        }
-      ], // 表格数据
+      tableData: [], // 表格数据
       currentPage: 1, // 当前页码
       dialogShow: false, // 新增单位对话框状态
       dwOptions: [
@@ -708,46 +668,52 @@ export default {
       uploading: false,
       // 查看弹框的判断值
       lookInfo: false,
-      // 图片
-      file: [],
       leixingOptions: [
         {
-          value: "选项1",
+          value: "1",
           label: "简易劳动合同"
-        }
+        },
+        {
+          value: "2",
+          label: "两制确认书"
+        },
+        {
+          value: "3",
+          label: "进场确认书"
+        },
+        {
+          value: "4",
+          label: "退场确认书"
+        },
+        {
+          value: "5",
+          label: "身份证正反面复印件"
+        },
       ], //选择合同类型
       leixingValue: "", //合同类型的值
-      lookInfoTable: [
-        {
-          number: "1",
-          name: "简易劳动合同"
-        },
-        {
-          number: "2",
-          name: "两制确认书"
-        },
-        {
-          number: "3",
-          name: "进场确认书"
-        },
-        {
-          number: "4",
-          name: "退场确认书"
-        },
-        {
-          number: "5",
-          name: "身份证正反面复印件"
-        }
-      ], //查看弹框的表格数据
+      lookInfoTable: [], //查看弹框的表格数据
       lookAll: false,
       lookAllColor: "",
-      baifenbi1: 49, //资料齐全人数百分比
-      baifenbi2: 75, //简易劳动合同百分比
-      baifenbi3: 82, //两制确认书百分比
-      baifenbi4: 90, //进场承诺书数百分比
-      baifenbi5: 90, //退场承诺书数百分比
-      baifenbi6: 37 //身份证百分比
+      baifenbi1: 0, //资料齐全人数百分比
+      baifenbi2: 0, //简易劳动合同百分比
+      baifenbi3: 0, //两制确认书百分比
+      baifenbi4: 0, //进场承诺书数百分比
+      baifenbi5: 0, //退场承诺书数百分比
+      baifenbi6: 0, //身份证百分比
+
+      file: '', // 文件
+      projectId: '', // 项目id
+      pageSize: 15, // 每页显示条数
+      pageNum: 1, // 当前页
+      pageTotal: 0, // 总条数
+      statisticsData: '', // 统计信息
+      userId: '', // 当前选择角色的id
     };
+  },
+  created() {
+    this.getProjectId()
+    this.getIndexList()
+    this.getStatisticsData()
   },
   methods: {
     handleSizeChange(val) {
@@ -761,28 +727,217 @@ export default {
     dialogClick() {
       this.dialogShow = !this.dialogShow;
     },
+
     //   打开上传弹框
-    openUploading(text) {
+    openUploading(text,id) {
       this.uploadingTitle = text;
+      this.userId = id
       this.uploading = true;
+      // this.file = new FormData()
+      // this.file.append('file','')
     },
+
     // 上传文件处理
     fileUp(e) {
-      let file = e.target.files;
-      //   this.file = new FormData();
-      this.file.push(file);
+      let file = e.target.files[0]
+      this.file = new FormData()
+      this.file.append('file',file)
     },
+
     // 打开查看弹框
-    openLookInfo(text) {
+    openLookInfo(text,id) {
       this.lookInfoTitle = text;
+      this.userId = id
       this.lookInfo = true;
+      this.getParticularsData()
+    },
+
+    // 获取项目id
+    getProjectId() {
+      this.projectId = sessionStorage.getItem(`pid`)
+    },
+
+    // 序号
+    indexMethod(index) {
+      return (this.pageNum - 1) * this.pageSize + index + 1;
+    },
+
+    // 获取工人信息列表
+    getIndexList() {
+      this.$axios.post(`/api/workersInformationAp/selectall?projectId=${this.projectId}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`).then(
+        res => {
+          // console.log(res.data)
+          this.tableData = res.data.data
+          this.pageTotal = res.data.count
+        }
+      )
+    },
+
+    // 获取统计信息
+    getStatisticsData() {
+      this.$axios.post(`/api/workersInformationAp/lzfwtj?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.baifenbi1 = res.data.data.ziliaobfb.split('%')[0]
+          this.baifenbi2 = res.data.data.jyhtbfb.split('%')[0]
+          this.baifenbi3 = res.data.data.lzqrsbfb.split('%')[0]
+          this.baifenbi4 = res.data.data.jcqrsbfb.split('%')[0]
+          this.baifenbi5 = res.data.data.comebfb.split('%')[0]
+          this.baifenbi6 = res.data.data.sfzfyjbfb.split('%')[0]
+          this.statisticsData = res.data.data
+        }
+      )
+    },
+
+    // 上传
+    uploadingClick() {
+      if (this.file&&this.leixingValue) {
+        let headers = {headers: {"Content-Type": "multipart/form-data"}}
+        this.$axios.post(`/api/workersInformationAp/insteradd?typeid=${this.leixingValue}&userId=${this.userId}&projectId=${this.projectId}`,this.file,headers).then(
+          res => {
+            // console.log(res.data)
+            if (res.data.result_code == 0) {
+              this.$message({
+                type: "success",
+                message: "上传成功"
+              })
+              this.getIndexList()
+              this.uploading = false
+            } else {
+              this.$message({
+                message: "上传失败",
+                type: "error"
+              })
+            }
+          }
+        )
+      } else {
+        this.$message({
+          message: "请选择需要上传的文件与文件类型",
+          type: "error"
+        });
+      }
+    },
+
+    // 获取查看详情数据列表
+    getParticularsData() {
+      this.$axios.post(`/api/workersInformationAp/sele?id=${this.userId}`).then(
+        res => {
+          // console.log(res.data)
+          let temp = []
+          let i = 1
+          if (!res.data.data) {
+            this.lookInfoTable = []
+          } else {
+            if (res.data.data.laborContract) {
+              temp.push(
+                {
+                  number: i,
+                  name: "简易劳动合同",
+                  url: res.data.data.laborContract,
+                  type: '1'
+                }
+              )
+              i++
+            }
+            if (res.data.data.twoSystems) {
+              temp.push(
+                {
+                  number: i,
+                  name: "两制确认书",
+                  url: res.data.data.twoSystems,
+                  type: '2'
+                }
+              )
+              i++
+            }
+            if (res.data.data.enter) {
+              temp.push(
+                {
+                  number: i,
+                  name: "进场确认书",
+                  url: res.data.data.enter,
+                  type: '3'
+                }
+              )
+              i++
+            }
+            if (res.data.data.come) {
+              temp.push(
+                {
+                  number: i,
+                  name: "退场确认书",
+                  url: res.data.data.come,
+                  type: '4'
+                }
+              )
+              i++
+            }
+            if (res.data.data.identity) {
+              temp.push(
+                {
+                  number: i,
+                  name: "	身份证正反面复印件",
+                  url: res.data.data.identity,
+                  type: '5'
+                }
+              )
+              i++
+            }
+          }
+          // console.log(this.lookInfoTable)
+          this.lookInfoTable = temp
+        }
+      )
+    },
+
+    // 删除
+    deleteClick(type) {
+      this.$confirm("是否要删除资料？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        // console.log(id)
+        let headers = {headers: {"Content-Type": "multipart/form-data"}}
+        this.$axios.post(`/api/workersInformationAp/insteradd?typeid=${type}&userId=${this.userId}&projectId=${this.projectId}`,headers).then(
+          res => {
+            // console.log(res.data)
+            if (res.data.result_code == 0) {
+              this.$message({
+                type: "success",
+                message: "删除成功"
+              })
+              this.getIndexList()
+              this.getParticularsData()
+            } else {
+              this.$message({
+                message: "删除失败",
+                type: "error"
+              })
+            }
+          }
+        )
+      })
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消删除"
+        });
+      })
+    },
+
+    // 下载
+    downloadClcik(fileName) {
+      location.href=`/api/lzfw/testDownload?fileName=${fileName}`
     }
   }
 };
 </script>
+
 <style lang="less">
 #fw_three {
-  .centent-box {
+  .content-box {
     border-radius: 0.04rem;
     background-color: #fff;
     box-shadow: 0 0 0.5rem -0.3rem #666;
@@ -891,17 +1046,40 @@ export default {
             background-color: #0090ff;
           }
           .icon {
-            width: 0.37rem;
-            height: 0.28rem;
+            width: .37rem;
+            height: .28rem;
+            transition: all .5s;
             display: inline-block;
             vertical-align: middle;
+            background-repeat: no-repeat;
+            background-position: center center;
+          }
+        }
+        .statistics {
+          .icon {
+            background-image: url('../../../../static/images/systemLiangZhi-statistics.png');
+          }
+          &:hover {
+            .icon {
+              background-image: url('../../../../static/images/systemLiangZhi-statisticsHover.png');
+            }
+          }
+        }
+        .derive {
+          .icon {
+            background-image: url('../../../../static/images/system-derive.png');
+          }
+          &:hover {
+            .icon {
+              background-image: url('../../../../static/images/system-deriveHover.png');
+            }
           }
         }
       }
       .table-box {
         width: 100%;
         margin-top: 0.2rem;
-        min-height: 5.6rem;
+        min-height: 5.8rem;
         .el-table {
           width: 16.28rem;
           // width: 100%;
@@ -1199,7 +1377,8 @@ export default {
               border: 1px solid #7b7b7b;
               border-radius: 0.05rem;
               padding-left: .1rem;
-                          &::placeholder {
+              width: 6.22rem;
+            &::placeholder {
               color: #ccc;
             }
 

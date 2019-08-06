@@ -2,7 +2,7 @@
     <div id="l_monitoring">
         <div class="content-box">
             <div class="nav">
-                <el-collapse accordion>
+                <!-- <el-collapse accordion>
                     <el-collapse-item :title="monitoringData.title" name="1">
                         <el-collapse @change="handleChange" accordion>
                             <el-collapse-item v-for="(item,index) in monitoringData.areaList" :key="index" :title="item.name" :name="`${item.name}`">
@@ -11,6 +11,20 @@
                                     {{item2.hname}}
                                     <span class="online" v-show="item2.xloc">在线</span>
                                     <span class="offline" v-show="!item2.xloc">不在线</span>
+                                    </a>
+                                </div>
+                            </el-collapse-item>
+                        </el-collapse>
+                    </el-collapse-item>
+                </el-collapse> -->
+                <el-collapse accordion>
+                    <el-collapse-item v-for="(item,index) in workAreaList" :title="item.projectName" name="1" :key="index">
+                        <el-collapse @change="handleChange" accordion>
+                            <el-collapse-item :title="item2.areaName" :name="item2.areaId" v-for="item2 in item.areaList" :key="item2.areaId">
+                                <div v-for="item3 in item2.userList" :key="item3.yuserId">
+                                    <a @click="$router.push({ path: '/location/l_search',query: { orderId: item3.userName}})">
+                                    {{item3.userName}}
+                                    <span :class="item3.userStatus?'online':'offline'">{{item3.userStatus?'在线':'不在线'}}</span>
                                     </a>
                                 </div>
                             </el-collapse-item>
@@ -53,8 +67,8 @@
                         font-size: .17rem;
                         background-color: #030625;
                         // width: 2.55rem;
-                        height: .3rem;
-                        line-height: .30rem;
+                        height: .4rem;
+                        line-height: .17rem;
                         // overflow: hidden;
                         // white-space: nowrap;
                         // text-overflow: ellipsis;
@@ -72,6 +86,7 @@
                                 height: 100%;
                                 font-size: .13rem;
                                 position: relative;
+                                color: #fff;
                                 .online {
                                     color: #24e974;
                                     position: absolute;
@@ -220,12 +235,12 @@ export default {
                     },
                 }
             }],
-            pid: 0, //项目id
-            monitoringData: '', //项目列表数据
+            projectId: '', // 项目id
+            workAreaList: '', // 工区列表
         }
     },
     created() {
-        this.getPid()
+        this.getProjectId()
         this.getMonitoringData()
     },
     methods: {
@@ -239,15 +254,15 @@ export default {
             // }
             // this.circle.show()
             let temp = []
-            for (let i = 0; i < this.monitoringData.areaList.length; i++) {
+            for (let i = 0; i < this.workAreaList[0].areaList.length; i++) {
                 // console.log(this.monitoringData.areaList[i].name)
-                if (val == this.monitoringData.areaList[i].name) {
-                    temp.push(this.monitoringData.areaList[i].xloc)
-                    temp.push(this.monitoringData.areaList[i].yloc)
+                if (val == this.workAreaList[0].areaList[i].areaId) {
+                    temp.push(this.workAreaList[0].areaList[i].areaXloc)
+                    temp.push(this.workAreaList[0].areaList[i].areaYloc)
                     // 设置电子围栏圆心
                     this.circle.setCenter(temp)
                     // 设置电子围栏半径
-                    this.circle.setRadius(this.monitoringData.areaList[i].radius)
+                    this.circle.setRadius(this.workAreaList[0].areaList[i].areaRadius)
                     // 设置地图中心点
                     this.center = temp
                     // 设置地图缩放等级
@@ -256,24 +271,18 @@ export default {
             }
         },
 
-        // 获取项目工区数据
+        // 获取工区列表
         getMonitoringData() {
-            this.$axios.get(`/lz/project/listzh?id=${this.pid}`).then(
+            this.$axios.post(`/api/hireApi/getHirePeople?projectId=${this.projectId}`).then(
                 res => {
-                    // console.log(res.data)
-                    this.monitoringData = res.data
-                    // this.circleCenter = [114.007675,22.663599]
-                    // this.circleRadius = 200
-                    
-                    
-                    // this.circle.hide()
+                    this.workAreaList = res.data.data
                 }
             )
         },
 
         // 获取项目id
-        getPid() {
-          this.pid = localStorage.getItem('pid')
+        getProjectId() {
+          this.projectId = sessionStorage.getItem('pid')
         }
     }
 }

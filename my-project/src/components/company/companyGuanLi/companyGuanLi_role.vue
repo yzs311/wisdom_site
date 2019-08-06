@@ -1,6 +1,6 @@
 <template>
     <div id="companyGuanLi_role">
-        <div class="centent-box">
+        <div class="content-box">
             <!-- 搜索栏 -->
             <div class="search-box">
                 <div class="input-box">
@@ -93,7 +93,7 @@
 <style lang="less">
     #companyGuanLi_role {
         width: 100%;
-        .centent-box {
+        .content-box {
             border-radius: .04rem;
             background-color: #fff;
             box-shadow: 0 0 .5rem -.3rem #666;

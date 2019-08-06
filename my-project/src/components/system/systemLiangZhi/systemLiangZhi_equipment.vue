@@ -1,6 +1,6 @@
 <template>
     <div id="systemLiangZhi_equipment">
-        <div class="centent-box">
+        <div class="content-box">
             <!-- 搜索栏 -->
             <div class="search-box">
                 <div class="left-box">
@@ -189,7 +189,7 @@
 <style lang="less">
     #systemLiangZhi_equipment {
         width: 100%;
-        .centent-box {
+        .content-box {
             border-radius: .04rem;
             background-color: #fff;
             box-shadow: 0 0 .5rem -.3rem #666;

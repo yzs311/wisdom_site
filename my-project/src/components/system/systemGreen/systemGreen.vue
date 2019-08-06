@@ -11,19 +11,19 @@
                 </li>
                 <li @click="isActiveShow('/systemGreen_TSP')">
                     <router-link to="/systemGreen_TSP" :class="activeShow=='/systemGreen_TSP'||activeShow=='/systemGreen'?'active':''">
-                        <div class="icon"></div>
+                        <div class="icon TSP"></div>
                         <span>TSP检测</span>
                     </router-link>
                 </li>
                 <li>
                     <a>
-                        <div class="icon"></div>
+                        <div class="icon waste"></div>
                         <span>废弃监管</span>
                     </a>
                 </li>
                 <li>
                     <a>
-                        <div class="icon"></div>
+                        <div class="icon rainwater"></div>
                         <span>雨水回收</span>
                     </a>
                 </li>
@@ -84,6 +84,15 @@
                             // text-align: justify;
                             // display: inline-block;
                             // text-align-last:justify;
+                        }
+                        .TSP {
+                            background-image: url('../../../../static/images/systemGreen-TSP.png');
+                        }
+                        .rainwater {
+                            background-image: url('../../../../static/images/systemGreen-rainwater.png');
+                        }
+                        .waste {
+                            background-image: url('../../../../static/images/systemGreen-waste.png');
                         }
                     }
                     a:hover {

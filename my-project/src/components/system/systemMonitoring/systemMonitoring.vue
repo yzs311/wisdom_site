@@ -8,19 +8,34 @@
                 <li class="button">
                     <router-link to="/systemHome" class="return"></router-link>
                 </li>
-                <li>
-                    <a class="active">
+                <li v-for="(item,index) in videoAreaData" :key="index">
+                    <a :class="item.id==areaId?'active':''" @click="selectVideoArea(item.id)">
                         <!-- <div class="icon"></div> -->
-                        <span>建兴科技园东侧</span>
+                        <span>{{item.areaName}}</span>
                     </a>
                 </li>
             </ul>
         </div>
         <!-- 内容 -->
         <div class="padding-box">
-            <div class="centent-box">
+            <div class="content-box">
                 <div class="left-box">
                     <ul>
+                        <li class="active" v-for="(item,index) in videoData" :key="index" v-if="areaId==item.areaId">
+                            <a class="text">
+                                <i class="icon"></i>
+                                <span>{{item.videoName}}</span>
+                                <i class="dot"></i>
+                            </a>
+                            <div class="video">
+                                <video id="player1" poster="" controls playsInline webkit-playsinline autoplay >
+                                    <source :src="item.url" type="" />
+                                    <source :src="item.url" type="application/x-mpegURL" />
+                                </video>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- <ul>
                         <li class="active">
                             <a class="text">
                                 <i class="icon"></i>
@@ -93,22 +108,22 @@
                             </a>
                             <div class="video"></div>
                         </li>
-                    </ul>
+                    </ul> -->
                 </div>
-                <div class="right-box">
+                <div class="right-box" v-for="(item,index) in videoData"  :key="index">
                     <div class="equipment">
                         <div class="title">设备信息</div>
                         <ul>
-                            <li>名称：摄像头1</li>
-                            <li>型号：大华ECE800</li>
-                            <li>位置：北广场朱雀门</li>
-                            <li>监控方式：固定点监控</li>
+                            <li>名称：{{item.videoName}}</li>
+                            <li>型号：{{item.videoType}}</li>
+                            <li>位置：{{item.videoAddress}}</li>
+                            <li>监控方式：{{item.videoWay}}</li>
                         </ul>
                         <ul class="bottom">
-                            <li>应急联系人：某某某</li>
-                            <li>联系方式：18111111111</li>
-                            <li>所属部门：安质部</li>
-                            <li>职务：现场管理员</li>
+                            <li>应急联系人：{{item.contacts}}</li>
+                            <li>联系方式：{{item.contactsWay}}</li>
+                            <li>所属部门：{{item.department}}</li>
+                            <li>职务：{{item.position}}</li>
                         </ul>
                     </div>
                     <div class="early-warning">
@@ -227,7 +242,7 @@
             padding-top: 0.3rem;
             padding-left: 0.2rem;
             padding-right: 0.2rem;
-            .centent-box {
+            .content-box {
                 height: 9.5rem;
                 border-radius: .04rem;
                 background-color: #fff;
@@ -247,10 +262,13 @@
                             padding: 0 .1rem;
                             margin-left: .35rem;
                             margin-bottom: .3rem;
-                            background-color: #fbfeff;
-                            border: .01rem solid #cce9ff;
+                            // background-color: #fbfeff;
+                            // border: .01rem solid #cce9ff;
+                            background-image: url('../../../../static/images/systemMonitoring-border.png');
+                            background-size: contain;
                             &.active {
-                                border: .01rem solid #3ada76;
+                                // border: .01rem solid #3ada76;
+                                background-image: url('../../../../static/images/systemMonitoring-activeBorder.png');
                             }
                             .text {
                                 height: .4rem;
@@ -262,7 +280,9 @@
                                     border-radius: .24rem;
                                     display: inline-block;
                                     vertical-align: middle;
-                                    background-color: #66c1ff;
+                                    // background-color: #66c1ff;
+                                    background-image: url('../../../../static/images/systemMonitoring-icon.png');
+                                    background-size: contain;
                                 }
                                 span {
                                     padding: 0 .08rem;
@@ -281,7 +301,12 @@
                             .video {
                                 width: 3.48rem;
                                 height: 1.96rem;
-                                border: .01rem solid #000;
+                                // border: .01rem solid #000;
+                                video {
+                                    width: 100%;
+                                    height: 100%;
+                                    // margin: 0 auto;
+                                }
                             }
                         }
                     }
@@ -329,8 +354,71 @@
 export default {
     data() {
         return {
-
+            projectId: 0, // 项目id
+            areaId: 0, // 视频区id
+            activeId: 1, // 当前选中设备的id
+            videoAreaData: [], // 视频区数据
+            videoData: [], // 视频数据
+            player1: '',
         }
+    },
+    created() {
+        this.getProjectId()
+        this.getProjectVideoArea()
+    },
+    updated() {
+        if(this.videoData!=""){
+            //如果在mounted中声明，直播地址还未取到，导致视频不显示。所以放在了这里
+            this.player1 = new EZUIPlayer('player1');
+            // this.player2 = new EZUIPlayer('player2')
+            // this.player3 = new EZUIPlayer('player3')
+            // this.player4 = new EZUIPlayer('player4')
+        }
+    },
+    methods: {
+        // 获取项目id
+        getProjectId() {
+            this.projectId = sessionStorage.getItem('pid')
+        },
+
+        // 获取视频区列表
+        getProjectVideoArea() {
+            this.$axios.post(`/api/ProjectVideoAreaApi/getProjectVideoArea?projectId=${this.projectId}`).then(
+                res => {
+                    // console.log(res.data)
+                    if (res.data.data) {
+                        // console.log('有视频区域')
+                        this.videoAreaData = res.data.data
+                    } else {
+                        // console.log('无视频区域')
+                        this.videoAreaData = [{
+                            id: 0,
+                            projectid: 0,
+                            areaName: "无监控数据"
+                        }]
+                    }
+                    this.areaId = res.data.data[0].id
+                    this.getProjectVideo()
+                }
+            )
+        },
+        
+        // 获取监控直播流
+        getProjectVideo() {
+            this.$axios.post(`/api/ProjectVideo/getProjectVideo?areaId=${this.areaId}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.videoData = res.data.data
+                }
+            )
+        },
+
+        // 当前选中视频区
+        selectVideoArea(areaId) {
+            // console.log(areaId)
+            this.areaId = areaId
+            this.getProjectVideo()
+        },
     }
 }
 </script>

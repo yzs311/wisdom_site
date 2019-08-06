@@ -3,7 +3,7 @@
         <!-- 顶部通栏 -->
         <div class="top-nav">
             <div class="top-nav-box">
-                <div class="logo-box"></div>
+                <!-- <div class="logo-box"></div> -->
                 <a class="return" @click="$router.go(-1)">返回</a>
             </div>
         </div>
@@ -38,7 +38,7 @@
             </div>
         </div>
         <!-- 页面主体 -->
-        <div class="centent-box">
+        <div class="content-box">
             <div class="center-box">
                 <div class="left-box">
                     <div class="title">
@@ -189,7 +189,7 @@
                 }
             }
         }
-        .centent-box {
+        .content-box {
             min-height: 533px;
             padding-top: 82px;
             background-color: #f5f5f5;

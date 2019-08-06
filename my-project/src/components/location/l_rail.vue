@@ -3,9 +3,9 @@
         <div class="content-box">
             <div class="nav">
                 <el-collapse @change="handleChange" accordion>
-                    <el-collapse-item :title="monitoringData.title" name="1">
-                        <div v-for="(item,index) in monitoringData.areaList" :key="index">
-                            <a style="color:#fff" @click="setElectronicFence(item)">{{item.name}}</a>
+                    <el-collapse-item v-for="(item,index) in workAreaList" :title="item.projectName" name="1" :key="index">
+                        <div v-for="item2 in item.areaList" :key="item2.areaId">
+                            <a style="color:#fff" @click="setElectronicFence(item2)">{{item2.areaName}}</a>
                         </div>
                     </el-collapse-item>
                 </el-collapse>
@@ -19,7 +19,7 @@
                     <p>请输入电子围栏半径（单位：米）</p>
                     <input v-model="radius" type="number">
                     <div class="button-box">
-                        <a class="save" :plain="true" @click="saveClick">保存</a>
+                        <a class="save" :plain="true" @click="setRail">保存</a>
                         <a class="cancel" @click="cancelClick">取消</a>
                     </div>
                 </div>
@@ -60,6 +60,7 @@
                             display: block;
                             width: 100%;
                             height: 100%;
+                            padding: .05rem 0;
                             font-size: .15rem;
                             color:#3375fe;
                         }
@@ -153,8 +154,8 @@ export default {
             circle: '', // 电子围栏位置信息
             gid: '', // 工区id
             radius: '', // 电子围栏半径
-            pid: 0, //项目id
-            monitoringData: '', //项目列表数据
+            projectId: '', //项目id
+            workAreaList: '', // 工区列表
             importShow: false,
             polygon: '',
             text: '',
@@ -246,38 +247,25 @@ export default {
             // }
         },
 
-        // 获取项目工区数据
-        getMonitoringData() {
-            this.$axios.get(`/lz/project/listzh?id=${this.pid}`).then(
-                res => {
-                    // console.log(res.data)
-                    this.monitoringData = res.data
-                    // this.circleCenter = [114.007675,22.663599]
-                    // this.circleRadius = 200                    
-                    // this.circle.hide()
-                }
-            )
-        },
-
         // 渲染选中工区的电子围栏
         setElectronicFence(areaList) {
             // console.log(areaList)
             let temp = []
-            temp.push(areaList.xloc)
-            temp.push(areaList.yloc)
+            temp.push(areaList.areaXloc)
+            temp.push(areaList.areaYloc)
             // 设置电子围栏圆心
             this.circle.setCenter(temp)
             // 设置电子围栏半径
-            this.circle.setRadius(areaList.radius)
+            this.circle.setRadius(areaList.areaRadius)
             // 设置地图中心点
             this.center = temp
             // 设置地图缩放等级
             this.zoom = 14
             // 保存当前选择工区的工区id
             // this.
-            this.gid = areaList.id
+            this.gid = areaList.areaId
             // 保存当前选择工区的半径
-            this.radius = areaList.radius
+            this.radius = areaList.areaRadius
         },
 
         // 编辑电子围栏信息
@@ -339,7 +327,37 @@ export default {
 
         // 获取项目id
         getPid() {
-          this.pid = localStorage.getItem('pid')
+          this.projectId = sessionStorage.getItem('pid')
+        },
+
+        // 获取工区列表
+        getMonitoringData() {
+            this.$axios.post(`/api/hireApi/getHirePeople?projectId=${this.projectId}`).then(
+                res => {
+                    this.workAreaList = res.data.data
+                }
+            )
+        },
+
+        // 设置电子围栏半径
+        setRail() {
+            this.importShow = false
+            this.$axios.post(`/api/hireApi/edit?id=${this.gid}&radius=${this.radius}`).then(
+                res => {
+                    if (res.data.data == 1) {
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        })
+                        this.getMonitoringData()
+                    } else {
+                        this.$message({
+                            message: '修改失败，请重试',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
         }
     }
 }

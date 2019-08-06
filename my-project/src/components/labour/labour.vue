@@ -9,8 +9,8 @@
           <div class="name">
             <h3>现场人员</h3>
             <div class="la-jindu">
-              <div class="la-subjindu">
-                <p>{{dh}}%</p>
+              <div class="la-subjindu" :style="`width:${KQCount.bfb}`">
+                <p>{{KQCount.bfb}}</p>
               </div>
             </div>
           </div>
@@ -22,10 +22,7 @@
                 </div>
                 <div>
                   <p>项目在场人数</p>
-                  <span
-                    v-for="(item,index) in KQCountData"
-                    :key="index"
-                  >{{item.sum}}</span>
+                  <span>{{KQCount.sum}}</span>
                 </div>
               </li>
               <li>
@@ -34,10 +31,7 @@
                 </div>
                 <div>
                   <p>今日考勤总人数</p>
-                  <span
-                    v-for="(item,index) in KQCountData"
-                    :key="index"
-                  >{{item.kq}}</span>
+                  <span>{{KQCount.kq}}</span>
                 </div>
               </li>
               <li>
@@ -46,10 +40,7 @@
                 </div>
                 <div>
                   <p>今日工人出勤人数</p>
-                  <span
-                    v-for="(item,index) in KQCountData"
-                    :key="index"
-                  >{{item.workerCheck}}</span>
+                  <span>{{KQCount.workerCheck}}</span>
                 </div>
               </li>
               <li>
@@ -58,10 +49,7 @@
                 </div>
                 <div>
                   <p>今日管理出勤人数</p>
-                  <span
-                  v-for="(item,index) in KQCountData"
-                    :key="index"
-                    >{{item.managerCheck}}</span>
+                  <span>{{KQCount.managerCheck}}</span>
                 </div>
               </li>
             </ul>
@@ -75,13 +63,13 @@
           <div class="map" id="professionMap" style="width:4.14rem;height:1.8rem;"></div>
           <div class="left-bottom-data" id="leftBottom">
             <ul id="leftBottom1">
-              <li v-for="(item,key,index) in WorkTypeData" :key="index">
+              <li v-for="(item,index) in workType" :key="index">
                 <div class="float-left">
                   <i :class="'color'+(index+1)"></i>
-                  <span>{{key}}</span>
+                  <span>{{item.title}}</span>
                 </div>
                 <div class="float-right">
-                  <span>{{item}}</span>
+                  <span>{{item.count}}</span>
                   <span>人</span>
                 </div>
               </li>
@@ -105,7 +93,7 @@
             </table>
             <div class="table-box" id="squad">
               <table id="squad1">
-                <tr v-for="(item,index) in staffData.team" :key="index">
+                <tr v-for="(item,index) in teamCount.team" :key="index">
                   <td>{{item.title}}</td>
                   <td>{{item.kq||'0'}}人</td>
                   <td>{{item.sum}}人</td>
@@ -125,7 +113,7 @@
             </table>
             <div class="table-box" id="staff">
               <table id="staff1">
-                <tr v-for="(item,index) in staffData.list" :key="index">
+                <tr v-for="(item,index) in teamCount.list" :key="index">
                   <td>{{item.title}}</td>
                   <td>{{item.inOut_id=='in'?'进':'出'}}</td>
                   <td>{{item.createTime}}</td>
@@ -168,7 +156,7 @@
           </div>
           <div class="right-bottom-data" id="rightBottom">
             <ul id="rightBottom1">
-              <li v-for="(item,index) in buildcompanyData" :key="index">
+              <li v-for="(item,index) in buildCompany" :key="index">
                 <p>{{item.name}}</p>
                 <div class="register">
                   <span>进场登记人数</span>
@@ -177,7 +165,7 @@
                 </div>
                 <div class="reality" id="reality">
                   <span>现场实时人数</span>
-                  <span class="progress" :data-bfb="item.bfb"></span>
+                  <span class="progress" :style="`width:${Math.floor((item.zc/item.kq)*100)}%`"></span>
                   <span>{{item.kq || 0}}</span>
                 </div>
               </li>
@@ -196,56 +184,49 @@
           <h3>进场手续签订</h3>
         </div>
         <div class="float-left">
-          <ul
-            v-for="(item,index) in contractData"
-            :key="index"
-            style="margin-top:-.1rem"
-          >
+          <ul style="margin-top:-.1rem">
             <li>
               <span class="span-margin">共录入:</span>
-              <span>{{item.entrance.total}}</span>
+              <span>{{contract.workConfirm.total}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">共签订:</span>
-              <span>{{item.entrance.ht}}</span>
+              <span>{{contract.workConfirm.ht}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">未签订:</span>
-              <span>{{item.entrance.wq}}</span>
+              <span>{{contract.workConfirm.wq}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">是否合格:</span>
-              <span :class="item.exit_pdf.bfb==100?'font-green':'font-red'">{{item.entrance.hg}}</span>
+              <span :class="contract.workConfirm.bfb=='100%'?'font-green':'font-red'">{{contract.workConfirm.hg}}</span>
             </li>
           </ul>
         </div>
         <div
           class="map float-right"
-          :class="item.entrance.bfb==100?'qualified':'disqualification'"
-          v-for="(item,index) in contractData"
-          :key="index"
+          :class="contract.workConfirm.bfb=='100%'?'qualified':'disqualification'"
         >
           <!-- qualified为合格 disqualification为不合格 -->
-          <div class="border" :class="item.entrance.bfb==100?'border-green':'border-red'">
-            <div class="subBorder" id="roateBox1">
+          <div class="border" :class="contract.workConfirm.bfb=='100%'?'border-green':'border-red'">
+            <!-- <div class="subBorder" id="roateBox1">
               <div class="wrapper" style="right:0rem">
                 <div
                   class="circleProgress"
-                  :class="item.entrance.bfb==100?'rightcircle-green':'rightcircle-red'"
+                  :class="contract.workConfirm.bfb=='100%'?'rightcircle-green':'rightcircle-red'"
                 ></div>
               </div>
               <div class="wrapper" style="left:0rem">
                 <div
                   class="circleProgress"
-                  :class="item.entrance.bfb==100?'leftcircle-green':'leftcircle-red'"
+                  :class="contract.workConfirm.bfb=='100%'?'leftcircle-green':'leftcircle-red'"
                 ></div>
               </div>
-            </div>
-            <span id="roateBfb1">{{Math.floor(item.entrance.bfb)}}</span>
-            <span>%</span>
+            </div> -->
+            <span id="roateBfb1">{{contract.workConfirm.bfb}}</span>
           </div>
         </div>
       </div>
@@ -255,51 +236,48 @@
           <h3>退场手续签订</h3>
         </div>
         <div class="float-left">
-          <ul v-for="(item,index) in contractData" :key="index" style="margin-top:-.1rem">
+          <ul style="margin-top:-.1rem">
             <li>
               <span class="span-margin">共录入:</span>
-              <span>{{item.exit_pdf.total}}</span>
+              <span>{{contract.entrance.total}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">共签订:</span>
-              <span>{{item.exit_pdf.ht}}</span>
+              <span>{{contract.entrance.ht}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">未签订:</span>
-              <span>{{item.exit_pdf.wq}}</span>
+              <span>{{contract.entrance.wq}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">是否合格:</span>
-              <span :class="item.exit_pdf.bfb==100?'font-green':'font-red'">{{item.exit_pdf.hg}}</span>
+              <span :class="contract.entrance.bfb=='100%'?'font-green':'font-red'">{{contract.entrance.hg}}</span>
             </li>
           </ul>
         </div>
         <div
           class="map float-right"
-          :class="item.exit_pdf.bfb==100?'qualified':'disqualification'"
-          v-for="(item,index) in contractData"
-          :key="index"
+          :class="contract.entrance.bfb=='100%'?'qualified':'disqualification'"
         >
-          <div class="border" :class="item.exit_pdf.bfb==100?'border-green':'border-red'">
-            <div class="subBorder" id="roateBox2">
+          <div class="border" :class="contract.entrance.bfb=='100%'?'border-green':'border-red'">
+            <!-- <div class="subBorder" id="roateBox2">
               <div class="wrapper" style="right:0rem">
                 <div
                   class="circleProgress"
-                  :class="item.exit_pdf.bfb==100?'rightcircle-green':'rightcircle-red'"
+                  :class="contract.entrance.bfb=='100%'?'rightcircle-green':'rightcircle-red'"
                 ></div>
               </div>
               <div class="wrapper" style="left:0rem">
                 <div
                   class="circleProgress"
-                  :class="item.exit_pdf.bfb==100?'leftcircle-green':'leftcircle-red'"
+                  :class="contract.entrance.bfb=='100%'?'leftcircle-green':'leftcircle-red'"
                 ></div>
               </div>
-            </div>
-            <span id="roateBfb2">{{Math.floor(item.exit_pdf.bfb)}}</span>
-            <span>%</span>
+            </div> -->
+            <span id="roateBfb2">{{contract.entrance.bfb}}</span>
           </div>
         </div>
       </div>
@@ -309,51 +287,48 @@
           <h3>劳动合同签订</h3>
         </div>
         <div class="float-left">
-          <ul v-for="(item,index) in contractData" :key="index" style="margin-top:-.1rem">
+          <ul style="margin-top:-.1rem">
             <li>
               <span class="span-margin">共录入:</span>
-              <span>{{item.contract.total}}</span>
+              <span>{{contract.contract.total}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">共签订:</span>
-              <span>{{item.contract.ht}}</span>
+              <span>{{contract.contract.ht}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">未签订:</span>
-              <span>{{item.contract.wq}}</span>
+              <span>{{contract.contract.wq}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">是否合格:</span>
-              <span :class="item.exit_pdf.bfb==100?'font-green':'font-red'">{{item.contract.hg}}</span>
+              <span :class="contract.contract.bfb=='100%'?'font-green':'font-red'">{{contract.contract.hg}}</span>
             </li>
           </ul>
         </div>
         <div
           class="map float-right"
-          :class="item.contract.bfb==100?'qualified':'disqualification'"
-          v-for="(item,index) in contractData"
-          :key="index"
+          :class="contract.contract.bfb=='100%'?'qualified':'disqualification'"
         >
-          <div class="border" :class="item.contract.bfb==100?'border-green':'border-red'">
-            <div class="subBorder" id="roateBox3">
+          <div class="border" :class="contract.contract.bfb=='100%'?'border-green':'border-red'">
+            <!-- <div class="subBorder" id="roateBox3">
               <div class="wrapper" style="right:0rem">
                 <div
                   class="circleProgress"
-                  :class="item.contract.bfb==100?'rightcircle-green':'rightcircle-red'"
+                  :class="contract.contract.bfb=='100%'?'rightcircle-green':'rightcircle-red'"
                 ></div>
               </div>
               <div class="wrapper" style="left:0rem">
                 <div
                   class="circleProgress"
-                  :class="item.contract.bfb==100?'leftcircle-green':'leftcircle-red'"
+                  :class="contract.contract.bfb=='100%'?'leftcircle-green':'leftcircle-red'"
                 ></div>
               </div>
-            </div>
-            <span id="roateBfb3">{{Math.floor(item.contract.bfb)}}</span>
-            <span>%</span>
+            </div> -->
+            <span id="roateBfb3">{{contract.contract.bfb}}</span>
           </div>
         </div>
       </div>
@@ -363,40 +338,34 @@
           <h3>两制确认书签订</h3>
         </div>
         <div class="float-left">
-          <ul
-            v-for="(item,index) in contractData"
-            :key="index"
-            style="margin-top:-.1rem"
-          >
+          <ul style="margin-top:-.1rem">
             <li>
               <span class="span-margin">共录入:</span>
-              <span>{{item.workConfirm.total}}</span>
+              <span>{{contract.exit_pdf.total}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">共签订:</span>
-              <span>{{item.workConfirm.ht}}</span>
+              <span>{{contract.exit_pdf.ht}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">未签订:</span>
-              <span>{{item.workConfirm.wq}}</span>
+              <span>{{contract.exit_pdf.wq}}</span>
               <span>人</span>
             </li>
             <li>
               <span class="span-margin">是否合格:</span>
-              <span :class="item.exit_pdf.bfb==100?'font-green':'font-red'">{{item.workConfirm.hg}}</span>
+              <span :class="contract.exit_pdf.bfb=='100%'?'font-green':'font-red'">{{contract.exit_pdf.hg}}</span>
             </li>
           </ul>
         </div>
         <div
           class="map float-right"
-          :class="item.workConfirm.bfb==100?'qualified':'disqualification'"
-          v-for="(item,index) in contractData"
-          :key="index"
-        >
-          <div class="border" :class="item.workConfirm.bfb==100?'border-green':'border-red'">
-            <div class="subBorder" id="roateBox4">
+          :class="contract.exit_pdf.bfb=='100%'?'qualified':'disqualification'"
+          >
+          <div class="border" :class="contract.exit_pdf.bfb=='100%'?'border-green':'border-red'">
+            <!-- <div class="subBorder" id="roateBox4">
               <div class="wrapper" style="right:0rem">
                 <div
                   class="circleProgress"
@@ -409,9 +378,8 @@
                   :class="item.workConfirm.bfb==100?'leftcircle-green':'leftcircle-red'"
                 ></div>
               </div>
-            </div>
-            <span id="roateBfb4">{{Math.floor(item.workConfirm.bfb)}}</span>
-            <span>%</span>
+            </div> -->
+            <span id="roateBfb4">{{contract.exit_pdf.bfb}}</span>
           </div>
         </div>
       </div>
@@ -420,32 +388,46 @@
 </template>
 
 <script>
+import { setTimeout } from 'timers';
 export default {
   data() {
     return {
       attendanceData: "", // 出勤数据
       attendanceMax: 600, // 项目出勤统计最大人数
       curveMax: 120, // 今日劳动曲线最大值
-      pid: 0, // 项目id
+      pid: 2977, // 项目id
       contractData: [], // 合同签订数据
-      KQCountData: [], // 现场人员考勤数据
       WorkTypeData: '', // 现场工种数据
       staffData: "", // 班组与人员数据
       buildcompanyData: "", // 分包单位考勤情况
       dh: 0, // 百分比
       timeId: null,
+
+      projectId: '', // 项目id
+      KQCount: '', // 现场人员
+      workType: '', // 现场工种
+      teamCount: '', // 班组动态与人员动态
+      buildCompany: '', // 分包单位考勤情况
+      contract: '', // 合同签订情况
     };
   },
   created() {
-    this.getPid()
-    //发送请求
-    this.getDataCount()
-    this.getKQCountData()
-    this.getWorkTypeData()
-    this.getTeamCountData()
-    this.getNearlyEightDaysData()
-    this.getXSData()
-    this.getBuildcompanyData()
+    // this.getPid()
+    // this.getDataCount()
+    // this.getKQCountData()
+    // this.getWorkTypeData()
+    // this.getTeamCountData()
+    // this.getNearlyEightDaysData()
+    // this.getXSData()
+    // this.getBuildcompanyData()
+    this.getProjectId()
+    this.getKQCount()
+    this.getWorkType()
+    this.getTeamCount()
+    this.getNearlyEightDays()
+    this.getXS()
+    this.getBuildCompany()
+    this.getContract()
   },
   methods: {
     // 现场工种模块：ECharts图渲染
@@ -493,7 +475,7 @@ export default {
     },
 
     // 项目出勤统计模块：ECharts图渲染
-    attendance(aMTotal, aMZc, aMDay, aMZcGly) {
+    attendance(date,count,wc,mc) {
       let attendance = this.$echarts.init(
         document.getElementById("attendance")
       );
@@ -536,13 +518,13 @@ export default {
             //   "01-07",
             //   "01-08"
             // ]
-            data: aMDay
+            data: date
           }
         ],
         yAxis: [
           {
             type: "value",
-            max: this.attendanceMax,
+            // max: this.attendanceMax,
             min: 0,
             interval: 100,
             axisLabel: {
@@ -574,7 +556,7 @@ export default {
             smooth: 0.2,
             color: ["#fff"],
             // data: [600, 500, 500, 500, 400, 500, 500, 400, 400, 500, 500]
-            data: aMTotal
+            data: count
           },
           {
             name: "工人出勤人数",
@@ -583,7 +565,7 @@ export default {
             smooth: 0.2,
             color: ["#63a6d4"],
             // data: [300, 200, 100, 500, 300, 300, 400, 300, 100, 300, 500]
-            data: aMZc
+            data: wc
           },
           {
             name: "管理人员出勤人数",
@@ -592,7 +574,7 @@ export default {
             smooth: 0.2,
             color: ["#33577c"],
             // data: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-            data: aMZcGly
+            data: mc
           }
         ]
       });
@@ -921,11 +903,123 @@ export default {
       )
     },
 
-    // 获取项目id
+    // 获取项目id(1.0)
     getPid() {
       this.pid = localStorage.getItem('pid')
-    }
+    },
 
+    // 获取项目id（2.0）
+    getProjectId() {
+      this.projectId = sessionStorage.getItem('pid')
+      // console.log(this.projectId)
+    },
+
+    // 获取现场人员
+    getKQCount() {
+      this.$axios.post(`/api/pc/projectWorkersApi/getKQCount?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.KQCount = res.data.xcry
+        }
+      )
+    },
+
+    // 获取现场工种
+    getWorkType() {
+      this.$axios.post(`/api/attendanceRecordApi/getWorkType?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.workType = res.data.xcgz
+          let temp = []
+          if (res.data.xcgz.length) {
+            for (let i = 0; i < res.data.xcgz.length||i<6; i++) {
+              temp.push(
+                {
+                  'value': res.data.xcgz[i].count,
+                  'name': res.data.xcgz[i].title
+                }
+              )
+            }
+          }
+          // console.log(temp)
+          setTimeout(()=>{
+            this.professionMap(temp)
+          },100)
+        }
+      )
+    },
+
+    // 获取人员动态与班组动态
+    getTeamCount() {
+      this.$axios.post(`/api/attendanceRecordApi/getTeamCount?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.teamCount = res.data
+        }
+      )
+    },
+
+    // 获取项目出勤统计
+    getNearlyEightDays() {
+      this.$axios.post(`/api/attendanceRecordApi/getNearlyEightDays?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          let date = []
+          let count = []
+          let wc = []
+          let mc = []
+          for (let i = 0; i < res.data.list.length; i++) {
+            date.push(res.data.list[i].date)
+            count.push(res.data.list[i].count)
+            wc.push(res.data.list[i].workerCheck)
+            mc.push(res.data.list[i].managerCheck)
+          }
+          setTimeout(()=>{
+            this.attendance(date,count,wc,mc)
+          })
+        }
+      )
+    },
+
+    // 获取今日劳动曲线
+    getXS() {
+      this.$axios.post(`/api/attendanceRecordApi/getXS?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data.hour)
+          let zc = []
+          let day = []
+          for (let i = 0; i < res.data.hour.length; i++) {
+            for (let key in res.data.hour[i]) {
+              zc.push(res.data.hour[i][key])
+              day.push(key.split(' ')[1])
+            }
+          }
+          setTimeout(() => {
+            this.labourCurve(zc,day)
+          }, 100)
+        }
+      )
+    },
+
+    // 获取分包单位考勤情况
+    getBuildCompany() {
+      this.$axios.post(`/api/attendanceRecordApi/getBuildcompanyData?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.buildCompany = res.data.buildcompany
+        }
+      )
+    },
+
+    // 获取合同统计
+    getContract() {
+      this.$axios.post(`/api/pc/projectWorkersApi/getDataCount?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.contract = res.data
+        }
+      )
+    },
   }
 };
 </script>

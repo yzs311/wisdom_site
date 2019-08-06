@@ -5,38 +5,56 @@
         <div class="top-show">
           <h3>工人上工情况</h3>
           <div class="jindu">
-            <div class="subjindu" v-for="(item,index) in projectData.grsg" :key="index" v-if="index==1">
-              <p>{{dh}}%</p>
+            <div class="subjindu" :style="`width:${attendanceData.bfb}`">
+              <p>{{attendanceData.bfb}}</p>
             </div>
           </div>
           <ul class="work-list clearfix">
-            <li v-for="(item,index) in projectData.grsg" :key="index+1" v-if="index<1">
+            <li>
               今日
               <!-- <span v-for="(item2,index2) in projectData.grsg" :key="index2" v-if="item<item2" class="danger">{{item.JR}} ↓</span>
               <span v-for="(item2,index2) in projectData.grsg" :key="index2+1" v-else-if="item>item2" class="noml">{{item.JR}} ↑</span> -->
-              <span>{{item.JR}}</span>
+              <span>{{attendanceData.today}}</span>
             </li>
-            <li v-for="(item,index) in projectData.grsg" :key="index+2" v-if="index==2">
+            <li>
               昨日
-              <span>{{item.ZR}}</span>
+              <span>{{attendanceData.yesterday}}</span>
             </li>
-            <li v-for="(item,index) in projectData.grsg" :key="index+3" v-if="index==3">
+            <li>
               本月
-              <span class="down">{{item.BY}}</span>
+              <span class="down">{{attendanceData.thisMonth}}</span>
             </li>
-            <li v-for="(item,index) in projectData.grsg" :key="index+4" v-if="index==4">
+            <li>
               上月
-              <span>{{item.SY}}</span>
+              <span>{{attendanceData.ultimo}}</span>
             </li>
           </ul>
         </div>
         <div class="summarize">
           <h3>工程概括</h3>
           <ul>
-            <li v-for="item in projectData.gcgk" :key="item.title">
+            <li v-if="generalizeData.projectName">
               <a href="javascript:;">
-                <span class="summarizeName">{{item.type}}：</span>
-                <span class="summarizeContent">{{item.title}}</span>
+                <span class="summarizeName">项目名称:</span>
+                <span class="summarizeContent">{{generalizeData.projectName}}</span>
+              </a>
+            </li>
+            <li v-if="generalizeData.acreage">
+              <a href="javascript:;">
+                <span class="summarizeName">工程面积:</span>
+                <span class="summarizeContent">{{generalizeData.acreage}}㎡</span>
+              </a>
+            </li>
+            <li v-if="generalizeData.projectCost">
+              <a href="javascript:;">
+                <span class="summarizeName">工程造价:</span>
+                <span class="summarizeContent">{{generalizeData.projectCost}}万</span>
+              </a>
+            </li>
+            <li v-if="generalizeData.constructionName">
+              <a href="javascript:;">
+                <span class="summarizeName">总包单位:</span>
+                <span class="summarizeContent">{{generalizeData.constructionName}}</span>
               </a>
             </li>
           </ul>
@@ -54,10 +72,10 @@
                   <span class="summarizeContent">{{item.title}}</span>
                 </a>
               </li> -->
-              <li v-for="item in projectData.cjaw" :key="item.title">
+              <li v-for="(item,index) in generalizeData.subpackage" :key="index">
                 <a href="javascript:;">
-                  <span class="summarizeName">{{item.type=='建设单位'?'分包单位':item.type}}：</span>
-                  <span class="summarizeContent">{{item.title}}</span>
+                  <span class="summarizeName">分包单位:</span>
+                  <span class="summarizeContent">{{item.name}}</span>
                 </a>
               </li>
             </ul>
@@ -69,23 +87,24 @@
           <div class="out_in">
             <div class="left">
               <span>今日进出：</span>
-              <span>{{cardid.car_num}}辆</span>
+              <span>{{carData.todaycount.count}}辆</span>
             </div>
             <div class="right">
               <span>运行情况：</span>
-              <span v-if="cardid.status=='0'" class="status noml">正常</span>
-              <span v-else class="status danger">异常</span>
+              <!-- <span v-if="cardid.status=='0'" class="status noml">正常</span> -->
+              <span class="status noml">正常</span>
+              <!-- <span v-else class="status danger">异常</span> -->
             </div>
           </div>
           <div class="case">
             <div class="left">进出情况</div>
             <div class="right" id="cardid" style="overflow:hidden;height:1.04rem;width:4.1rem;">
               <ul id="cardid1">
-                <li v-for="(item, index) in cardid.cars" :key="index">
-                  <span>{{item.name}}</span>
-                  <span>{{item.inout}}</span>
-                  <span>{{item.time}}</span>
-                  <span>{{item.cartype}}</span>
+                <li v-for="(item, index) in carData.todaycount.vehicleList" :key="index">
+                  <span>{{item.vehicleNo}}</span>
+                  <span>{{item.gateinname}}</span>
+                  <span>{{item.liftTime}}</span>
+                  <!-- <span>{{item.cartype}}</span> -->
                 </li>
               </ul>
               <ul id="cardid2"></ul>
@@ -97,7 +116,7 @@
         <div class="mainInfo">
           <span class="title">
             安全文明施工天数:
-            <span class="day">636</span>天
+            <span class="day">{{day}}</span>天
           </span>
           <router-link to="/dormitory" class="dormitory">智慧宿舍</router-link>
         </div>
@@ -114,16 +133,16 @@
             <ul>
               <li>
                 <span class="leftName">塔吊数量：</span>
-                <span class="sub">{{crash.tower_num}}座</span>
+                <span class="sub">{{towerCraneData.length}}座</span>
               </li>
               <li>
                 <span class="leftName">违规操作：</span>
-                <span v-if="crash.err=='0'" class="sub status noml">无</span>
-                <span v-else class="sub status danger">有</span>
+                <span class="sub status noml">无</span>
+                <!-- <span v-else class="sub status danger">有</span> -->
               </li>
               <li>
                 <span class="leftName">运行情况：</span>
-                <span v-if="crash.status=='0'" class="sub noml">正常</span>
+                <span v-if="towerCraneData[0].sb=='正常'" class="sub noml">正常</span>
                 <span v-else class="sub danger">异常</span>
               </li>
             </ul>
@@ -137,22 +156,22 @@
             <ul>
               <li>
                 <span class="leftName">升降机数量：</span>
-                <span class="sub">{{lift.lifter_num}}座</span>
+                <span class="sub">{{elevatorData.length}}座</span>
               </li>
               <li>
                 <span class="leftName">载重重量：</span>
-                <span class="sub danger">{{lift.weight}}吨</span>
+                <span class="sub danger">{{elevatorData[0].laod}}吨</span>
               </li>
               <li>
                 <span class="leftName">运行情况：</span>
-                <span v-if="lift.status=='0'" class="sub noml">正常</span>
+                <span v-if="elevatorData[0].sb=='正常'" class="sub noml">正常</span>
                 <span v-else class="sub danger">异常</span>
               </li>
             </ul>
             <div class="runtime">
               <div>已正常运行</div>
               <img src="../../../static/images/shizhong.png" alt>
-              <div class="noml runtimeBg">{{lift.time}}小时</div>
+              <div class="noml runtimeBg">{{elevatorData[0].days}}小时</div>
             </div>
           </div>
         </div>
@@ -223,22 +242,22 @@
           <ul>
             <li>
               <span class="leftName">电箱数量：</span>
-              <span class="sub">{{electricity.electricity_num}}座</span>
+              <span class="sub">{{electricityBox.count}}座</span>
             </li>
             <li>
               <span class="leftName">电箱温度：</span>
-              <span class="sub danger">{{electricity.electricity_t}}℃</span>
+              <span class="sub danger">{{electricityBox.envirwarm}}℃</span>
             </li>
             <li>
               <span class="leftName">运行情况：</span>
-              <span v-if="electricity.status=='0'" class="sub noml">正常</span>
+              <span v-if="electricityBox.kgjl.sb=='正常'" class="sub noml">正常</span>
               <span v-else class="sub danger">异常</span>
             </li>
           </ul>
           <div class="runtime">
             <div>已正常运行</div>
             <img src="../../../static/images/shizhong.png" alt>
-            <div class="noml runtimeBg">{{electricity.time}}小时</div>
+            <div class="noml runtimeBg">{{electricityBox.kgjl.days}}小时</div>
           </div>
         </div>
       </el-col>
@@ -246,6 +265,7 @@
   </div>
 </template>
 <script>
+import { setTimeout } from 'timers';
 export default {
   data() {
     return {
@@ -270,23 +290,40 @@ export default {
       electricity: {},
       // 项目id
       xmid: "281",
-      pid: 0, //项目id
       projectData: '', //项目总况页面数据
+
+      projectId: '', //项目id
+      electricityBox: '', // 电箱数据
+      carData: '', // 车辆数据
+      generalizeData: '', // 工程概括数据
+      attendanceData: '', // 工人上工情况数据
+      elevatorData: '', // 升降机数据
+      towerCraneData: '', // 塔吊数据
+      day: '', // 安全文明施工天数
     };
   },
   mounted() {},
   created() {
-    this.getPid(),
-    // this.dust(),
-    // this.temperature(),
-    // this.getSummary(),
-    // this.renderBaifenbi(),
-    this.getCardid(),
-    this.getCrash(),
-    this.getLift(),
-    this.getCenterInfo(),
-    this.getyongdian(),
-    this.getProjectData()
+    // this.dust()
+    // this.temperature()
+    // this.getSummary()
+    // this.renderBaifenbi()
+    // this.getCardid()
+    // this.getCrash()
+    // this.getLift()
+    // this.getyongdian()
+    // this.getProjectData()
+
+    this.getPid()
+    this.getCenterInfo()
+    this.getElectricityBox()
+    this.getCarData()
+    this.getGeneralize()
+    this.getAttendance()
+    this.getElevator()
+    this.getTowerCrane()
+    this.getTspData()
+    this.getDay()
   },
   methods: {
     // 初始化扬尘检测数据图
@@ -295,7 +332,7 @@ export default {
       mydust.setOption({
         title: { text: "" },
         grid: {
-          x: 70,
+          x: 100,
           y: 0,
           x2: 14,
           y2: 20
@@ -386,6 +423,7 @@ export default {
         ]
       })
     },
+    
     // 初始化温度检测数据图
     temperaturePic(tPH,tPV) {
       // hours.push("h");
@@ -460,6 +498,7 @@ export default {
         ]
       });
     },
+
     // 工人上工区域
     renderBaifenbi() {
       this.xmid = this.getQueryString("xmid");
@@ -484,6 +523,7 @@ export default {
           }
         });
     },
+
     // 工程概括区域
     getSummary() {
       this.xmid = this.getQueryString("xmid")
@@ -501,6 +541,7 @@ export default {
           }
         });
     },
+
     // 车牌识别
     getCardid() {
       this.xmid = this.getQueryString("xmid");
@@ -517,6 +558,7 @@ export default {
           }
         });
     },
+
     // 塔吊防碰撞
     getCrash() {
       this.xmid = this.getQueryString("xmid");
@@ -530,6 +572,7 @@ export default {
           }
         });
     },
+
     // 升降机
     getLift() {
       this.xmid = this.getQueryString("xmid");
@@ -543,19 +586,17 @@ export default {
           }
         });
     },
+
     // 中间主图
     getCenterInfo() {
-      this.xmid = this.getQueryString("xmid");
+      // this.xmid = this.getQueryString("xmid");
       this.$axios
-        .get(`http://gd.17hr.net:8018/APP/XMPage/XmData.ashx?method=XMData&xmid=${this.xmid}`)
+        .get(`http://gd.17hr.net:8018/APP/XMPage/XmData.ashx?method=XMData&xmid=DV2mxBGL1Ao%3D`)
         .then(res => {
-          if(res.data.success == 1){
-            this.$router.push('unopen')
-          }else{
             this.centerInfo = res.data;
-          }
-        });
+        })
     },
+
     scrollText() {
       setTimeout(() => {
         var speed = 40;
@@ -618,6 +659,7 @@ export default {
         };
       }, 1000);
     },
+
     // 用电检测
     getyongdian() {
       this.xmid = this.getQueryString("xmid");
@@ -627,6 +669,7 @@ export default {
           this.electricity = res.data;
         });
     },
+
     getQueryString(name) {
       var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
       var r = window.location.search.substr(1).match(reg);
@@ -686,11 +729,127 @@ export default {
 
     // 获取项目id
     getPid() {
-      this.pid = localStorage.getItem('pid')
-    }
+      this.projectId = sessionStorage.getItem('pid')
+    },
+
+    // 获取电箱数据
+    getElectricityBox() {
+      this.$axios.post(`/api/currentTemperatureApi/kanban?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.electricityBox = res.data
+        }
+      )
+    },
+
+    // 获取车辆数据
+    getCarData() {
+      this.$axios.post(`/api/parkings/todaycount?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data.data[0])
+          this.carData = res.data.data[0]
+          if (this.carData.todaycount.vehicleList >= 4) {
+            // 调用滚动方法
+            setTimeout(()=>{
+              this.cardScroll()
+            },100)
+          }
+        }
+      )
+    },
+
+    // 获取升降机数据
+    getElevator() {
+      this.$axios.post(`/api/appElevatorAddRecord/crane?pid=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.elevatorData = res.data.data
+        }
+      )
+    },
+
+    // 获取塔吊数据
+    getTowerCrane() {
+        this.$axios.post(`/api/appCraneAddRecord/kanban?pid=${this.projectId}`).then(
+            res => {
+                // console.log(res.data.sjjlist)
+                this.towerCraneData = res.data.sjjlist
+            }
+        )
+    },
+
+    // 获取工程概括
+    getGeneralize() {
+      this.$axios.post(`/api/project/getXmzk?id=${this.projectId}`).then (
+        res => {
+          // console.log(res.data)
+          this.generalizeData = res.data
+          if (this.generalizeData.subpackage.length >= 5) {
+            // 调用滚动方法
+            setTimeout(()=>{
+              this.scrollText()
+            },100)
+          }
+        }
+      )
+    },
+
+    // 获取工人上工情况
+    getAttendance() {
+      this.$axios.post(`/api/attendanceRecordApi/TheWorkersWork?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.attendanceData = res.data
+        }
+      )
+    },
+
+    // 获取扬尘与温度检测数据
+    getTspData() {
+      this.$axios.post(`/api/DustEmission/Tsp?projectId=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          let temp1 = []
+          let temp2 = []
+          let temp3 = []
+          let temp4 = []
+          for (let i = 0; i < res.data.tsp.length; i++) {
+            for (const key in res.data.tsp[i]) {
+              // console.log(key)
+              // console.log(res.data.tsp[i][key])
+              temp1.push(key)
+              temp2.push(res.data.tsp[i][key])
+            }
+          }
+          for (let i = 0; i < res.data.temperature.length; i++) {
+            for (const key in res.data.temperature[i]) {
+              // console.log(key)
+              // console.log(res.data.temperature[i][key])
+              temp3.push(key.split(' ')[1])
+              temp4.push(res.data.temperature[i][key])
+            }
+          }
+          setTimeout(()=>{
+            this.dustPic(temp1,temp2)
+            this.temperaturePic(temp3,temp4)
+          },100)
+        }
+      )
+    },
+
+    // 获取施工天数
+    getDay() {
+      this.$axios.post(`/api/project/day?id=${this.projectId}`).then(
+        res => {
+          // console.log(res.data)
+          this.day = res.data.day
+        }
+      )
+    },
   }
 };
 </script>
+
 <style lang='less' scoped>
 .content {
   padding-top: 0.5rem;

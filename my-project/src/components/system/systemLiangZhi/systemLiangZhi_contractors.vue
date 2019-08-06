@@ -15,7 +15,7 @@
                         </li>
                     </ul>
                 </div>
-                <a class="search-button" @click="searchClcik">搜索</a>
+                <a class="search-button" @click="searchClick">搜索</a>
             </div>
             <!-- 主体区域 -->
             <div class="main-box">
@@ -272,13 +272,17 @@
                             <div>
                                 <span>
                                     负责人
+                                    <div class="required">*</div>
                                 </span>
                                 <input type="text" v-model="contacts">
                             </div>
                         </li>
                         <li>
                             <div>
-                                <span>联系电话</span>
+                                <span>
+                                    联系电话
+                                    <div class="required">*</div>
+                                </span>
                                 <input type="number" v-model="mobilePhone">
                             </div>
                             <div>
@@ -612,7 +616,7 @@ export default {
             dialogShow: false, // 新增单位对话框状态
             compileShow: false, // 编辑对话框状态
             contractorType: [], // 单位类型选项
-            pid: 4, // 项目id
+            pid: 0, // 项目id
             constructionName: '', // 单位名称
             shortName: '', // 简称
             capital: '', // 注册资金
@@ -636,22 +640,28 @@ export default {
         }
     },
     created() {
+        this.getProjectId()
         this.getContractorType()
         this.selectConstructionCompanyList()
     },
     methods: {
+        // 获取项目id
+        getProjectId() {
+            this.pid = sessionStorage.getItem('pid')
+        },
+
         // 每页条数切换
         handleSizeChange(val) {
             // console.log(`每页 ${val} 条`)
             this.pageSize = val
-            this.selectConstructionCompanyList()
+            this.pageClick()
         },
 
         // 当前页
         handleCurrentChange(val) {
             // console.log(`当前页: ${val}`)
             this.pageNum = val
-            this.selectConstructionCompanyList()
+            this.pageClick()
         },
 
         // 当前选中的行数
@@ -819,18 +829,18 @@ export default {
                     console.log(res.data.data)
                     this.constructionName = res.data.data.constructionName
                     this.shortName = res.data.data.shortName
-                    this.capital = res.data.data.capital
-                    this.companyType = res.data.data.companyType
+                    this.capital = res.data.data.capital?res.data.data.capital:''
+                    this.companyType = res.data.data.dictionaries.title
                     this.legalPerson = res.data.data.legalPerson
                     this.suid = res.data.data.suid
-                    this.remark = res.data.data.remark
-                    this.bankOpen = res.data.data.bankOpen
-                    this.bankNum = res.data.data.bankNum
-                    this.bankAddress = res.data.data.bankAddress
-                    this.address = res.data.data.address
-                    this.contacts = res.data.data.contacts
-                    this.mobilePhone = res.data.data.mobilePhone
-                    this.email = res.data.data.email
+                    this.remark = res.data.data.remark?res.data.data.remark:''
+                    this.bankOpen = res.data.data.bankOpen?res.data.data.bankOpen:''
+                    this.bankNum = res.data.data.bankNum?res.data.data.bankNum:''
+                    this.bankAddress = res.data.data.bankAddress?res.data.data.bankAddress:''
+                    this.address = res.data.data.address?res.data.data.address:''
+                    this.contacts = res.data.data.contacts?res.data.data.contacts:''
+                    this.mobilePhone = res.data.data.mobilePhone?res.data.data.mobilePhone:''
+                    this.email = res.data.data.email?res.data.data.email:''
                 }
             )
         },
@@ -838,6 +848,11 @@ export default {
         // 编辑信息
         updateConstructionCompany() {
             if (this.constructionName && this.shortName && this.suid && this.companyType && this.contacts && this.mobilePhone) {
+                for (let i = 0; i < this.contractorType.length; i++) {
+                    if (this.companyType == this.contractorType[i].title) {
+                        this.companyType = this.contractorType[i].id
+                    }
+                }
                 this.$axios.post(`/api/constructionCompanyApi/updateConstructionCompany?id=${Number(this.selectionId)}&constructionName=${this.constructionName}&shortName=${this.shortName}&capital=${this.capital}&companyType=${this.companyType}&legalPerson=${this.legalPerson}&suid=${this.suid}&bankOpen=${this.bankOpen}&bankNum=${this.bankNum}&bankAddress=${this.bankAddress}&address=${this.address}&contacts=${this.contacts}&mobilePhone=${this.mobilePhone}&email=${this.email}&remark=${this.remark}`).then(
                     res => {
                         console.log(res.data)
@@ -848,7 +863,7 @@ export default {
                             })
                             this.compileShow = false
                             this.pageNum = 1
-                            this.selectConstructionCompanyList()
+                            this.searchClick()
                         } else {
                             this.$message({
                                 message: '修改失败，请重试',
@@ -871,8 +886,36 @@ export default {
         },
 
         // 搜索
-        searchClcik() {
-            this.$axios.post(`/api/constructionCompanyApi/selectConstructionCompanyList?projectId=${this.pid}&pageNum=1&pageSize=${this.pageSize}&param=${this.param}&suid=${this.searchSuid}`).then(
+        searchClick() {
+            this.pageNum = 1
+            this.$axios.post(`/api/constructionCompanyApi/selectConstructionCompanyList?projectId=${this.pid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&param=${this.param}&suid=${this.searchSuid}`).then(
+                res => {
+                    // console.log(res.data)
+                    let temp = []
+                    if (res.data.data.rows) {
+                        for (let i = 0; i < res.data.data.rows.length; i++) {
+                            // console.log(i)
+                            temp.push({
+                                number: (this.pageNum-1)*this.pageSize+i+1, 
+                                licence: res.data.data.rows[i].suid, 
+                                name: res.data.data.rows[i].constructionName, 
+                                abbreviation: res.data.data.rows[i].shortName, 
+                                type: res.data.data.rows[i].dictionaries.title, 
+                                principal: res.data.data.rows[i].contacts, 
+                                phone: res.data.data.rows[i].mobilePhone,
+                                id:  res.data.data.rows[i].id,
+                            })
+                        }
+                    }
+                    this.pageTotal = res.data.data.total
+                    this.tableData = temp
+                }
+            )
+        },
+
+        // 翻页
+        pageClick() {
+            this.$axios.post(`/api/constructionCompanyApi/selectConstructionCompanyList?projectId=${this.pid}&pageNum=${this.pageNum}&pageSize=${this.pageSize}&param=${this.param}&suid=${this.searchSuid}`).then(
                 res => {
                     // console.log(res.data)
                     if (res.data.data.rows) {
@@ -892,20 +935,14 @@ export default {
                         }
                         this.pageTotal = res.data.data.total
                         this.tableData = temp
-                    } else {
-                        this.$message({
-                            message: '没有找到相关参建单位',
-                            type: 'warning'
-                        })
-                    }   
-                    
+                    }  
                 }
             )
         },
 
         // 导出Excel
         deriveClick() {
-            location.href=`/api/constructionCompanyApi/export?projectId=${this.pid}&param=${this.param}&suid=${this.searchSuid}`
+            location.href=`http://47.106.71.3:8080/api/constructionCompanyApi/export?projectId=${this.pid}&param=${this.param}&suid=${this.searchSuid}`
         },
     }
 }

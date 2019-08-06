@@ -1,6 +1,6 @@
 <template>
     <div id="q_infoParticulars">
-        <div class="centent-box">
+        <div class="content-box">
             <!-- 导航 -->
             <div class="nav">
                 <router-link to="/quality/q_statistics">首页</router-link>
@@ -261,7 +261,7 @@
         .red-color {
             color: #b1335d;
         }
-        .centent-box {
+        .content-box {
             width: 15rem;
             height: 9.42rem;
             padding: .3rem .3rem 0 .3rem;

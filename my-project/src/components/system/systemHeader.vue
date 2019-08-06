@@ -1,9 +1,9 @@
 <template>
     <div id="systemHeader">
         <div class="float-left">
-            <a class="logo"></a>
+            <router-link to="/home" class="logo"></router-link>
             <div class="line"></div>
-            <div class="project-name">布吉消除黑臭工程</div>
+            <div class="project-name">{{projectName}}</div>
         </div>
         <div class="float-right">
             <a class="message">
@@ -16,14 +16,14 @@
                 首页
             </router-link>
             <a class="user">
-                <el-dropdown>
+                <el-dropdown @command="handleCommand">
                     <a class="el-dropdown-link">
-                        用户名
+                        用户
                         <i class="el-icon-arrow-down el-icon--right"></i>
                     </a>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>个人设置</el-dropdown-item>
-                        <el-dropdown-item @click="$router.push({ pata: '/login' })">退出</el-dropdown-item>
+                        <el-dropdown-item command="login">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </a>
@@ -95,8 +95,36 @@
 export default {
     data() {
         return {
-
+            pid: '', // 项目id
+            projectName: '', // 项目名称
         }
+    },
+    created() {
+        this.getProjectId()
+        this.selectIndex()
+    },
+    methods: {
+        // 获取项目id
+        getProjectId() {
+            this.pid = sessionStorage.getItem('pid')
+        },
+
+        // 获取项目名称
+        selectIndex() {
+            this.$axios.post(`/api/pcLzIndex/selectIndex?pid=${this.pid}`).then(
+                res => {
+                    // console.log(res.data.data.projectName)
+                    this.projectName = res.data.data.projectName
+                }
+            )
+        },
+
+        // 退出
+        handleCommand(command) {
+            if (command == 'login') {
+                this.$router.push('login')
+            }
+        },
     }
 }
 </script>
