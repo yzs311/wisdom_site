@@ -477,7 +477,7 @@ export default {
         }
     },
     created() {
-        // this.getPid()
+        this.getPid()
         // 发送请求
         this.getDustEmissionListData()
     },
@@ -570,7 +570,7 @@ export default {
 
         // 获取扬尘设备列表
         getDustEmissionListData() {
-            this.$axios.get(`/api/dustEmission/get/getDustEmissionList?pid=21`).then(
+            this.$axios.get(`/api/dustEmission/get/getDustEmissionList?pid=${this.pid}`).then(
                 res => {
                     // console.log(res.data)
                     this.dustEmissionListData = res.data.dustEmissionList

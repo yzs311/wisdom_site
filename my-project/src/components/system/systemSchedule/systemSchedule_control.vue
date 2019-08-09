@@ -4,7 +4,7 @@
             <!-- 按钮栏 -->
             <div class="top-button">
                 <div class="button-box">
-                    <a class="new" @click="dialogShow=true">
+                    <a class="new" @click="dialogShow=true;dialogState=true">
                         <i class="icon"></i>
                         创建节点
                     </a>
@@ -61,6 +61,10 @@
                         <div class="node">
                             节点
                         </div>
+                        <!-- 负责人 -->
+                        <div class="principal">
+                            负责人
+                        </div>
                         <!-- 进度 -->
                         <div class="schedule">
                             进度
@@ -102,63 +106,68 @@
                             操作
                         </div>
                     </li>
-                    <li >
+                    <li v-for="(item,index) in nodeList" :key="index">
+                        <a class="relevance" @click="selectZhPreposeList(item.id)" v-show="item.relevance!=1"></a>
                         <div class="number">
-                            1
+                            {{index+1}}
                         </div>
                         <div class="node">
-                            <a>
+                            <!-- <a>
                                 <i class="el-icon-remove-outline" style="color:#46aeff"></i>
-                            </a>
-                            深圳科伦特产业园中心2019年施工及验收计划
-                            <a>
+                            </a> -->
+                            {{item.name}}
+                            <!-- <a>
                                 <i class="el-icon-edit-outline" style="color:#46aeff"></i>
-                            </a>
+                            </a> -->
+                        </div>
+                        <div class="principal">
+                            
                         </div>
                         <div class="schedule">
                             <div class="schedule-bar">
-                                <div class="sub-schedule" style="width:50%">50%</div>
+                                <div class="sub-schedule" :style="`width:${item.progress}%`">{{item.progress}}%</div>
                             </div>
                         </div>
                         <div class="status">
-                            未开始
+                            {{item.state==0?'正常开始':item.state==1?'未开始':item.state==2?'延期未开始':item.state==3?'延期开始':item.state==4?'延期完成':'正常完成'}}
                         </div>
                         <div class="rank">
-                            一级
+                            {{item.controlRank==1?'一级':item.controlRank==2?'二级':'三级'}}
                         </div>
                         <div class="plan-time">
-                            365天
+                            -
                         </div>
                         <div class="practical-time">
                             -
                         </div>
                         <div class="plan-start">
-                            2018-01-01
+                            {{item.predictStart.split(' ')[0]}}
                         </div>
                         <div class="plan-end">
-                            2018-01-25
+                            {{item.predictEnd.split(' ')[0]}}
                         </div>
                         <div class="practical-start">
-                            2018-01-01
+                            <!-- {{item.start.split(' ')[0]}} -->
                         </div>
                         <div class="practical-end">
-                            -
+                            <!-- {{item.end.split(' ')[0]}} -->
                         </div>
                         <div class="operation">
-                            <el-dropdown>
+                            <el-dropdown @command="handleCommand">
                                 <a class="el-dropdown-link">
                                     <i class="el-icon-setting"></i>
                                 </a>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item>插入同级节点</el-dropdown-item>
                                     <el-dropdown-item>插入下级节点</el-dropdown-item>
-                                    <el-dropdown-item>编辑</el-dropdown-item>
-                                    <el-dropdown-item>删除</el-dropdown-item>
+                                    <el-dropdown-item :command="`preposition:${item.id}`">设置前置节点</el-dropdown-item>
+                                    <el-dropdown-item :command="`edit:${item.id}`">编辑</el-dropdown-item>
+                                    <el-dropdown-item :command="`delete:${item.id}`">删除</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
                     </li>
-                    <li >
+                    <!-- <li >
                         <div class="number">
                             2
                         </div>
@@ -360,12 +369,13 @@
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item>插入同级节点</el-dropdown-item>
                                     <el-dropdown-item>插入下级节点</el-dropdown-item>
+                                    <el-dropdown-item>设置前置节点</el-dropdown-item>
                                     <el-dropdown-item>编辑</el-dropdown-item>
                                     <el-dropdown-item>删除</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
             <!-- 关联计划 -->
@@ -384,8 +394,8 @@
                         <a :class="!relevanceActive?'active':''" style="margin-left:.38rem;" @click="relevanceActive=false">前置任务</a>
                     </div>
                     <div class="btn-box">
-                        <a v-show="relevanceActive">添加进度计划关联</a>
-                        <a v-show="!relevanceActive">添加前置任务</a>
+                        <!-- <a v-show="relevanceActive">添加进度计划关联</a> -->
+                        <!-- <a v-show="!relevanceActive">添加前置任务</a> -->
                     </div>
                 </div>
                 <!-- 关联计划列表 -->
@@ -497,22 +507,31 @@
                             <div class="interval">
                                 延迟间隔
                             </div>
-                        </li>
-                        <li>
-                            <div class="number">
-                                1
-                            </div>
-                            <div class="node">
-                                1A、1B电梯工程
-                            </div>
-                            <div class="name">
-                                2019年1月计划
-                            </div>
-                            <div class="preposition">
-                                <input type="text">
-                            </div>
+                            <!-- 操作 -->
                             <div class="interval">
-                                <input type="text">
+                                操作
+                            </div>
+                        </li>
+                        <li v-for="item in preposeList" :key="item.id">
+                            <div class="li-box" v-for="(item2,index) in nodeList" :key="index" v-if="item.preposePian==item2.id">
+                                <div class="number">
+                                    {{index+1}}
+                                </div>
+                                <div class="node">
+                                    {{item2.name}}
+                                </div>
+                                <div class="name">
+                                    {{item2.state==0?'正常开始':item2.state==1?'未开始':''}}
+                                </div>
+                                <div class="preposition">
+                                    {{item2.predictStart.split(' ')[0]}}
+                                </div>
+                                <div class="interval">
+                                    {{item2.predictEnd.split(' ')[0]}}
+                                </div>
+                                <div class="interval">
+                                    <a @click="removePrepose(item.id)">删除</a>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -530,19 +549,24 @@
                 </div>
             </div>
             <!-- 新增计划节点 -->
-            <!-- 新增单位 -->
             <div class="dialog-box" v-show="dialogShow">
-                <div class="title">
+                <div class="title" v-show="dialogState">
                     新增计划节点
                     <a class="close" @click="dialogShow=false">
                         <i class="el-icon-close"></i>
                     </a>
                 </div>
-                <div class="nav">
+                <div class="title" v-show="!dialogState">
+                    编辑计划节点
+                    <a class="close" @click="dialogShow=false">
+                        <i class="el-icon-close"></i>
+                    </a>
+                </div>
+                <!-- <div class="nav">
                     <a @click="newActive=1" :class="newActive==1?'active':''">基础信息</a>
                     <a @click="newActive=2" :class="newActive==2?'active':''">前置任务</a>
                     <a @click="newActive=3" :class="newActive==3?'active':''">关联计划</a>
-                </div>
+                </div> -->
                 <div class="form" v-show="newActive==1">
                     <ul>
                         <li>
@@ -551,7 +575,7 @@
                                     节点名称
                                     <div class="required">*</div>
                                 </span>
-                                <input type="text">
+                                <input type="text" v-model="nodeName">
                             </div>
                             <div>
                                 <span>
@@ -566,30 +590,48 @@
                                     计划开始
                                     <div class="required">*</div>
                                 </span>
-                                <input type="text">
+                                <el-date-picker
+                                    v-model="predictStart"
+                                    type="date"
+                                    placeholder="选择日期"
+                                    value-format="yyyy-MM-dd HH:mm:ss">
+                                </el-date-picker>
                             </div>
                             <div>
                                 <span>
                                     计划结束
                                     <div class="required">*</div>
                                 </span>
-                                <input type="text">
+                                <el-date-picker
+                                    v-model="predictEnd"
+                                    type="date"
+                                    placeholder="选择日期"
+                                    value-format="yyyy-MM-dd HH:mm:ss">
+                                </el-date-picker>
                             </div>
                         </li>
-                        <li>
+                        <!-- <li>
                             <div>
                                 <span>
                                     实际开始
                                 </span>
-                                <input type="text">
+                                <el-date-picker
+                                    v-model="start"
+                                    type="date"
+                                    placeholder="选择日期">
+                                </el-date-picker>
                             </div>
                             <div>
                                 <span>
                                     实际结束
                                 </span>
-                                <input type="text">
+                                <el-date-picker
+                                    v-model="end"
+                                    type="date"
+                                    placeholder="选择日期">
+                                </el-date-picker>
                             </div>
-                        </li>
+                        </li> -->
                         <li>
                             <div>
                                 <span>
@@ -599,29 +641,23 @@
                             </div>
                             <div>
                                 <span>
-                                    分包单位
+                                    管控级别
+                                    <div class="required">*</div>
                                 </span>
-                                <input type="text">
+                                <el-select v-model="controlRank" placeholder="请选择">
+                                    <el-option
+                                    v-for="item in rankOptions"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                    </el-option>
+                                </el-select>
                             </div>
                         </li>
-                        <li>
+                        <!-- <li>
                             <div>
                                 <span>
                                     流水段
-                                </span>
-                                <input type="text">
-                            </div>
-                            <div>
-                                <span>
-                                    管控级别
-                                </span>
-                                <input type="text">
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <span>
-                                    工期
                                 </span>
                                 <input type="text">
                             </div>
@@ -632,7 +668,7 @@
                                 <el-radio v-model="radio" label="1">是</el-radio>
                                 <el-radio v-model="radio" label="2">否</el-radio>
                             </div>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
                 <div class="form" v-show="newActive==2">
@@ -739,11 +775,43 @@
                     </div>
                 </div>
                 <div class="confirm">
-                    <a class="button">确定</a>
+                    <a v-show="dialogState" class="button" @click="addNode()">确定</a>
+                    <a v-show="!dialogState" class="button" @click="editNode()">确定</a>
+                </div>
+            </div>
+            <!-- 前置任务选则 -->
+            <div class="dialog-box" v-show="prepositionShow" style="width:6rem">
+                <div class="title" v-show="dialogState">
+                    新增前置节点
+                    <a class="close" @click="prepositionShow=false">
+                        <i class="el-icon-close"></i>
+                    </a>
+                </div>
+                <div class="form">
+                    <ul style="padding-left:0">
+                        <li>
+                            <div>
+                                <span>
+                                    节点名称
+                                </span>
+                                 <el-select v-model="preposePian" placeholder="选择前置节点">
+                                    <el-option
+                                        v-for="item in nodeList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="confirm">
+                    <a class="button" @click="addPrepose">确定</a>
                 </div>
             </div>
             <!-- 遮罩层 -->
-            <div class="shade-box" v-show="dialogShow"></div>
+            <div class="shade-box" v-show="dialogShow || prepositionShow"></div>
             <!-- 甘特图 -->
             <div class="gantt-chart" v-show="ganttShow">
                 <ul>
@@ -1037,6 +1105,7 @@
                         .node {
                             flex: 1;
                         }
+                        .principal,
                         .status,
                         .rank,
                         .plan-time,
@@ -1153,6 +1222,18 @@
                                 color: #4a4a4a;
                                 font-size: .12rem;
                                 line-height: .3rem;
+                                >div {
+                                    color: #4a4a4a;
+                                    font-size: .12rem;
+                                    line-height: .3rem;
+                                }
+                            }
+                            .li-box {
+                                display: flex;
+                                justify-content: space-between;
+                                position: relative;
+                                height: .3rem;
+                                width: 100%;
                             }
                             .schedule {
                                 width: .9rem;
@@ -1286,7 +1367,7 @@
                 }
                 .form {
                     padding-bottom: .3rem;
-                    min-height: 4.56rem;
+                    // min-height: 4.56rem;
                     >ul{
                         padding-left: .43rem;
                         li {
@@ -1515,7 +1596,9 @@ export default {
         return {
             relevanceShow: false, // 关联计划显示状态
             relevanceActive: true, // 关联计划当前选中模块
-            dialogShow: false, // 对话框状态
+            dialogShow: false, // 对话框显示状态
+            dialogState: true, // 对话框状态
+            prepositionShow: false, // 添加前置节点对话框显示状态
             newActive: 1, // 新增对话框当前选中模块
             radio: '1', // 是否关键节点
             ganttShow: false, // 甘特图显示状态
@@ -1550,7 +1633,230 @@ export default {
             ], // 管控级别选项
             rankValue: '', // 管控级别值
             dateValue: '', // 日期
+
+            projectId: '', // 项目id
+            creatorId: '', // 创建人id
+            nodeName: '', // 节点名称
+            parentId: 0, // 父级节点
+            predictStart: '', // 计划开始时间
+            predictEnd: '', // 计划结束时间
+            start: '', // 实际开始时间
+            end: '', // 实际结束时间
+            controlRank: '', // 管控级别值
+            principal: '', // 负责人id
+            pipeliningSegment: '', // 流水段id
+            nodeList: '', // 节点列表
+            activeId: '', // 当前选中id
+            preposePian: '', // 前置节点id
+            preposeList: '', // 前置节点列表
+            activeMainPlan: '', // 当前选中节点id
         }
     },
+    created() {
+        this.getCreatorId()
+        this.selectZhNodeList()
+        this.getPersonnelList()
+    },
+    methods: {
+        // 获取创建人id
+        getCreatorId() {
+            this.creatorId = sessionStorage.getItem('userId')
+            this.projectId = sessionStorage.getItem('pid')
+        },
+
+        // 获取人员列表
+        getPersonnelList() {
+            this.$axios.post(`/api/pc/projectWorkersApi/list?projectId=${this.projectId}&pageNum=1&pageSize=1000`).then(
+                res => {
+                    console.log(res.data)
+                }
+            )
+        },
+
+        // 查询节点列表
+        selectZhNodeList() {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhNodeList?creatorId=${this.creatorId}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.nodeList = res.data.data
+                }
+            )
+        },
+
+        // 添加节点
+        addNode() {
+            if (this.nodeName && this.predictStart && this.predictEnd && this.controlRank) {
+                this.$axios.post(`http://192.168.1.36:5555/provider/Node/addNode?creatorId=${this.creatorId}&name=${this.nodeName}&parentId=${this.parentId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}&controlRank=${this.controlRank}`).then(
+                    res => {
+                        // console.log(res.data)
+                        if (res.data.code == 0) {
+                            this.$message({
+                                message: '创建成功',
+                                type: 'success'
+                            })
+                            this.dialogShow = false
+                            this.selectZhNodeList()
+                        } else {
+                            this.$message({
+                                message: '创建失败',
+                                type: 'warning'
+                            })
+                        }
+                    }
+                )
+            } else {
+                this.$message({
+                    message: '带*号的输入框不得为空',
+                    type: 'warning'
+                })
+            }
+        },
+
+        // 删除节点
+        removeNode(id) {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/removeNode?id=${id}`).then(
+                res => {
+                    // console.log(res.data)
+                    if (res.data.code == 0) {
+                        this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            })
+                            this.selectZhNodeList()
+                    } else {
+                        this.$message({
+                            message: '删除失败',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 操作下拉框点击事件
+        handleCommand(command) {
+            // console.log(command)
+            if (command.split(':')[0] == 'delete') {
+                this.removeNode(command.split(':')[1])
+            }
+            if (command.split(':')[0] == 'edit') {
+                this.activeId = command.split(':')[1]
+                for (let i = 0; i < this.nodeList.length; i++) {
+                    if (this.activeId == this.nodeList[i].id) {
+                        this.nodeName = this.nodeList[i].name
+                        this.parentId = this.nodeList[i].parentId
+                        this.predictStart = this.nodeList[i].predictStart
+                        this.predictEnd = this.nodeList[i].predictEnd
+                        this.principal = this.nodeList[i].principal
+                        this.controlRank = this.nodeList[i].controlRank
+                    }
+                }
+                this.dialogState = false
+                this.dialogShow = true
+            }
+            if (command.split(':')[0] == 'preposition') {
+                this.activeId = command.split(':')[1]
+                this.prepositionShow = true
+            }
+        },
+
+        // 编辑节点
+        editNode() {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/editNode?creatorId=${this.creatorId}&name=${this.nodeName}&parentId=${this.parentId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}&controlRank=${this.controlRank}&id=${this.activeId}`).then(
+                res => {
+                    // console.log(res.data)
+                    if (res.data.code == 0) {
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        })
+                        this.dialogShow = false
+                        this.selectZhNodeList()
+                    } else {
+                        this.$message({
+                            message: '修改失败',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 查询节点关联列表
+        selectRelevanceNode() {
+            for (let i = 0; i < this.nodeList.length; i++) {
+                // console.log(this.nodeList[i].id)
+                this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhProgressNodeList?nodeId=${this.nodeList[i].id}`).then(
+                    res => {
+                        // console.log(res.data)
+                        if (res.data.data.length == 0) {
+                            this.nodeList[i]['relevance'] = 0
+                        } else {
+                            this.nodeList[i]['relevance'] = 1
+                        }
+                    }
+                )
+            }
+            console.log(this.nodeList)
+        },
+
+        // 添加前置节点
+        addPrepose() {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/addPrepose?mainPlan=${this.activeId}&preposePian=${this.preposePian}`).then(
+                res => {
+                    if (res.data.code == 0) {
+                        this.$message({
+                            message: '添加成功',
+                            type: 'success'
+                        })
+                        this.prepositionShow = false
+                        this.selectZhPreposeList(this.activeMainPlan)
+                        // this.selectZhNodeList()
+                    } else {
+                        this.$message({
+                            message: '添加失败',
+                            type: 'warning'
+                        })
+                    }
+                    // console.log(res.data)
+                }
+            )
+        },
+
+        // 查询前置节点列表
+        selectZhPreposeList(mainPlan) {
+            this.relevanceShow = true
+            this.activeMainPlan = mainPlan
+            // console.log(mainPlan)
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhPreposeList?mainPlan=${mainPlan}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.preposeList = res.data.data
+                }
+            )
+        },
+
+        // 删除前置节点
+        removePrepose(id) {
+            // console.log(id)
+            this.$axios.post(`http://192.168.1.36:5555//provider/Node/removePrepose?id=${id}`).then(
+                res => {
+                    // console.log(res.data)
+                    if (res.data.code == 0) {
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        })
+                        this.selectZhPreposeList(this.activeMainPlan)
+                    } else {
+                        this.$message({
+                            message: '删除失败',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+    }
 }
 </script>

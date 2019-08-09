@@ -2,7 +2,7 @@
   <div class="indexBody">
     <div class="header">
       <div class="header-main container clearfix">
-        <div class="city" v-if="weather.length > 0">
+        <!-- <div class="city" v-if="weather.length > 0">
           {{weather[0].results[0].currentCity}}
           <span class="temp" v-if="weather.length > 0">{{weather[0].results[0].weather_data[0].temperature}}</span>
               <img v-if="nowWeather.includes('云')" src="../../../static/images/g_duoyun.png">
@@ -12,7 +12,7 @@
               <img v-else-if="nowWeather.includes('阴')" src="../../../static/images/g_yin.png">
               <img v-else-if="nowWeather.includes('雷')" src="../../../static/images/g_lei.png">
               <img v-else src="../../../static/images/g_wan.png">
-        </div>
+        </div> -->
         <ul class="nav">
           <li v-on:click="isActive('/home');personnelClick5()">
             <div class="Lactive-box" v-show="active=='/home'|| active=='/login'">
@@ -145,7 +145,7 @@
         </ul>
         <span v-on:click="isActive('/home')">
           <router-link to="/systemHome">
-            <h2 class="head-title">深圳河消除黑臭项目</h2>
+            <h2 class="head-title">{{projectName}}</h2>
           </router-link>
         </span>
         <div class="date-time">
@@ -162,9 +162,10 @@ import moment from "moment"
 export default {
   data() {
     return {
+      pid: '', // 项目id
       project: "",
       weather: "",
-      time: {},
+      time: '',
       timeId: "",
       active: "/home",
       nowWeather:'',
@@ -172,6 +173,7 @@ export default {
       dropDownState2: true, // 安全管理下拉框状态
       dropDownState3: true, // 智能应用下拉框状态
       dropDownState4: true, // 绿色施工下拉框状态
+      projectName: '', // 项目名称
     };
   },
   created() {
@@ -180,6 +182,8 @@ export default {
     this.setTime()
     this.setActive()
     // this.getliuyong()
+    this.getProjectId()
+    this.selectIndex()
   },
   methods: {
     getName() {
@@ -376,7 +380,22 @@ export default {
         message: '该功能暂未开放',
         type: 'warning'
       })
-    }
+    },
+
+    // 获取项目id
+    getProjectId() {
+      this.pid = sessionStorage.getItem('pid')
+    },
+
+    // 获取项目名称
+    selectIndex() {
+        this.$axios.post(`/api/pcLzIndex/selectIndex?pid=${this.pid}`).then(
+            res => {
+                // console.log(res.data.data.projectName)
+                this.projectName = res.data.data.projectName
+            }
+        )
+    },
   }
 };
 </script>

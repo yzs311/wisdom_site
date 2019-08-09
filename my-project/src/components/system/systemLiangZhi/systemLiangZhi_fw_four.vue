@@ -235,8 +235,8 @@ export default {
       this.$axios.post(`/api/baogao/select?projectId=${this.projectId}&pageSize=${this.pageSize}&pageNum=${this.pageNum}`).then(
         res => {
           // console.log(res.data)
-          this.tableData = res.data.data
-          this.pageTotal = res.data.total 
+          this.tableData = res.data.data.rows
+          this.pageTotal = res.data.data.total 
         }
       )
     },

@@ -8,10 +8,10 @@
                         <i class="icon"></i>
                         创建进度计划
                     </a>
-                    <a class="contract" @click="nodeShow = true">
+                    <!-- <a class="contract" @click="nodeShow = true">
                         <i class="icon"></i>
                         导入节点
-                    </a>
+                    </a> -->
                     <a class="derive">
                         <i class="icon"></i>
                         导出计划
@@ -56,10 +56,10 @@
             <!-- 主体列表 -->
             <div class="main-list">
                 <el-collapse accordion>
-                    <el-collapse-item>
+                    <el-collapse-item v-for="(item,index) in planList" :key="index">
                         <template slot="title">
                             <span class="name">
-                                2019年12月计划（2019-12-01~2019-12-31）
+                                {{item.name}}（{{item.predictStart.split(' ')[0]}}~{{item.predictEnd.split(' ')[0]}}）
                             </span>
                             <span class="progress-bar">
                                 <div class="schedule-bg">
@@ -71,6 +71,17 @@
                             <span class="state">
                                 共5个节点，已完成0个，未完成5个
                             </span>
+                            <el-dropdown @command="handleCommand">
+                                <a class="el-dropdown-link">
+                                    <!-- <i class="el-icon-setting"></i> -->
+                                </a>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item :command="`importNode:${item.id}`">导入节点</el-dropdown-item>
+                                    <el-dropdown-item>导出计划</el-dropdown-item>
+                                    <el-dropdown-item>导入计划</el-dropdown-item>
+                                    <el-dropdown-item :command="`delete:${item.id}`">删除</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
                         </template>
                         <ul>
                             <li class="first">
@@ -123,7 +134,7 @@
                                     操作
                                 </div>
                             </li>
-                            <li >
+                            <li>
                                 <div class="number">
                                     1
                                 </div>
@@ -179,7 +190,7 @@
                                     </el-dropdown>
                                 </div>
                             </li>
-                            <li >
+                            <!-- <li >
                                 <div class="number">
                                     2
                                 </div>
@@ -386,7 +397,7 @@
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
-                            </li>
+                            </li> -->
                         </ul>
                     </el-collapse-item>
                 </el-collapse>
@@ -403,33 +414,41 @@
                     <ul>
                         <li>
                             <span>
-                                计划时间
-                                <div class="required">*</div>
-                            </span>
-                            <input type="text">
-                        </li>
-                        <li>
-                            <span>
                                 计划名称
                                 <div class="required">*</div>
                             </span>
-                            <input type="text">
+                            <input type="text" v-model="name">
+                        </li>
+                        <li>
+                            <span>
+                                计划时间
+                                <div class="required">*</div>
+                            </span>
+                            <el-date-picker
+                            v-model="dateValue"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            value-format="yyyy-MM-dd"
+                            @change="getTime">
+                            </el-date-picker>
                         </li>
                     </ul>
                 </div>
                 <div class="confirm">
-                    <a class="button">确定</a>
+                    <a class="button" @click="addProgressPlan()">确定</a>
                 </div>
             </div>
             <!-- 导入节点 -->
-            <div class="dialog-box" v-show="nodeShow" style="top:.2rem;width:14.08rem">
+            <div class="dialog-box" v-show="nodeShow">
                 <div class="title">
                     导入节点
                     <a class="close" @click="nodeShow=false">
                         <i class="el-icon-close"></i>
                     </a>
                 </div>
-                <div class="table">
+                <!-- <div class="table">
                     <div class="table-title">
                         从总控计划导入
                     </div>
@@ -472,16 +491,48 @@
                         </el-table>
                     </div>
                     <div class="paging-box">
-                        <!-- @current-change="handleCurrentChange2" -->
+                        @current-change="handleCurrentChange2"
                         <el-pagination
                             :current-page="pageNum"
                             layout="total, prev, pager, next, jumper"
                             :total="pageTotal">
                         </el-pagination>
                     </div>
+                </div> -->
+                <div class="form">
+                    <ul>
+                        <li>
+                            <span>
+                                计划名称
+                                <div class="required">*</div>
+                            </span>
+                            <el-select v-model="nodeId" placeholder="请选择">
+                                <el-option
+                                v-for="item in nodeList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                                </el-option>
+                            </el-select>
+                        </li>
+                        <li>
+                            <span>
+                                节点占进度百分比
+                                <div class="required">*</div>
+                            </span>
+                            <input type="text" v-model="progressNodeRatio">
+                        </li>
+                        <li>
+                            <span>
+                                进度占节点百分比
+                                <div class="required">*</div>
+                            </span>
+                            <input type="text" v-model="nodeProgressRatio">
+                        </li>
+                    </ul>
                 </div>
                 <div class="confirm">
-                    <a class="button">确定</a>
+                    <a class="button" @click="addProgressNode()">确定</a>
                 </div>
             </div>
             <!-- 导入计划 -->
@@ -698,8 +749,22 @@
                             }
                         }
                         .state {
+                            width: 3.3rem;
                             color: #4a4a4a;
                             font-size: .18rem;
+                        }
+                        .el-dropdown {
+                            height: .62rem;
+                            .el-dropdown-link {
+                                width: .2rem;
+                                height: .62rem;
+                                // line-height: .48rem;
+                                display: inline-block;
+                                background-image: url('../../../../static/images/systemSchedule-icon.png');
+                                background-position: center center;
+                                background-repeat: no-repeat;
+                                background-size: contain;
+                            }
                         }
                     }
                     .el-collapse-item__content {
@@ -786,7 +851,7 @@
             }
             .dialog-box {
                 left: 50%;
-                top: 2.14rem;
+                top: 1.5rem;
                 z-index: 200;
                 width: 6.84rem;
                 overflow: hidden;
@@ -844,8 +909,13 @@
                             .el-date-editor {
                                 width: 3.66rem;
                                 height: .41rem;
+                                overflow: hidden;
                                 input {
-                                    padding-left: .3rem;
+                                    padding-left: 0;
+                                    border: 0;
+                                }
+                                span {
+                                    width: auto;
                                 }
                             }
                         }
@@ -1041,9 +1111,45 @@ export default {
             pageSize2: 10, // 导入计划每页条数
             pageNum2: 1, // 导入计划当前页
             pageTotal2: 2, // 导入计划总条数
+
+            creatorId: '', // 创建人id
+            nodeList: '', // 节点列表
+            planList: '', // 计划列表
+            dateValue: '', // 日期范围
+            name: '', // 计划名称
+            predictStart: '', // 计划开始时间
+            predictEnd: '', // 计划结束时间
+            nodeId: '', // 节点id
+            progressNodeRatio: '', // 节点占进度百分比
+            nodeProgressRatio: '', // 进度占节点百分比
+            progressId: '', // 当前选中计划id
         }
     },
+    created() {
+        this.getCreatorId()
+        this.selectZhProgressPlanList()
+        this.selectZhNodeList()
+    },
     methods: {
+        // 获取开始时间与结束时间
+        getTime() {
+            // console.log(this.dateValue)
+            this.dateValue?this.predictStart = this.dateValue[0]:this.predictStart=''
+            this.dateValue?this.predictEnd = this.dateValue[1]:this.predictEnd=''
+        },
+
+        // 操作下拉框点击事件
+        handleCommand(command) {
+            // console.log(command)
+            if (command.split(':')[0] == 'delete') {
+                this.remoProgressPlan(command.split(':')[1])
+            }
+            if (command.split(':')[0] == 'importNode') {
+                this.progressId = command.split(':')[1]
+                this.nodeShow = true
+            }
+        },
+
         // 导入节点序号
         indexMethod(index) {
             return (this.pageNum-1)*this.pageSize+index+1
@@ -1052,6 +1158,118 @@ export default {
         // 导入计划序号
         indexMethod2(index) {
             return (this.pageNum-1)*this.pageSize+index+1
+        },
+
+        // 获取创建人id
+        getCreatorId() {
+            this.creatorId = sessionStorage.getItem('userId')
+        },
+
+        // 查询节点列表
+        selectZhNodeList() {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhNodeList?creatorId=${this.creatorId}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.nodeList = res.data.data
+                }
+            )
+        },
+
+        // 获取进度计划列表
+        selectZhProgressPlanList() {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhProgressPlanList?creatorId=${this.creatorId}`).then(
+                res => {
+                    // console.log(res.data)
+                    this.planList = res.data.data
+                    this.selectZhProgressNodeList()
+                }
+            )
+        },
+
+        // 查询计划节点关联列表
+        selectZhProgressNodeList() {
+            for (let i = 0; i < this.planList.length; i++) {
+                // console.log(this.planList[i].id)
+                this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhProgressNodeList?progressId=${this.planList[i].id}`).then(
+                    res => {
+                        // console.log(res.data.data)
+                        this.planList[i]['nodeList'] = res.data.data
+                    }
+                )
+            }
+            // console.log(this.planList)
+        },
+
+        // 添加进度计划
+        addProgressPlan() {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/addProgressPlan?name=${this.name}&creatorId=${this.creatorId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}`).then(
+                res => {
+                    // console.log(res.data)
+                    if (res.data.code == 0) {
+                        this.$message({
+                            message: '添加成功',
+                            type: 'success'
+                        })
+                        this.createShow = false
+                        this.selectZhProgressPlanList()
+                    } else {
+                        this.$message({
+                            message: '添加失败',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 删除进度计划
+        remoProgressPlan(id) {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/remoProgressPlan?id=${id}`).then(
+                res => {
+                    if (res.data.code == 0) {
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        })
+                        this.selectZhProgressPlanList()
+                    } else {
+                        this.$message({
+                            message: '删除失败',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 进度计划导入关联节点
+        addProgressNode() {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/addProgressNode?progressId=${this.progressId}&nodeId=${this.nodeId}&progressNodeRatio=${this.progressNodeRatio}&nodeProgressRatio=${this.nodeProgressRatio}`).then(
+                res => {
+                    if (res.data.code == 0) {
+                        this.$message({
+                            message: '导入成功',
+                            type: 'success'
+                        })
+                        this.nodeShow = false
+                        this.selectZhProgressPlanList()
+                    } else {
+                        this.$message({
+                            message: '导入失败',
+                            type: 'warning'
+                        })
+                    }
+                }
+            )
+        },
+
+        // 删除进度计划中的关联节点
+        removeProgressNode() {
+            this.$axios.post(`http://192.168.1.36:5555/provider/Node/removeProgressNode`).then(
+                res => {
+                    console.log(res.data)
+                }
+            )
         },
     }
 }

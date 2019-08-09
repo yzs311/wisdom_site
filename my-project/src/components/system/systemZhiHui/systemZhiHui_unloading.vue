@@ -15,7 +15,7 @@
                         <div class="icon-box offline"></div>
                         <div class="text-box">
                             <div class="top-text">离线卸料平台</div>
-                            <div class="bottom-text">0</div>
+                            <div class="bottom-text">1</div>
                         </div>
                     </li>
                     <li>
@@ -40,15 +40,15 @@
                     </div>
                     <div class="list-body">
                         <ul>
-                            <li>
+                            <!-- <li>
                                 <span style="width:2.54rem">布吉河流项目001</span>
                                 <span class="green">
                                     <i class="dot"></i>
                                     运行中
                                 </span>
-                            </li>
+                            </li> -->
                             <li>
-                                <span style="width:2.54rem">布吉河流项目001</span>
+                                <span style="width:2.54rem">布吉河流项目1号卸料平台</span>
                                 <span class="red">
                                     <i class="dot"></i>
                                     未运行

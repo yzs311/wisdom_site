@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- 看板导航栏 -->
-    <baseHeader v-show="isLogin"></baseHeader>
+    <baseHeader v-if="isLogin"></baseHeader>
 
     <!-- 后台管理系统导航栏 -->
     <systemHeader v-if="systemShow"></systemHeader>

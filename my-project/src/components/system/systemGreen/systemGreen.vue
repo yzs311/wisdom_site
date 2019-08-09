@@ -15,7 +15,7 @@
                         <span>TSP检测</span>
                     </router-link>
                 </li>
-                <li>
+                <!-- <li>
                     <a>
                         <div class="icon waste"></div>
                         <span>废弃监管</span>
@@ -26,7 +26,7 @@
                         <div class="icon rainwater"></div>
                         <span>雨水回收</span>
                     </a>
-                </li>
+                </li> -->
             </ul>
         </div>
         <!-- 内容 -->

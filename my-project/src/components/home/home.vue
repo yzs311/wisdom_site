@@ -87,7 +87,7 @@
           <div class="out_in">
             <div class="left">
               <span>今日进出：</span>
-              <span>{{carData.todaycount.count}}辆</span>
+              <span v-if="carData">{{carData.todaycount.count}}辆</span>
             </div>
             <div class="right">
               <span>运行情况：</span>
@@ -99,12 +99,11 @@
           <div class="case">
             <div class="left">进出情况</div>
             <div class="right" id="cardid" style="overflow:hidden;height:1.04rem;width:4.1rem;">
-              <ul id="cardid1">
-                <li v-for="(item, index) in carData.todaycount.vehicleList" :key="index">
+              <ul id="cardid1" v-if="carData">
+                <li v-for="(item, index) in carData.todaycount.vehicleList" :key="index" >
                   <span>{{item.vehicleNo}}</span>
                   <span>{{item.gateinname}}</span>
                   <span>{{item.liftTime}}</span>
-                  <!-- <span>{{item.cartype}}</span> -->
                 </li>
               </ul>
               <ul id="cardid2"></ul>
@@ -133,17 +132,21 @@
             <ul>
               <li>
                 <span class="leftName">塔吊数量：</span>
-                <span class="sub">{{towerCraneData.length}}座</span>
+                <span class="sub" v-if="towerCraneData">{{towerCraneData.length}}座</span>
               </li>
               <li>
                 <span class="leftName">违规操作：</span>
                 <span class="sub status noml">无</span>
                 <!-- <span v-else class="sub status danger">有</span> -->
               </li>
-              <li>
+              <li v-if="towerCraneData">
                 <span class="leftName">运行情况：</span>
                 <span v-if="towerCraneData[0].sb=='正常'" class="sub noml">正常</span>
                 <span v-else class="sub danger">异常</span>
+              </li>
+              <li v-else>
+                <span class="leftName">运行情况：</span>
+                <span class="sub danger">无数据</span>
               </li>
             </ul>
             <div class="outer">
@@ -156,22 +159,26 @@
             <ul>
               <li>
                 <span class="leftName">升降机数量：</span>
-                <span class="sub">{{elevatorData.length}}座</span>
+                <span class="sub" v-if="elevatorData">{{elevatorData.length}}座</span>
               </li>
               <li>
                 <span class="leftName">载重重量：</span>
-                <span class="sub danger">{{elevatorData[0].laod}}吨</span>
+                <span class="sub danger" v-if="elevatorData">{{elevatorData[0].laod}}吨</span>
               </li>
-              <li>
+              <li v-if="elevatorData">
                 <span class="leftName">运行情况：</span>
                 <span v-if="elevatorData[0].sb=='正常'" class="sub noml">正常</span>
                 <span v-else class="sub danger">异常</span>
+              </li>
+              <li v-else>
+                <span class="leftName">运行情况：</span>
+                <span class="sub danger">无数据</span>
               </li>
             </ul>
             <div class="runtime">
               <div>已正常运行</div>
               <img src="../../../static/images/shizhong.png" alt>
-              <div class="noml runtimeBg">{{elevatorData[0].days}}小时</div>
+              <div class="noml runtimeBg" v-if="elevatorData">{{elevatorData[0].days}}小时</div>
             </div>
           </div>
         </div>
@@ -242,22 +249,26 @@
           <ul>
             <li>
               <span class="leftName">电箱数量：</span>
-              <span class="sub">{{electricityBox.count}}座</span>
+              <span v-if="electricityBox" class="sub">{{electricityBox.count}}座</span>
             </li>
             <li>
               <span class="leftName">电箱温度：</span>
-              <span class="sub danger">{{electricityBox.envirwarm}}℃</span>
+              <span v-if="electricityBox" class="sub danger">{{electricityBox.envirwarm}}℃</span>
             </li>
-            <li>
+            <li v-if="electricityBox">
               <span class="leftName">运行情况：</span>
               <span v-if="electricityBox.kgjl.sb=='正常'" class="sub noml">正常</span>
               <span v-else class="sub danger">异常</span>
+            </li>
+            <li v-else>
+              <span class="leftName">运行情况：</span>
+              <span class="sub danger">无数据</span>
             </li>
           </ul>
           <div class="runtime">
             <div>已正常运行</div>
             <img src="../../../static/images/shizhong.png" alt>
-            <div class="noml runtimeBg">{{electricityBox.kgjl.days}}小时</div>
+            <div class="noml runtimeBg" v-if="electricityBox">{{electricityBox.kgjl.days}}小时</div>
           </div>
         </div>
       </el-col>
@@ -300,20 +311,10 @@ export default {
       elevatorData: '', // 升降机数据
       towerCraneData: '', // 塔吊数据
       day: '', // 安全文明施工天数
+      re: 0,
     };
   },
-  mounted() {},
   created() {
-    // this.dust()
-    // this.temperature()
-    // this.getSummary()
-    // this.renderBaifenbi()
-    // this.getCardid()
-    // this.getCrash()
-    // this.getLift()
-    // this.getyongdian()
-    // this.getProjectData()
-
     this.getPid()
     this.getCenterInfo()
     this.getElectricityBox()
@@ -737,7 +738,9 @@ export default {
       this.$axios.post(`/api/currentTemperatureApi/kanban?projectId=${this.projectId}`).then(
         res => {
           // console.log(res.data)
-          this.electricityBox = res.data
+          if (res.data) {
+            this.electricityBox = res.data
+          }
         }
       )
     },
@@ -747,12 +750,14 @@ export default {
       this.$axios.post(`/api/parkings/todaycount?projectId=${this.projectId}`).then(
         res => {
           // console.log(res.data.data[0])
-          this.carData = res.data.data[0]
-          if (this.carData.todaycount.vehicleList >= 4) {
-            // 调用滚动方法
-            setTimeout(()=>{
-              this.cardScroll()
-            },100)
+          if (res.data.data) {
+            this.carData = res.data.data[0]
+            if (this.carData.todaycount.vehicleList >= 4) {
+              // 调用滚动方法
+              setTimeout(()=>{
+                this.cardScroll()
+              },100)
+            }
           }
         }
       )
@@ -763,7 +768,9 @@ export default {
       this.$axios.post(`/api/appElevatorAddRecord/crane?pid=${this.projectId}`).then(
         res => {
           // console.log(res.data)
-          this.elevatorData = res.data.data
+          if (res.data.data) {
+            this.elevatorData = res.data.data
+          }
         }
       )
     },
@@ -773,7 +780,9 @@ export default {
         this.$axios.post(`/api/appCraneAddRecord/kanban?pid=${this.projectId}`).then(
             res => {
                 // console.log(res.data.sjjlist)
-                this.towerCraneData = res.data.sjjlist
+                if (res.data.sjjlist) {
+                  this.towerCraneData = res.data.sjjlist
+                }
             }
         )
     },
@@ -783,12 +792,14 @@ export default {
       this.$axios.post(`/api/project/getXmzk?id=${this.projectId}`).then (
         res => {
           // console.log(res.data)
-          this.generalizeData = res.data
-          if (this.generalizeData.subpackage.length >= 5) {
-            // 调用滚动方法
-            setTimeout(()=>{
-              this.scrollText()
-            },100)
+          if (res.data) {
+            this.generalizeData = res.data
+            if (this.generalizeData.subpackage.length >= 5) {
+              // 调用滚动方法
+              setTimeout(()=>{
+                this.scrollText()
+              },100)
+            }
           }
         }
       )
@@ -799,7 +810,9 @@ export default {
       this.$axios.post(`/api/attendanceRecordApi/TheWorkersWork?projectId=${this.projectId}`).then(
         res => {
           // console.log(res.data)
-          this.attendanceData = res.data
+          if (res.data) {
+            this.attendanceData = res.data
+          }
         }
       )
     },
@@ -809,30 +822,32 @@ export default {
       this.$axios.post(`/api/DustEmission/Tsp?projectId=${this.projectId}`).then(
         res => {
           // console.log(res.data)
-          let temp1 = []
-          let temp2 = []
-          let temp3 = []
-          let temp4 = []
-          for (let i = 0; i < res.data.tsp.length; i++) {
-            for (const key in res.data.tsp[i]) {
-              // console.log(key)
-              // console.log(res.data.tsp[i][key])
-              temp1.push(key)
-              temp2.push(res.data.tsp[i][key])
+          if (res.data) {
+            let temp1 = []
+            let temp2 = []
+            let temp3 = []
+            let temp4 = []
+            for (let i = 0; i < res.data.tsp.length; i++) {
+              for (const key in res.data.tsp[i]) {
+                // console.log(key)
+                // console.log(res.data.tsp[i][key])
+                temp1.push(key)
+                temp2.push(res.data.tsp[i][key])
+              }
             }
-          }
-          for (let i = 0; i < res.data.temperature.length; i++) {
-            for (const key in res.data.temperature[i]) {
-              // console.log(key)
-              // console.log(res.data.temperature[i][key])
-              temp3.push(key.split(' ')[1])
-              temp4.push(res.data.temperature[i][key])
+            for (let i = 0; i < res.data.temperature.length; i++) {
+              for (const key in res.data.temperature[i]) {
+                // console.log(key)
+                // console.log(res.data.temperature[i][key])
+                temp3.push(key.split(' ')[1])
+                temp4.push(res.data.temperature[i][key])
+              }
             }
+            setTimeout(()=>{
+              this.dustPic(temp1,temp2)
+              this.temperaturePic(temp3,temp4)
+            },100)
           }
-          setTimeout(()=>{
-            this.dustPic(temp1,temp2)
-            this.temperaturePic(temp3,temp4)
-          },100)
         }
       )
     },
@@ -842,7 +857,10 @@ export default {
       this.$axios.post(`/api/project/day?id=${this.projectId}`).then(
         res => {
           // console.log(res.data)
-          this.day = res.data.day
+          if (res.data.day) {
+            this.day = res.data.day
+          }
+          
         }
       )
     },

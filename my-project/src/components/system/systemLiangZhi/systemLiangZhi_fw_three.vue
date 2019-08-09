@@ -821,7 +821,7 @@ export default {
 
     // 获取查看详情数据列表
     getParticularsData() {
-      this.$axios.post(`/api/workersInformationAp/sele?id=${this.userId}`).then(
+      this.$axios.post(`/api/workersInformationAp/sele?userid=${this.userId}`).then(
         res => {
           // console.log(res.data)
           let temp = []
