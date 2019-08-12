@@ -83,66 +83,54 @@
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </template>
-                        <ul>
-                            <li class="first">
-                                <!-- 编号 -->
+                        <ul v-html="item.nodeList">
+                            <!-- <li class="first">
                                 <div class="number">
                                     编号
                                 </div>
-                                <!-- 节点 -->
                                 <div class="node">
                                     节点
                                 </div>
-                                <!-- 进度 -->
                                 <div class="schedule">
                                     进度
                                 </div>
-                                <!-- 状态 -->
                                 <div class="status">
                                     状态
                                 </div>
-                                <!-- 级别 -->
                                 <div class="rank">
                                     管控级别
                                 </div>
-                                <!-- 计划工期 -->
                                 <div class="plan-time">
                                     计划工期
                                 </div>
-                                <!-- 实际工期 -->
                                 <div class="practical-time">
                                     实际工期
                                 </div>
-                                <!-- 计划开始 -->
                                 <div class="plan-start">
                                     计划开始
                                 </div>
-                                <!-- 计划结束 -->
                                 <div class="plan-end">
                                     计划结束
                                 </div>
-                                <!-- 实际开始 -->
                                 <div class="practical-start">
                                     实际开始
                                 </div>
-                                <!-- 实际结束 -->
                                 <div class="practical-end">
                                     实际结束
                                 </div>
-                                <!-- 操作 -->
                                 <div class="operation">
                                     操作
                                 </div>
-                            </li>
-                            <li>
+                            </li> -->
+                            <!-- <li v-for="(item2,index2) in item.nodeList" :key="index2" v-if="item.nodeList">
                                 <div class="number">
-                                    1
+                                    {{index2+1}}
                                 </div>
                                 <div class="node">
                                     <a>
                                         <i class="el-icon-remove-outline" style="color:#46aeff"></i>
                                     </a>
-                                    深圳科伦特产业园中心2019年施工及验收计划
+                                    {{item2.id}}
                                     <a>
                                         <i class="el-icon-edit-outline" style="color:#46aeff"></i>
                                     </a>
@@ -189,7 +177,7 @@
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
-                            </li>
+                            </li> -->
                             <!-- <li >
                                 <div class="number">
                                     2
@@ -1114,7 +1102,7 @@ export default {
 
             creatorId: '', // 创建人id
             nodeList: '', // 节点列表
-            planList: '', // 计划列表
+            planList: [], // 计划列表
             dateValue: '', // 日期范围
             name: '', // 计划名称
             predictStart: '', // 计划开始时间
@@ -1167,7 +1155,7 @@ export default {
 
         // 查询节点列表
         selectZhNodeList() {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhNodeList?creatorId=${this.creatorId}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/selectZhNodeList?creatorId=${this.creatorId}`).then(
                 res => {
                     // console.log(res.data)
                     this.nodeList = res.data.data
@@ -1177,7 +1165,7 @@ export default {
 
         // 获取进度计划列表
         selectZhProgressPlanList() {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhProgressPlanList?creatorId=${this.creatorId}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/selectZhProgressPlanList?creatorId=${this.creatorId}`).then(
                 res => {
                     // console.log(res.data)
                     this.planList = res.data.data
@@ -1190,19 +1178,68 @@ export default {
         selectZhProgressNodeList() {
             for (let i = 0; i < this.planList.length; i++) {
                 // console.log(this.planList[i].id)
-                this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhProgressNodeList?progressId=${this.planList[i].id}`).then(
+                let temp = 
+                `<li class="first">
+                    <div class="number">
+                        编号
+                    </div>
+                    <div class="node">
+                        节点
+                    </div>
+                    <div class="schedule">
+                        进度
+                    </div>
+                    <div class="status">
+                        状态
+                    </div>
+                    <div class="rank">
+                        管控级别
+                    </div>
+                    <div class="plan-time">
+                        计划工期
+                    </div>
+                    <div class="practical-time">
+                        实际工期
+                    </div>
+                    <div class="plan-start">
+                        计划开始
+                    </div>
+                    <div class="plan-end">
+                        计划结束
+                    </div>
+                    <div class="practical-start">
+                        实际开始
+                    </div>
+                    <div class="practical-end">
+                        实际结束
+                    </div>
+                    <div class="operation">
+                        操作
+                    </div>
+                </li>
+                `
+                this.$axios.post(`http://192.168.1.22:5555/provider/Node/selectZhProgressNodeList?progressId=${this.planList[i].id}`).then(
                     res => {
                         // console.log(res.data.data)
-                        this.planList[i]['nodeList'] = res.data.data
+                        // this.planList[i]['nodeList'] = res.data.data
+                        for (let i2 = 0; i2 < res.data.data.length; i2++) {
+                            // console.log(res.data.data[i2])
+                            temp += 
+                            `<div>123</div>`
+                            // console.log(temp)
+                        }
+                        console.log(i)
+                        this.planList[i]['nodeList'] = temp
                     }
                 )
+                
             }
             // console.log(this.planList)
         },
 
         // 添加进度计划
         addProgressPlan() {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/addProgressPlan?name=${this.name}&creatorId=${this.creatorId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/addProgressPlan?name=${this.name}&creatorId=${this.creatorId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}`).then(
                 res => {
                     // console.log(res.data)
                     if (res.data.code == 0) {
@@ -1224,7 +1261,7 @@ export default {
 
         // 删除进度计划
         remoProgressPlan(id) {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/remoProgressPlan?id=${id}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/remoProgressPlan?id=${id}`).then(
                 res => {
                     if (res.data.code == 0) {
                         this.$message({
@@ -1244,7 +1281,7 @@ export default {
 
         // 进度计划导入关联节点
         addProgressNode() {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/addProgressNode?progressId=${this.progressId}&nodeId=${this.nodeId}&progressNodeRatio=${this.progressNodeRatio}&nodeProgressRatio=${this.nodeProgressRatio}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/addProgressNode?progressId=${this.progressId}&nodeId=${this.nodeId}&progressNodeRatio=${this.progressNodeRatio}&nodeProgressRatio=${this.nodeProgressRatio}`).then(
                 res => {
                     if (res.data.code == 0) {
                         this.$message({
@@ -1265,7 +1302,7 @@ export default {
 
         // 删除进度计划中的关联节点
         removeProgressNode() {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/removeProgressNode`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/removeProgressNode`).then(
                 res => {
                     console.log(res.data)
                 }

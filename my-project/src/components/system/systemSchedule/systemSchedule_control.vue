@@ -1675,7 +1675,7 @@ export default {
 
         // 查询节点列表
         selectZhNodeList() {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhNodeList?creatorId=${this.creatorId}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/selectZhNodeList?creatorId=${this.creatorId}`).then(
                 res => {
                     // console.log(res.data)
                     this.nodeList = res.data.data
@@ -1686,7 +1686,7 @@ export default {
         // 添加节点
         addNode() {
             if (this.nodeName && this.predictStart && this.predictEnd && this.controlRank) {
-                this.$axios.post(`http://192.168.1.36:5555/provider/Node/addNode?creatorId=${this.creatorId}&name=${this.nodeName}&parentId=${this.parentId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}&controlRank=${this.controlRank}`).then(
+                this.$axios.post(`http://192.168.1.22:5555/provider/Node/addNode?creatorId=${this.creatorId}&name=${this.nodeName}&parentId=${this.parentId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}&controlRank=${this.controlRank}`).then(
                     res => {
                         // console.log(res.data)
                         if (res.data.code == 0) {
@@ -1714,7 +1714,7 @@ export default {
 
         // 删除节点
         removeNode(id) {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/removeNode?id=${id}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/removeNode?id=${id}`).then(
                 res => {
                     // console.log(res.data)
                     if (res.data.code == 0) {
@@ -1762,7 +1762,7 @@ export default {
 
         // 编辑节点
         editNode() {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/editNode?creatorId=${this.creatorId}&name=${this.nodeName}&parentId=${this.parentId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}&controlRank=${this.controlRank}&id=${this.activeId}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/editNode?creatorId=${this.creatorId}&name=${this.nodeName}&parentId=${this.parentId}&predictStart=${this.predictStart}&predictEnd=${this.predictEnd}&controlRank=${this.controlRank}&id=${this.activeId}`).then(
                 res => {
                     // console.log(res.data)
                     if (res.data.code == 0) {
@@ -1786,7 +1786,7 @@ export default {
         selectRelevanceNode() {
             for (let i = 0; i < this.nodeList.length; i++) {
                 // console.log(this.nodeList[i].id)
-                this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhProgressNodeList?nodeId=${this.nodeList[i].id}`).then(
+                this.$axios.post(`http://192.168.1.22:5555/provider/Node/selectZhProgressNodeList?nodeId=${this.nodeList[i].id}`).then(
                     res => {
                         // console.log(res.data)
                         if (res.data.data.length == 0) {
@@ -1802,7 +1802,7 @@ export default {
 
         // 添加前置节点
         addPrepose() {
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/addPrepose?mainPlan=${this.activeId}&preposePian=${this.preposePian}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/addPrepose?mainPlan=${this.activeId}&preposePian=${this.preposePian}`).then(
                 res => {
                     if (res.data.code == 0) {
                         this.$message({
@@ -1828,7 +1828,7 @@ export default {
             this.relevanceShow = true
             this.activeMainPlan = mainPlan
             // console.log(mainPlan)
-            this.$axios.post(`http://192.168.1.36:5555/provider/Node/selectZhPreposeList?mainPlan=${mainPlan}`).then(
+            this.$axios.post(`http://192.168.1.22:5555/provider/Node/selectZhPreposeList?mainPlan=${mainPlan}`).then(
                 res => {
                     // console.log(res.data)
                     this.preposeList = res.data.data
@@ -1839,7 +1839,7 @@ export default {
         // 删除前置节点
         removePrepose(id) {
             // console.log(id)
-            this.$axios.post(`http://192.168.1.36:5555//provider/Node/removePrepose?id=${id}`).then(
+            this.$axios.post(`http://192.168.1.22:5555//provider/Node/removePrepose?id=${id}`).then(
                 res => {
                     // console.log(res.data)
                     if (res.data.code == 0) {
