@@ -9,7 +9,7 @@
             </div>
             <div class="right">
               <p style="font-size:0.18rem;">在线气体检测</p>
-              <p style="font-size:0.26rem;margin-top:0.05rem">10</p>
+              <p style="font-size:0.26rem;margin-top:0.05rem">0</p>
             </div>
           </div>
         </div>
@@ -20,7 +20,7 @@
             </div>
             <div class="right">
               <p style="font-size:0.18rem;">离线气体检测</p>
-              <p style="font-size:0.26rem;margin-top:0.05rem">0</p>
+              <p style="font-size:0.26rem;margin-top:0.05rem">1</p>
             </div>
           </div>
         </div>
@@ -668,10 +668,10 @@ export default {
         equipmentShow: false, // 切换设备显示状态
         tableData: [
             {
-                EX: 100, //EX
-                O2: 100, //O2
-                H2S: 100, //H2S
-                CO: 100, //CO
+                EX: 10, //EX
+                O2: 20, //O2
+                H2S: 13, //H2S
+                CO: 5, //CO
             }
         ], // 列表数据
         pageNum: 1, // 当且页

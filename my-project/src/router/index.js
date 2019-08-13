@@ -316,6 +316,7 @@ const router = new VueRouter({
         {path:'/projectShezhi',meta:{needLogin:true},component:resolve => require(['../components/projectManagement/projectShezhi.vue'],resolve)},
         {path:'/projectShouquan',meta:{needLogin:true},component:resolve => require(['../components/projectManagement/projectShouquan.vue'],resolve)},
         {path:'/gaoZhiMo',meta:{needLogin:true},component:resolve => require(['../components/gaoZhiMo/gaoZhiMo.vue'],resolve)},
+        {path:'/shenJiKeng',meta:{needLogin:true},component:resolve => require(['../components/shenJiKeng/shenJiKeng.vue'],resolve)},
         {path:'/companyGuanLi',meta:{needLogin:true},component:resolve => require(['../components/company/companyGuanLi/companyGuanLi.vue'],resolve),children:[
             {path:'',meta:{needLogin:true},component:resolve => require(['../components/company/companyGuanLi/companyGuanLi_set.vue'],resolve)},
             {path:'/companyGuanLi_set',meta:{needLogin:true},component:resolve => require(['../components/company/companyGuanLi/companyGuanLi_set.vue'],resolve)},

@@ -618,6 +618,7 @@ export default {
             year: '', // 年
             month: '', // 月
             day: '', // 日
+            indexTimeId: '', // 页面数据定时器
         }
     },
     mounted() {
@@ -696,6 +697,26 @@ export default {
                     },100)
                 }
             )
+            this.indexTimeId = setInterval(()=>{
+                this.$axios.post(`/api/inOutKanBan/selectIndex?pid=${this.projectId}`).then(
+                    res => {
+                        // console.log(res.data)
+                        this.indexData = res.data.data
+                        setTimeout(()=>{
+                            this.attendanceEcart(this.indexData.gzList)
+                            if (this.indexData.grdtList.length > 5) {
+                                this.scrollStart('grdt','grdt1','grdt2')
+                            }
+                            if (this.indexData.glrydtList.length > 5) {
+                                this.scrollStart('gldt','gldt1','gldt2')
+                            }
+                            if (this.indexData.sgqykq.length > 8) {
+                                this.scrollStart('qykq','qykq1','qykq2')
+                            }
+                        },100)
+                    }
+                )
+            },10000)
         },
 
         // 获取当前时间

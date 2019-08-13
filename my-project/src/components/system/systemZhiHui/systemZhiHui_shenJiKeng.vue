@@ -34,43 +34,11 @@
                 <div class="alarm-box">
                     <div class="title">
                         <span style="font-weight: bolder;">警报状态</span>
-                        <span>报警数：16</span>
+                        <span>报警数：1</span>
                     </div>
                     <div class="alarm-chart" id="alarmChart"></div>
                     <div class="list-box">
                         <ul>
-                            <li>
-                                <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
-                                <a>确认</a>
-                            </li>
-                            <li>
-                                <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
-                                <a>确认</a>
-                            </li>
-                            <li>
-                                <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
-                                <a>确认</a>
-                            </li>
-                            <li>
-                                <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
-                                <a>确认</a>
-                            </li>
-                            <li>
-                                <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
-                                <a>确认</a>
-                            </li>
-                            <li>
-                                <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
-                                <a>确认</a>
-                            </li>
-                            <li>
-                                <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
-                                <a>确认</a>
-                            </li>
-                            <li>
-                                <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
-                                <a>确认</a>
-                            </li>
                             <li>
                                 <span>1号深基坑于2018-02-08产生1级超阀值告警</span>
                                 <a>确认</a>

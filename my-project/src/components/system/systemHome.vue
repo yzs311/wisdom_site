@@ -93,17 +93,17 @@
                 <div class="top-box">
                     <div class="top-left">
                         <div class="title">
-                            <div class="time">15：34：11</div>
+                            <div class="time">{{time}}</div>
                             <div class="date">
-                                <div>五月</div>
-                                <div>29</div>
+                                <div>{{month}}月</div>
+                                <div>{{day}}</div>
                             </div>
                             <div class="line"></div>
                             <div class="weather-icon fine"></div>
-                            <div class="temperature">25℃</div>
+                            <div class="temperature">30℃</div>
                             <div class="day">
                                 安全文明施工天数：
-                                <span>100</span>
+                                <span>211</span>
                                 天
                             </div>
                         </div>
@@ -125,11 +125,11 @@
                                     </li>
                                     <li>
                                         <span>在场人数</span>
-                                        <span>2000</span>
+                                        <span>410人</span>
                                     </li>
                                     <li>
                                         <span>考勤人数</span>
-                                        <span>200</span>
+                                        <span>310人</span>
                                     </li>
                                 </div>
                                 <div class="manager" style="margin-top:.56rem;">
@@ -139,15 +139,15 @@
                                     </li>
                                     <li>
                                         <span>在场人数</span>
-                                        <span>2000</span>
+                                        <span>38人</span>
                                     </li>
                                     <li>
                                         <span>考勤人数</span>
-                                        <span>200</span>
+                                        <span>26人</span>
                                     </li>
                                 </div>
                             </div>
-                            <div class="attendance-graph">
+                            <div class="attendance-graph" id="attendance">
                             
                             </div>
                         </div>
@@ -159,22 +159,23 @@
                             <div class="main-box">
                                 <li>
                                     <div>
+                                        <!-- /m³ -->
                                         <div class="name">PM2.5</div>
-                                        <div class="value">40</div>
+                                        <div class="value">14μg</div>
                                         <div class="state">优</div>
                                     </div>
                                 </li>
                                 <li>
                                     <div>
                                         <div class="name">PM10</div>
-                                        <div class="value">55</div>
+                                        <div class="value">23μg</div>
                                         <div class="state">优</div>
                                     </div>
                                 </li>
                                 <li>
                                     <div>
                                         <div class="name">PM100</div>
-                                        <div class="value">70</div>
+                                        <div class="value">33μg</div>
                                         <div class="state">优</div>
                                     </div>
                                 </li>
@@ -182,7 +183,7 @@
                             <div class="bottom-box">
                                 <div class="text-box">
                                     噪音：
-                                    <span>60</span>
+                                    <span>63db</span>
                                 </div>
                                 <div class="img-box"></div>
                             </div>
@@ -197,13 +198,13 @@
                             车牌识别系统
                         </div>
                         <div class="state">
-                            <span>今日进出：11辆</span>
+                            <span>今日进出：0辆</span>
                             <span>运行情况：
-                                <span class="green-color">正常</span>
+                                <span class="pink-color">离线</span>
                             </span>
                         </div>
                         <ul>
-                            <li>
+                            <!-- <li>
                                 <span>粤C CJ537</span>
                                 <span>进</span>
                                 <span class="yellow-color">渣土车</span>
@@ -226,7 +227,7 @@
                                 <span>进</span>
                                 <span>临时车</span>
                                 <span>2019-01-01 19：:22</span>
-                            </li>
+                            </li> -->
                             <!-- <li>
                                 <span>粤C CJ537</span>
                                 <span>进</span>
@@ -244,9 +245,9 @@
                             <li>塔吊数量：2座</li>
                             <li>
                                 运行情况：
-                                <span class="pink-color">故障</span>
+                                <span class="pink-color">离线</span>
                             </li>
-                            <li>报警统计：0</li>
+                            <li>报警统计：0次</li>
                         </div>
                         <div class="right-box" id="towerCrane"></div>
                     </li>
@@ -259,9 +260,9 @@
                             <li>升降机数量数量：2座</li>
                             <li>
                                 运行情况：
-                                <span class="green-color">正常</span>
+                                <span class="pink-color">离线</span>
                             </li>
-                            <li>报警统计：0</li>
+                            <li>报警统计：0次</li>
                         </div>
                         <div class="right-box" id="elevator"></div>
                     </li>
@@ -274,9 +275,9 @@
                             <li>电箱数量：2座</li>
                             <li>
                                 运行情况：
-                                <span class="green-color">正常</span>
+                                <span class="pink-color">离线</span>
                             </li>
-                            <li>报警统计：0</li>
+                            <li>报警统计：0次</li>
                         </div>
                         <div class="right-box" id="electricity"></div>
                     </li>
@@ -516,7 +517,7 @@
                                 }
                             }
                             .attendance {
-                                margin-top: .3rem;
+                                margin-top: .2rem;
                                 display: inline-block;
                                 >div {
                                     li {
@@ -541,6 +542,8 @@
                                 }
                             }
                             .attendance-graph {
+                                height: 2rem;
+                                width: 4.14rem;
                                 display: inline-block;
                             }
                         }
@@ -592,8 +595,9 @@
                                 }
                             }
                             .bottom-box {
+                                width: 4rem;
                                 margin-top: .22rem;
-                                margin-left: 50%;
+                                margin-left: 60%;
                                 transform: translate(-50%);
                                 display: inline-block;
                                 .text-box {
@@ -707,10 +711,15 @@
 </style>
 
 <script>
+import moment from "moment"
 export default {
     data() {
         return {
             retractState: true, // 侧导航栏状态
+            timeId: '', // 定时器
+            month: '', // 月份
+            day: '', // 日期
+            time: '', // 时间
             // lzShow: true,
         }
     },
@@ -718,6 +727,8 @@ export default {
         this.setTowerCrane()
         this.setElevator()
         this.setElectricity()
+        this.attendance()
+        this.getDate()
     },
     methods: {
         // 侧导航栏缩进
@@ -918,13 +929,102 @@ export default {
             })
         },
 
+        // 考勤记录ECharts渲染
+        attendance() {
+            let attendance = this.$echarts.init(
+              document.getElementById("attendance")
+            )
+            attendance.setOption({
+                grid: {
+                    x: 30,
+                    y: 20,
+                    x2: 40,
+                    y2: 10,
+                    containLabel: true
+                },
+                tooltip: {
+                    trigger: "axis",
+                    formatter: "{b}点: {c}人"
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        axisLabel: {
+                            rotate: 0,
+                            interval: 0,
+                            color: "#000"
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: "#132e6d"
+                            }
+                        },
+                        type: "category",
+                        boundaryGap: false,
+                        data: [
+                          "4",
+                          "6",
+                          "8",
+                          "10",
+                          "12",
+                        ]
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: "value",
+                        interval: 50,
+                        axisLabel: {
+                            textStyle: {
+                                color: "#000"
+                            },
+                            formatter: "{value}人"
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: "#fff"
+                            }
+                        },
+                        splitLine: {
+                            show: true,
+                            lineStyle: {
+                                color: ["#0793ff"],
+                                width: 1,
+                                type: "dashed"
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: "考勤人数",
+                        type: "line",
+                        symbolSize: 10,
+                        smooth: 0.2,
+                        symbol:'circle',
+                        color: ["#0090ff"],
+                        data: [200, 240, 260, 260, 180]
+                    },
+                ]
+            })
+        },
+
         // 该模块暂未开放
         unopenClick() {
             this.$message({
               message: '该功能暂未开放',
               type: 'warning'
             })
-        }
+        },
+
+        // 获取时间
+        getDate() {
+            this.timeId = setInterval(()=>{
+                this.time = moment().format("hh:mm:ss")
+                this.month = moment().format("MM")
+                this.day = moment().format("DD")
+            },1000)
+        },
     }
 }
 </script>

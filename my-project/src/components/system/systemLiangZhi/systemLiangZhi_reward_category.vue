@@ -491,12 +491,12 @@ export default {
                 {
                     name: '比赛获奖', // 类别名称
                     type: 1, // 奖/罚
-                    money: 1, // 金额
+                    money: 100, // 金额
                 },
                 {
                     name: '扰乱秩序',
                     type: 0,
-                    money: -1,
+                    money: -100,
                 },
             ]
         }

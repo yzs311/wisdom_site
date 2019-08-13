@@ -23,7 +23,7 @@
                                 离线电表
                             </div>
                             <div class="bottom-text">
-                                0
+                                1
                             </div>
                         </div>
                     </div>
@@ -35,8 +35,8 @@
                         <div class="left-box">
                             <div class="border-box">
                                 <div class="text-box">
-                                    <div class="top-text">4月用电量</div>
-                                    <div class="middle-text">122264</div>
+                                    <div class="top-text">7月用电量</div>
+                                    <div class="middle-text">12264</div>
                                     <div class="bottom-text">KW</div>
                                 </div>
                             </div>
@@ -67,30 +67,6 @@
                                 <div class="extent-box">
                                     <div class="value"></div>
                                 </div>
-                                <div class="text-box">10月</div>
-                            </li>
-                            <li>
-                                <div class="extent-box">
-                                    <div class="value"></div>
-                                </div>
-                                <div class="text-box">11月</div>
-                            </li>
-                            <li>
-                                <div class="extent-box">
-                                    <div class="value"></div>
-                                </div>
-                                <div class="text-box">12月</div>
-                            </li>
-                            <li>
-                                <div class="extent-box">
-                                    <div class="value"></div>
-                                </div>
-                                <div class="text-box">01月</div>
-                            </li>
-                            <li>
-                                <div class="extent-box">
-                                    <div class="value"></div>
-                                </div>
                                 <div class="text-box">02月</div>
                             </li>
                             <li>
@@ -98,6 +74,30 @@
                                     <div class="value"></div>
                                 </div>
                                 <div class="text-box">03月</div>
+                            </li>
+                            <li>
+                                <div class="extent-box">
+                                    <div class="value"></div>
+                                </div>
+                                <div class="text-box">04月</div>
+                            </li>
+                            <li>
+                                <div class="extent-box">
+                                    <div class="value"></div>
+                                </div>
+                                <div class="text-box">05月</div>
+                            </li>
+                            <li>
+                                <div class="extent-box">
+                                    <div class="value"></div>
+                                </div>
+                                <div class="text-box">06月</div>
+                            </li>
+                            <li>
+                                <div class="extent-box">
+                                    <div class="value"></div>
+                                </div>
+                                <div class="text-box">07月</div>
                             </li>
                         </ul>
                         <a class="next-button"></a>
@@ -112,7 +112,7 @@
                     <!-- 电表名 -->
                     <div class="name-box">
                         <div class="name">施工区</div>
-                        <div class="status">在线</div>
+                        <div class="status" style="color:#fe8990">离线</div>
                     </div>
                     <!-- 按钮框 -->
                     <div class="button-box">
@@ -148,21 +148,21 @@
                                 <div class="text-icon">周</div>
                                 <div class="text-box">
                                     <div>周用电量</div>
-                                    <div>111KW</div>
+                                    <div>701KW</div>
                                 </div>
                             </li>
                             <li>
                                 <div class="text-icon">月</div>
                                 <div class="text-box">
                                     <div>月用电量</div>
-                                    <div>111KW</div>
+                                    <div>3234KW</div>
                                 </div>
                             </li>
                             <li>
                                 <div class="text-icon">年</div>
                                 <div class="text-box">
                                     <div>年用电量</div>
-                                    <div>111KW</div>
+                                    <div>20301KW</div>
                                 </div>
                             </li>
                         </ul>
@@ -248,7 +248,7 @@
                                 离线水表
                             </div>
                             <div class="bottom-text">
-                                0
+                                1
                             </div>
                         </div>
                     </div>
@@ -260,8 +260,8 @@
                         <div class="left-box">
                             <div class="border-box">
                                 <div class="text-box">
-                                    <div class="top-text">4月用水量</div>
-                                    <div class="middle-text">2222</div>
+                                    <div class="top-text">7月用水量</div>
+                                    <div class="middle-text">3212</div>
                                     <div class="bottom-text">m³</div>
                                 </div>
                             </div>
@@ -292,30 +292,6 @@
                                 <div class="extent-box">
                                     <div class="value"></div>
                                 </div>
-                                <div class="text-box">10月</div>
-                            </li>
-                            <li>
-                                <div class="extent-box">
-                                    <div class="value"></div>
-                                </div>
-                                <div class="text-box">11月</div>
-                            </li>
-                            <li>
-                                <div class="extent-box">
-                                    <div class="value"></div>
-                                </div>
-                                <div class="text-box">12月</div>
-                            </li>
-                            <li>
-                                <div class="extent-box">
-                                    <div class="value"></div>
-                                </div>
-                                <div class="text-box">01月</div>
-                            </li>
-                            <li>
-                                <div class="extent-box">
-                                    <div class="value"></div>
-                                </div>
                                 <div class="text-box">02月</div>
                             </li>
                             <li>
@@ -323,6 +299,30 @@
                                     <div class="value"></div>
                                 </div>
                                 <div class="text-box">03月</div>
+                            </li>
+                            <li>
+                                <div class="extent-box">
+                                    <div class="value"></div>
+                                </div>
+                                <div class="text-box">04月</div>
+                            </li>
+                            <li>
+                                <div class="extent-box">
+                                    <div class="value"></div>
+                                </div>
+                                <div class="text-box">05月</div>
+                            </li>
+                            <li>
+                                <div class="extent-box">
+                                    <div class="value"></div>
+                                </div>
+                                <div class="text-box">06月</div>
+                            </li>
+                            <li>
+                                <div class="extent-box">
+                                    <div class="value"></div>
+                                </div>
+                                <div class="text-box">07月</div>
                             </li>
                         </ul>
                         <a class="next-button"></a>
@@ -337,7 +337,7 @@
                     <!-- 电表名 -->
                     <div class="name-box">
                         <div class="name">施工区</div>
-                        <div class="status">在线</div>
+                        <div class="status" style="color:#fe8990">离线</div>
                     </div>
                     <!-- 按钮框 -->
                     <div class="button-box">
@@ -360,34 +360,34 @@
                     </div>
                     <!-- 总用电量 -->
                     <div class="sum">
-                        <div class="title">总用水量7272m³</div>
+                        <div class="title">总用水量17127m³</div>
                         <ul>
                             <li>
                                 <div class="text-icon">日</div>
                                 <div class="text-box">
                                     <div>日用水量</div>
-                                    <div>111m³</div>
+                                    <div>114m³</div>
                                 </div>
                             </li>
                             <li>
                                 <div class="text-icon">周</div>
                                 <div class="text-box">
                                     <div>周用水量</div>
-                                    <div>111m³</div>
+                                    <div>803m³</div>
                                 </div>
                             </li>
                             <li>
                                 <div class="text-icon">月</div>
                                 <div class="text-box">
                                     <div>月用水量</div>
-                                    <div>111m³</div>
+                                    <div>3212m³</div>
                                 </div>
                             </li>
                             <li>
                                 <div class="text-icon">年</div>
                                 <div class="text-box">
                                     <div>年用水量</div>
-                                    <div>111m³</div>
+                                    <div>17127m³</div>
                                 </div>
                             </li>
                         </ul>
@@ -803,17 +803,17 @@ export default {
             waterShow: true, // 用水统计与用水详情切换
             tableData: [
                 {
-                    time: '12.18~12.25',
-                    electricQuantity: '1222KW',
-                    average: '122KW',
-                    compare: +122
+                    time: '7.18~7.25',
+                    electricQuantity: '701KW',
+                    average: '100KW',
+                    compare: +22
                 },
-                {
-                    time: '12.18~12.25',
-                    electricQuantity: '1222KW',
-                    average: '122KW',
-                    compare: -122
-                }
+                // {
+                //     time: '12.18~12.25',
+                //     electricQuantity: '1222KW',
+                //     average: '122KW',
+                //     compare: -122
+                // }
             ], // 用电量列表数据
             pageSize: 1, // 每页条数
             pageNum: 1, // 当前页
@@ -863,13 +863,13 @@ export default {
                             type: "category",
                             // boundaryGap: false,
                             data: [
-                              "12.18-12.24",
-                              "12.18-12.24",
-                              "12.18-12.24",
-                              "12.18-12.24",
-                              "12.18-12.24",
-                              "12.18-12.24",
-                              "12.18-12.24"
+                              "08-07",
+                              "08-08",
+                              "08-09",
+                              "08-10",
+                              "08-11",
+                              "08-12",
+                              "08-13"
                             ]
                             // data: data.time
                         }

@@ -74,8 +74,8 @@
                   <router-link to="/gaoZhiMo">高支模检测</router-link>
 
                 </li>
-                <li>
-                  <a @click="unopenClick">基坑监测</a>
+                <li v-on:click="isActive('/shenJiKeng')">
+                  <router-link to="/shenJiKeng" @click="unopenClick">基坑监测</router-link>
                 </li>
                 <li>
                   <a @click="unopenClick">施工周边监测</a>

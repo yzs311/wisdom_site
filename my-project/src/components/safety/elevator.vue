@@ -1,10 +1,10 @@
 <template>
   <div class="content">
     <div class="top">
-      <div class="top-box" v-for="(item,index) in elevatorData" :key="index">
+      <!-- <div class="top-box" v-for="(item,index) in elevatorData" :key="index">
         <div class="status">
           <span class="green">正常运行</span>
-          <!-- <span v-else class="danger">异常运行</span> -->
+          <span v-else class="danger">异常运行</span>
         </div>
         <div class="employee">
           <span class="bolder">操作员</span>
@@ -12,30 +12,76 @@
           <span class="bolder">上班时间</span>
           <span>{{item.time!=null?item.time.split(' ')[1]:''}}</span>
         </div>
-        <!-- <img :src="`${imgUrl}/${item.photo}`" alt class="pic"> -->
+        <img :src="`${imgUrl}/${item.photo}`" alt class="pic">
         <img :src="item.img" alt="" class="pic">
+      </div> -->
+
+      <div class="top-box">
+        <div class="status">
+          <span class="green">正常运行</span>
+          <!-- <span v-else class="danger">异常运行</span> -->
+        </div>
+        <div class="employee">
+          <span class="bolder">操作员</span>
+          <span>金地刚</span>
+          <span class="bolder">上班时间</span>
+          <span>06：56</span>
+        </div>
+        <!-- <img :src="`${imgUrl}/${item.photo}`" alt class="pic"> -->
+        <!-- <img :src="item.img" alt="" class="pic"> -->
+        <img src="../../../static/images/s_pic.png" alt="" class="pic">
+      </div>
+      <div class="top-box">
+        <div class="status">
+          <span class="green">正常运行</span>
+          <!-- <span v-else class="danger">异常运行</span> -->
+        </div>
+        <div class="employee">
+          <span class="bolder">操作员</span>
+          <span>丘桂侯</span>
+          <span class="bolder">上班时间</span>
+          <span>06：44</span>
+        </div>
+        <!-- <img :src="`${imgUrl}/${item.photo}`" alt class="pic"> -->
+        <!-- <img :src="item.img" alt="" class="pic"> -->
+        <img src="../../../static/images/s_pic.png" alt="" class="pic">
+      </div>
+      <div class="top-box">
+        <div class="status">
+          <span class="green">正常运行</span>
+          <!-- <span v-else class="danger">异常运行</span> -->
+        </div>
+        <div class="employee">
+          <span class="bolder">操作员</span>
+          <span>贲维军</span>
+          <span class="bolder">上班时间</span>
+          <span>06：32</span>
+        </div>
+        <!-- <img :src="`${imgUrl}/${item.photo}`" alt class="pic"> -->
+        <!-- <img :src="item.img" alt="" class="pic"> -->
+        <img src="../../../static/images/s_pic.png" alt="" class="pic">
       </div>
     </div>
     <div class="buttom">
-      <div class="main" v-for="(item,index) in elevatorData" :key="index">
+      <!-- <div class="main" v-for="(item,index) in elevatorData" :key="index">
         <div class="title">{{item.operator_name}}</div>
         <div class="info" >
           <div class="manyInfo">
             <div class="num">
               <p class="noml small noml-border">{{item.laod}}t</p>
             </div>
-            <!-- <div class="t_num" v-else>
+            <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_zz}}t</p>
-            </div> -->
+            </div>
             <div class="subtitle">载重</div>
           </div>
           <div class="manyInfo">
             <div class="num">
               <p class="noml small noml-border">{{item.height}}m</p>
             </div>
-            <!-- <div class="t_num" v-else>
+            <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_gd}}m</p>
-            </div> -->
+            </div>
             <div class="subtitle">高度</div>
           </div>
           <div class="manyInfo">
@@ -60,6 +106,142 @@
         <div class="subtitle">
           <h1 style="display:inline-block">检修倒计时:</h1>
           <h1 :class="item.residue>=10?'normal':item.residue>=1?'warning':'anomaly'" style="display:inline-block">&nbsp;&nbsp;{{item.residue}}天</h1>
+        </div>
+      </div> -->
+
+      <div class="main">
+        <div class="title">一号升降机</div>
+        <div class="info" >
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml small noml-border">26t</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger small danger-border">{{item.yx_zz}}t</p>
+            </div> -->
+            <div class="subtitle">载重</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml small noml-border">33m</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger small danger-border">{{item.yx_gd}}m</p>
+            </div> -->
+            <div class="subtitle">高度</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml noml-border">正常</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger danger-border">异常</p>
+            </div> -->
+            <div class="subtitle">防坠在位监测</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml noml-border">正常</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger danger-border">异常常</p>
+            </div> -->
+            <div class="subtitle">上下限位监测</div>
+          </div>
+        </div>
+        <div class="subtitle">
+          <h1 style="display:inline-block">检修倒计时:</h1>
+          <h1 class="normal" style="display:inline-block">&nbsp;&nbsp;67天</h1>
+        </div>
+      </div>
+      <div class="main">
+        <div class="title">二号升降机</div>
+        <div class="info" >
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml small noml-border">26t</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger small danger-border">{{item.yx_zz}}t</p>
+            </div> -->
+            <div class="subtitle">载重</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml small noml-border">33m</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger small danger-border">{{item.yx_gd}}m</p>
+            </div> -->
+            <div class="subtitle">高度</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml noml-border">正常</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger danger-border">异常</p>
+            </div> -->
+            <div class="subtitle">防坠在位监测</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml noml-border">正常</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger danger-border">异常常</p>
+            </div> -->
+            <div class="subtitle">上下限位监测</div>
+          </div>
+        </div>
+        <div class="subtitle">
+          <h1 style="display:inline-block">检修倒计时:</h1>
+          <h1 class="normal" style="display:inline-block">&nbsp;&nbsp;67天</h1>
+        </div>
+      </div>
+      <div class="main">
+        <div class="title">三号升降机</div>
+        <div class="info" >
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml small noml-border">26t</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger small danger-border">{{item.yx_zz}}t</p>
+            </div> -->
+            <div class="subtitle">载重</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml small noml-border">33m</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger small danger-border">{{item.yx_gd}}m</p>
+            </div> -->
+            <div class="subtitle">高度</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml noml-border">正常</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger danger-border">异常</p>
+            </div> -->
+            <div class="subtitle">防坠在位监测</div>
+          </div>
+          <div class="manyInfo">
+            <div class="num">
+              <p class="noml noml-border">正常</p>
+            </div>
+            <!-- <div class="t_num" v-else>
+              <p class="danger danger-border">异常常</p>
+            </div> -->
+            <div class="subtitle">上下限位监测</div>
+          </div>
+        </div>
+        <div class="subtitle">
+          <h1 style="display:inline-block">检修倒计时:</h1>
+          <h1 class="normal" style="display:inline-block">&nbsp;&nbsp;67天</h1>
         </div>
       </div>
     </div>

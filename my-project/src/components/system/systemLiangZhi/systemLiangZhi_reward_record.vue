@@ -335,26 +335,15 @@ export default {
         return {
             tableData: [
                 {
-                    name: '某某某', // 姓名
-                    num: 123456, // 工号
-                    company: '深圳市市政工程总公司', // 所属参建单位
-                    team: '永恒信一班', // 所属班组
-                    typeWork: '木工', // 工种
-                    rewardType: '优秀员工', // 奖罚类别
-                    money: 100, // 奖罚金额
+                    name: '阳建军', // 姓名
+                    num: 10000001, // 工号
+                    company: '深圳市国为建筑安装有限公司', // 所属参建单位
+                    team: '国为1班', // 所属班组
+                    typeWork: '普工', // 工种
+                    rewardType: '罚', // 奖罚类别
+                    money: -100, // 奖罚金额
                     date: '2019-07-09', // 奖罚日期
-                    reason: '2019-07-09罚款', // 奖罚事由
-                },
-                {
-                    name: '某某某', 
-                    num: 123456, 
-                    company: '深圳市市政工程总公司', 
-                    team: '永恒信一班', 
-                    typeWork: '木工', 
-                    rewardType: '优秀员工', 
-                    money: -100, 
-                    date: '2019-07-09', 
-                    reason: '2019-07-09罚款', 
+                    reason: '扰乱秩序', // 奖罚事由
                 },
             ], // 列表数据
             pageNum: 1, // 当前页

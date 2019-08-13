@@ -929,7 +929,7 @@ export default {
 
     // 下载
     downloadClcik(fileName) {
-      location.href=`/api/lzfw/testDownload?fileName=${fileName}`
+      location.href=`http://47.106.71.3:8080/api/lzfw/testDownload?imgURL=${imgURL}`
     }
   }
 };

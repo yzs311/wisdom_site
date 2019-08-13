@@ -124,12 +124,6 @@
                             <li class="first-name">
                                 姓名
                             </li>
-                            <li>
-                                <a>某某某</a>
-                            </li>
-                            <li>
-                                <a>某某某</a>
-                            </li>
                         </ul>
                     </div>
                     <div class="input-box">
@@ -493,37 +487,55 @@ export default {
         return {
             tableData: [
                 {
-                    name: '某某某', // 姓名
-                    num: '123456', // 工号
-                    company: '深圳市市政工程总公司', // 所属参建单位
-                    team: '永恒信一班', // 所属班组
-                    profession: '木工', // 工种
-                    group: 1, // 是否班组长
-                    state: 0, // 状态
+                    name: '阳建军', // 姓名
+                    num: '10000001', // 工号
+                    company: '深圳市国为建筑安装有限公司', // 所属参建单位
+                    team: '国为1班', // 所属班组
+                    profession: '普工', // 工种
+                    group: 0, // 是否班组长
+                    state: 1, // 状态
                 },
                 {
-                    name: '某某某',
-                    num: '123456',
-                    company: '深圳市市政工程总公司',
-                    team: '永恒信一班',
-                    profession: '木工',
-                    group: 1,
+                    name: '陈志民',
+                    num: '10000002',
+                    company: '深圳市国为建筑安装有限公司',
+                    team: '国为1班',
+                    profession: '普工',
+                    group: 0,
                     state: 1
                 },
                 {
-                    name: '某某某',
-                    num: '123456',
-                    company: '深圳市市政工程总公司',
-                    team: '永恒信一班',
-                    profession: '木工',
+                    name: '欧成标',
+                    num: '10000003',
+                    company: '深圳市国为建筑安装有限公司',
+                    team: '国为1班',
+                    profession: '普工',
                     group: 0,
-                    state: 2
+                    state: 1
+                },
+                {
+                    name: '周鹏',
+                    num: '10000004',
+                    company: '深圳市国为建筑安装有限公司',
+                    team: '国为1班',
+                    profession: '普工',
+                    group: 0,
+                    state: 1
+                },
+                {
+                    name: '陈为安',
+                    num: '10000005',
+                    company: '深圳市国为建筑安装有限公司',
+                    team: '国为1班',
+                    profession: '普工',
+                    group: 0,
+                    state: 1
                 }
             ], // 列表数据
             dialogShow: false, // 对话框显示状态
             pageNum: 1, // 当前页
             pageSize: 15, // 每页条数
-            pageTotal: 2, // 总条数
+            pageTotal: 5, // 总条数
         }
     },
     created() {

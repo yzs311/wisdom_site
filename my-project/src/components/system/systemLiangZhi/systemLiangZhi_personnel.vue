@@ -1751,14 +1751,14 @@ export default {
             let headers = {headers: {"Content-Type": "multipart/form-data"}}
             this.$axios.post(`/api/file/upload?folderName=hj`,this.photographFile,headers).then(
                 res => {
-                    console.log(res.data.data[0].fileimgurl)
+                    // console.log(res.data.data[0].fileimgurl)
                     if (res.data.code == 0) {
                         $(`.photographA`).text('+')
                         this.photographShow = false
                         // $(".photographImg").attr('src',res.data.data[0].fileimgurl)
                         this.faceUrl = res.data.data[0].fileimgurl 
                     } else {
-                        $(`.backA`).text('+')
+                        $(`.photographA`).text('+')
                         this.$message({
                             message: '上传失败，请重试',
                             type: 'error'
@@ -1805,7 +1805,7 @@ export default {
                         this.faceShow = false
                         // $(".faceImg").attr('src',res.data.data.url)
                     } else {
-                        $(`.backA`).text('+')
+                        $(`.faceA`).text('+')
                         this.$message({
                             message: '上传失败，请重试',
                             type: 'error'
@@ -1845,13 +1845,32 @@ export default {
                 res => {
                     // console.log(res.data)
                     if (res.data.code == 0) {
-                        this.empCardnum = res.data.data.card_num
+                        // this.empCardnum = res.data.data.card_num
                         this.bankCardUrl = res.data.data.url
                         $(`.cardA`).text('+')
                         this.cardShow = false
                         // $(".cardImg").attr('src',res.data.data.url)
                     } else {
-                        $(`.backA`).text('+')
+                        $(`.cardA`).text('+')
+                        this.$message({
+                            message: '上传失败，请重试',
+                            type: 'error'
+                        })
+                    }
+                }
+            )
+        },
+        // 银行卡上传
+        uploadingBankCard() {
+            let headers = {headers: {"Content-Type": "multipart/form-data"}}
+            this.$axios.post(`/api/file/upload?folderName=hj`,this.fileCard,headers).then(
+                res => {    
+                    if (res.data.code == 0) {
+                        $(`.cardA`).text('+')
+                        this.cardShow = false
+                        this.bankCardUrl = res.data.data[0].fileimgurl 
+                    } else {
+                        $(`.cardA`).text('+')
                         this.$message({
                             message: '上传失败，请重试',
                             type: 'error'
@@ -1889,7 +1908,7 @@ export default {
             // console.log(this.file.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
             // console.log(`123`)
             $(`.cardA`).text('上传中')
-            this.getAliOcrIdCardCard()
+            this.uploadingBankCard()
         },
 
         // 获取参建与班组的级联列表

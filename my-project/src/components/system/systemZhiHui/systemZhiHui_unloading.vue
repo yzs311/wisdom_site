@@ -48,7 +48,7 @@
                                 </span>
                             </li> -->
                             <li>
-                                <span style="width:2.54rem">布吉河流项目1号卸料平台</span>
+                                <span style="width:2.54rem">1号卸料平台</span>
                                 <span class="red">
                                     <i class="dot"></i>
                                     未运行
@@ -589,7 +589,7 @@ export default {
                     mainRope: '正常', // 主绳
                     deputyRope: '正常', // 副绳
                     status: 0, // 状态
-                    time: '12-11 09:11', // 时间
+                    time: '9-11 09:11', // 时间
                 },
                 {
                     load: '100t', // 载重
@@ -597,7 +597,7 @@ export default {
                     mainRope: '正常', // 主绳
                     deputyRope: '正常', // 副绳
                     status: 1, // 状态
-                    time: '12-11 09:11', // 时间
+                    time: '9-11 11:11', // 时间
                 },
             ], // 历史记录列表
         }

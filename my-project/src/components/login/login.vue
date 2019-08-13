@@ -154,6 +154,7 @@ export default {
             localStorage.setItem("islogin", "true")
             if (res.data.data.userType == 2) {
               this.$router.push({ path: "/systemHome" })
+              // this.$router.push({ path: "/systemLiangZhi" })
             } else {
               this.$router.push({ path: "/homePage" })
             }

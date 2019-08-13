@@ -822,13 +822,13 @@ export default {
         return {
             pageSize: 15, // 每页条数
             pageNum: 1, // 当前页
-            pageTotal: 2, // 总条数
+            pageTotal: 5, // 总条数
             dialogShow: false, // 对话框状态
             examineShow: false, // 查看对话框状态
             loading: false, // 加载遮罩层状态
             tableData: [
                 {
-                    name: '某某某', // 姓名
+                    name: '阳建军', // 姓名
                     Jan: 1, // 1月
                     Feb: 1, // 2月
                     Mar: 1, // 3月
@@ -836,29 +836,77 @@ export default {
                     May: 1, // 5月
                     June: 1, // 6月
                     July: 1, // 7月
-                    Aug: 1, // 8月
-                    Sept: 1, // 9月
-                    Oct: 1, // 10月
-                    Nov: 1, // 11月
-                    Dec: 1, // 12月
-                    status: 1, // 状态
+                    Aug: 0, // 8月
+                    Sept: 0, // 9月
+                    Oct: 0, // 10月
+                    Nov: 0, // 11月
+                    Dec: 0, // 12月
+                    status: 0, // 状态
                 },
                 {
-                    name: '某某某', 
-                    Jan: 0, 
-                    Feb: 0, 
-                    Mar: 0, 
-                    Apr: 0, 
-                    May: 0, 
-                    June: 0, 
-                    July: 0, 
+                    name: '陈志民', 
+                    Jan: 1, 
+                    Feb: 1, 
+                    Mar: 1, 
+                    Apr: 1, 
+                    May: 1, 
+                    June: 1, 
+                    July: 1, 
                     Aug: 0, 
                     Sept: 0, 
                     Oct: 0, 
                     Nov: 0, 
                     Dec: 0, 
                     status: 0, 
-                }
+                },
+                {
+                    name: '欧成标', 
+                    Jan: 1, 
+                    Feb: 1, 
+                    Mar: 1, 
+                    Apr: 1, 
+                    May: 1, 
+                    June: 1, 
+                    July: 1, 
+                    Aug: 0, 
+                    Sept: 0, 
+                    Oct: 0, 
+                    Nov: 0, 
+                    Dec: 0, 
+                    status: 0, 
+                },
+                {
+                    name: '周鹏', 
+                    Jan: 1, 
+                    Feb: 1, 
+                    Mar: 1, 
+                    Apr: 1, 
+                    May: 1, 
+                    June: 1, 
+                    July: 1, 
+                    Aug: 0, 
+                    Sept: 0, 
+                    Oct: 0, 
+                    Nov: 0, 
+                    Dec: 0, 
+                    status: 0, 
+                },
+                {
+                    name: '陈为安', 
+                    Jan: 1, 
+                    Feb: 1, 
+                    Mar: 1, 
+                    Apr: 1, 
+                    May: 1, 
+                    June: 1, 
+                    July: 1, 
+                    Aug: 0, 
+                    Sept: 0, 
+                    Oct: 0, 
+                    Nov: 0, 
+                    Dec: 0, 
+                    status: 0, 
+                },
             ], // 列表数据
             tableData2: [
                 {

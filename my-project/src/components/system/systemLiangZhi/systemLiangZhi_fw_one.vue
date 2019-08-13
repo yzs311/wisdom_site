@@ -391,8 +391,8 @@ export default {
     // 下载
     downloadClick(imgURL) {
       // console.log(fileName)
-      // location.href=`http://47.106.71.3:8080/api/lzfw/testDownload?imgURL=${imgURL}`
-      location.href=`http://192.168.1.18:8080/api/lzfw/testDownload?imgURL=${imgURL}`
+      location.href=`http://47.106.71.3:8080/api/lzfw/testDownload?imgURL=${imgURL}`
+      // location.href=`http://192.168.1.18:8080/api/lzfw/testDownload?imgURL=${imgURL}`
     }
   }
 };

@@ -87,7 +87,8 @@
                     </div>
                 </div>
             </div> -->
-            <div class="content-box" v-for="(item,index) in towerCraneData" :key="index">
+
+            <!-- <div class="content-box" v-for="(item,index) in towerCraneData" :key="index">
                 <div class="top-box">
                     <div class="status">
                         <span :class="item.sb=='正常'?'normal':'anomaly'">{{item.sb}}</span>
@@ -99,7 +100,6 @@
                         <span>{{item.runtime!=null?item.runtime.split(' ')[1]:''}}</span>
                     </div>
                     <img :src="item.img" alt="" class="pic">
-                    <!-- <img src="../../../static/images/s_pic.png" alt="" class="pic"> -->
                 </div>
                 <div class="bottom-box">
                     <div class="name">
@@ -162,7 +162,6 @@
                                 <img src="../../../static/images/s_dip-angle.png" alt="">
                                 <div>
                                     <p class="warning">倾角</p>
-                                    <!--  <p>X{{val.yx_qjX}}°</p> -->
                                     <p>{{item.obliguity}}°</p>
                                 </div>
                             </li>
@@ -171,6 +170,268 @@
                     <div class="day">
                         <span class="bolder">检修倒计时： </span>
                         <span class="bolder" :class="item.residue>=10?'normal':item.residue>=1?'warning':'anomaly'">{{item.residue}}天</span>
+                    </div>
+                </div>
+            </div> -->
+            
+            <div class="content-box">
+                <div class="top-box">
+                    <div class="status">
+                        <span class="normal">正常</span>
+                    </div>
+                    <div class="employee">
+                        <span class="bolder">操作员</span>
+                        <span>阳建军</span>
+                        <span class="bolder">上班时间</span>
+                        <span>07：51</span>
+                    </div>
+                    <!-- <img :src="item.img" alt="" class="pic"> -->
+                    <img src="../../../static/images/s_pic.png" alt="" class="pic">
+                </div>
+                <div class="bottom-box">
+                    <div class="name">
+                        <span class="bolder">一号塔吊</span>
+                    </div>
+                    <div class="top-data">
+                        <div class="top-left">
+                            <p class="warning">力矩</p>
+                            <span>55%</span>
+                        </div>
+                        <div class="middle">
+                            <div class="middle-img">
+                                <span style="font-size:.24rem">30t</span>
+                            </div>
+                            <span>重量</span>
+                        </div>
+                        <div class="top-right">
+                            <p class="warning">倍率</p>
+                            <span>2倍</span>
+                        </div>
+                    </div>
+                    <div class="bottom-data">
+                        <ul>
+                            <li>
+                                <img src="../../../static/images/s_weight.png" alt="">
+                                <div>
+                                    <p class="warning">安全起重</p>
+                                    <p>50t</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_range.png" alt="">
+                                <div>
+                                    <p class="warning">幅度</p>
+                                    <p>2m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_altitude.png" alt="">
+                                <div>
+                                    <p class="warning">高度</p>
+                                    <p>40m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_rotation.png" alt="">
+                                <div>
+                                    <p class="warning">回转</p>
+                                    <p>10°</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_wind-speed.png" alt="">
+                                <div>
+                                    <p class="warning">风速</p>
+                                    <p>13m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_dip-angle.png" alt="">
+                                <div>
+                                    <p class="warning">倾角</p>
+                                    <!--  <p>X{{val.yx_qjX}}°</p> -->
+                                    <p>7°</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="day">
+                        <span class="bolder">检修倒计时： </span>
+                        <span class="bolder normal">92天</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-box">
+                <div class="top-box">
+                    <div class="status">
+                        <span class="normal">正常</span>
+                    </div>
+                    <div class="employee">
+                        <span class="bolder">操作员</span>
+                        <span>陈志民</span>
+                        <span class="bolder">上班时间</span>
+                        <span>07：03</span>
+                    </div>
+                    <!-- <img :src="item.img" alt="" class="pic"> -->
+                    <img src="../../../static/images/s_pic.png" alt="" class="pic">
+                </div>
+                <div class="bottom-box">
+                    <div class="name">
+                        <span class="bolder">二号塔吊</span>
+                    </div>
+                    <div class="top-data">
+                        <div class="top-left">
+                            <p class="warning">力矩</p>
+                            <span>55%</span>
+                        </div>
+                        <div class="middle">
+                            <div class="middle-img">
+                                <span style="font-size:.24rem">30t</span>
+                            </div>
+                            <span>重量</span>
+                        </div>
+                        <div class="top-right">
+                            <p class="warning">倍率</p>
+                            <span>2倍</span>
+                        </div>
+                    </div>
+                    <div class="bottom-data">
+                        <ul>
+                            <li>
+                                <img src="../../../static/images/s_weight.png" alt="">
+                                <div>
+                                    <p class="warning">安全起重</p>
+                                    <p>50t</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_range.png" alt="">
+                                <div>
+                                    <p class="warning">幅度</p>
+                                    <p>2m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_altitude.png" alt="">
+                                <div>
+                                    <p class="warning">高度</p>
+                                    <p>40m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_rotation.png" alt="">
+                                <div>
+                                    <p class="warning">回转</p>
+                                    <p>10°</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_wind-speed.png" alt="">
+                                <div>
+                                    <p class="warning">风速</p>
+                                    <p>13m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_dip-angle.png" alt="">
+                                <div>
+                                    <p class="warning">倾角</p>
+                                    <!--  <p>X{{val.yx_qjX}}°</p> -->
+                                    <p>7°</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="day">
+                        <span class="bolder">检修倒计时： </span>
+                        <span class="bolder normal">92天</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-box">
+                <div class="top-box">
+                    <div class="status">
+                        <span class="normal">正常</span>
+                    </div>
+                    <div class="employee">
+                        <span class="bolder">操作员</span>
+                        <span>欧成标</span>
+                        <span class="bolder">上班时间</span>
+                        <span>06：19</span>
+                    </div>
+                    <!-- <img :src="item.img" alt="" class="pic"> -->
+                    <img src="../../../static/images/s_pic.png" alt="" class="pic">
+                </div>
+                <div class="bottom-box">
+                    <div class="name">
+                        <span class="bolder">三号塔吊</span>
+                    </div>
+                    <div class="top-data">
+                        <div class="top-left">
+                            <p class="warning">力矩</p>
+                            <span>55%</span>
+                        </div>
+                        <div class="middle">
+                            <div class="middle-img">
+                                <span style="font-size:.24rem">30t</span>
+                            </div>
+                            <span>重量</span>
+                        </div>
+                        <div class="top-right">
+                            <p class="warning">倍率</p>
+                            <span>2倍</span>
+                        </div>
+                    </div>
+                    <div class="bottom-data">
+                        <ul>
+                            <li>
+                                <img src="../../../static/images/s_weight.png" alt="">
+                                <div>
+                                    <p class="warning">安全起重</p>
+                                    <p>50t</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_range.png" alt="">
+                                <div>
+                                    <p class="warning">幅度</p>
+                                    <p>2m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_altitude.png" alt="">
+                                <div>
+                                    <p class="warning">高度</p>
+                                    <p>40m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_rotation.png" alt="">
+                                <div>
+                                    <p class="warning">回转</p>
+                                    <p>10°</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_wind-speed.png" alt="">
+                                <div>
+                                    <p class="warning">风速</p>
+                                    <p>13m</p>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="../../../static/images/s_dip-angle.png" alt="">
+                                <div>
+                                    <p class="warning">倾角</p>
+                                    <!--  <p>X{{val.yx_qjX}}°</p> -->
+                                    <p>7°</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="day">
+                        <span class="bolder">检修倒计时： </span>
+                        <span class="bolder normal">92天</span>
                     </div>
                 </div>
             </div>

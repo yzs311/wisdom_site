@@ -15,7 +15,7 @@
             <!-- 主体 -->
             <div class="main">
                 <ul>
-                    <li>
+                    <!-- <li>
                         <div class="left-box">
                             <div class="name">
                                 创新科技园
@@ -52,7 +52,7 @@
                             <a>编辑</a>
                             <a>删除</a>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
