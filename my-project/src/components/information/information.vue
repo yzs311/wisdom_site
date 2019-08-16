@@ -48,10 +48,10 @@
             </div>
             <div class="memory-box">
                 <div class="sum-box">
-                    <div class="sub-box"></div>
+                    <div class="sub-box" style="width:2%"></div>
                 </div>
                 <div class="memory-text">
-                    1.5G/5.0G
+                    0.1G/5.0G
                 </div>
             </div>
         </div>
@@ -646,7 +646,7 @@ export default {
     methods: {
         // 获取文件列表
         getQueryFolderData() {
-            this.$axios.post(`/lz/folder/queryFolder?projectId=${this.pid}`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/folder/queryFolder?projectId=${this.pid}`).then(
                 res => {
                     // console.log(res.data)
                     this.folderData = res.data
@@ -672,7 +672,7 @@ export default {
             this.importShow = false
 
             // 设置文件夹名字
-            this.$axios.post(`/lz/folder/addFolder?folderName=${this.folderName}&projectId=${this.pid}&parentId=${this.folderId}`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/folder/addFolder?folderName=${this.folderName}&projectId=${this.pid}&parentId=${this.folderId}`).then(
                 res => {
                     // console.log(res.data)
                     if (res.data.msg == '添加成功！') {
@@ -733,7 +733,7 @@ export default {
                 }
             },300)
             let headers = {headers: {"Content-Type": "multipart/form-data"}}
-            this.$axios.post(`/lz/file/uploadObject?folderName=1&folderId=${this.folderId}&uploader=${this.pid}`,this.file,headers).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/file/uploadObject?folderName=1&folderId=${this.folderId}&uploader=${this.pid}`,this.file,headers).then(
                 res => {
                     if (res.data.msg == '上传图片成功') {
                         clearInterval(time)
@@ -790,7 +790,7 @@ export default {
 
         // 遍历文件列表
         getFileDataList() {
-            this.$axios.post(`/lz/file/queryFile?page=${this.page}&pageSize=${this.pageSize}&uploader=${this.pid}`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/file/queryFile?page=${this.page}&pageSize=${this.pageSize}&uploader=${this.pid}`).then(
                 res => {
                     // console.log(res.data.rows)
                     this.fileDataList = res.data.rows
@@ -826,7 +826,7 @@ export default {
 
         // 删除文件夹点击事件
         getDeleteFolder() {
-            this.$axios.post(`/lz/folder/deleteFolder?folderId=${this.folderId}`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/folder/deleteFolder?folderId=${this.folderId}`).then(
                 res => {
                     console.log(res.data)
                     // 删除成功后更新文件夹列表
@@ -861,7 +861,7 @@ export default {
         // 删除文件事件
         deletFile(fileId) {
             console.log(fileId)
-            this.$axios.post(`/lz/file/deleteFile?ids=${fileId}`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/file/deleteFile?ids=${fileId}`).then(
                 res => {
                     console.log(res.data.msg)
                     if (res.data.msg == '删除成功!') {
@@ -920,7 +920,7 @@ export default {
         // 模糊查询
         fuzzySearch() {
             if(this.fileName!='') {
-                this.$axios.post(`/lz/file/queryFile?page=${this.page}&pageSize=${this.pageSize}&uploader=${this.pid}&fileName=${this.fileName}`).then(
+                this.$axios.post(`http://39.108.103.150:8989/lz/file/queryFile?page=${this.page}&pageSize=${this.pageSize}&uploader=${this.pid}&fileName=${this.fileName}`).then(
                     res => {
                         // console.log(res.data.rows)
                         this.fileDataList = res.data.rows

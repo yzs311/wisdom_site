@@ -80,6 +80,13 @@
               </li>
             </ul>
             <ul id="colee2"></ul>
+            <div v-if="generalizeData" class="text-box" style="padding: 0 0.35rem;">
+              项目简介:
+            </div>
+            <div class="roll-box" v-if="generalizeData.projectIntroduction">
+              
+              <div class="text-box" style="margin-top:0">{{generalizeData.projectIntroduction}} </div>
+            </div>
           </div>
         </div>
         <div class="plate">
@@ -121,8 +128,15 @@
         </div>
         <div class="videoInfo">
           <el-carousel trigger="click" height="6.14rem">
-            <el-carousel-item v-for="(item,index) in centerInfo.pics" :key="index">
-              <img :src="`http://gd.17hr.net:8018/`+item.url">
+            <el-carousel-item>
+              <img src="../../../static/images/mmexport1565845097787.jpg">
+            </el-carousel-item>
+            <el-carousel-item>
+              <img src="../../../static/images/mmexport1565845100546.jpg">
+            </el-carousel-item>
+            <el-carousel-item>
+              <img src="../../../static/images/mmexport1565845104313.jpg">
+              <!-- <img src="" alt=""> -->
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -141,8 +155,9 @@
               </li>
               <li v-if="towerCraneData">
                 <span class="leftName">运行情况：</span>
-                <span v-if="towerCraneData[0].sb=='正常'" class="sub noml">正常</span>
-                <span v-else class="sub danger">异常</span>
+                <!-- <span v-if="towerCraneData[0].sb=='正常'" class="sub noml">正常</span> -->
+                <!-- <span v-else class="sub danger">异常</span> -->
+                <span class="sub danger">离线</span>
               </li>
               <li v-else>
                 <span class="leftName">运行情况：</span>
@@ -159,7 +174,8 @@
             <ul>
               <li>
                 <span class="leftName">升降机数量：</span>
-                <span class="sub" v-if="elevatorData">{{elevatorData.length}}座</span>
+                <!-- <span class="sub" v-if="elevatorData">{{elevatorData.length}}座</span> -->
+                <span class="sub" v-if="elevatorData">3座</span>
               </li>
               <li>
                 <span class="leftName">载重重量：</span>
@@ -276,7 +292,7 @@
   </div>
 </template>
 <script>
-import { setTimeout } from 'timers';
+import { setTimeout, setInterval } from 'timers';
 export default {
   data() {
     return {
@@ -312,11 +328,14 @@ export default {
       towerCraneData: '', // 塔吊数据
       day: '', // 安全文明施工天数
       re: 0,
+
+      temp1: '',
+      temp2: '',
     };
   },
   created() {
     this.getPid()
-    this.getCenterInfo()
+    // this.getCenterInfo()
     this.getElectricityBox()
     this.getCarData()
     this.getGeneralize()
@@ -621,13 +640,14 @@ export default {
         }
         var MyMar1 = setInterval(Marquee1, speed); //设置定时器
         //鼠标移上时清除定时器达到滚动停止的目的
-        colee.onmouseover = function() {
-          clearInterval(MyMar1);
-        };
-        //鼠标移开时重设定时器
-        colee.onmouseout = function() {
-          MyMar1 = setInterval(Marquee1, speed);
-        };
+        // colee.onmouseover = function() {
+        //   clearInterval(MyMar1);
+        //   // console.log(123)
+        // };
+        // //鼠标移开时重设定时器
+        // colee.onmouseout = function() {
+        //   MyMar1 = setInterval(Marquee1, speed);
+        // };
       }, 1000);
     },
 
@@ -650,14 +670,14 @@ export default {
           }
         }
         var MyMar1 = setInterval(Marquee1, speed); //设置定时器
-        //鼠标移上时清除定时器达到滚动停止的目的
-        colee.onmouseover = function() {
-          clearInterval(MyMar1);
-        };
-        //鼠标移开时重设定时器
-        colee.onmouseout = function() {
-          MyMar1 = setInterval(Marquee1, speed);
-        };
+        // //鼠标移上时清除定时器达到滚动停止的目的
+        // colee.onmouseover = function() {
+        //   clearInterval(MyMar1);
+        // };
+        // //鼠标移开时重设定时器
+        // colee.onmouseout = function() {
+        //   MyMar1 = setInterval(Marquee1, speed);
+        // };
       }, 1000);
     },
 
@@ -752,7 +772,7 @@ export default {
           // console.log(res.data.data[0])
           if (res.data.data) {
             this.carData = res.data.data[0]
-            if (this.carData.todaycount.vehicleList >= 4) {
+            if (this.carData.todaycount.vehicleList.length >= 4) {
               // 调用滚动方法
               setTimeout(()=>{
                 this.cardScroll()
@@ -822,7 +842,7 @@ export default {
       this.$axios.post(`/api/DustEmission/Tsp?projectId=${this.projectId}`).then(
         res => {
           // console.log(res.data)
-          if (res.data) {
+          if (res.data.tsp) {
             let temp1 = []
             let temp2 = []
             let temp3 = []
@@ -864,6 +884,7 @@ export default {
         }
       )
     },
+
   }
 };
 </script>
@@ -1250,6 +1271,17 @@ export default {
         }
       }
     }
+  }
+  .roll-box {
+    padding: 0 0.35rem;
+    height: 2.3rem;
+    overflow: auto;
+  }
+  .text-box {
+    // padding: 0 0.35rem;
+    font-size: 0.16rem;
+    color: #7f9ea8;
+    margin-top: .15rem;
   }
 }
 .plate {

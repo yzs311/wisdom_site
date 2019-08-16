@@ -41,26 +41,42 @@
         <div class="btn">搜索</div>
       </div>
       <div class="tableBox">
-        <el-table :data="allTableData" stripe border @row-click="getInfo">
+        <el-table :data="allTableData" stripe border >
           <el-table-column type="selection" width="35"></el-table-column>
-          <el-table-column prop="number" label="序号" width="70"></el-table-column>
-          <el-table-column prop="zhengGaiNumber" label="整改单编号" width="145"></el-table-column>
-          <el-table-column prop="jianChaPeople" label="检查人" width="104"></el-table-column>
-          <el-table-column prop="zeRenGongSi" label="责任分包公司" width="219"></el-table-column>
-          <el-table-column prop="zhengGaiStatus" label="整改状态" width="135">
+          <el-table-column type="index" label="序号" width="70" :index="indexMethod"></el-table-column>
+          <el-table-column prop="safetyId" label="整改单编号" width="145"></el-table-column>
+          <el-table-column prop="initiatorName" label="检查人" width="104"></el-table-column>
+          <el-table-column prop="constructionName" label="责任分包公司" width="219"></el-table-column>
+          <el-table-column prop="status" label="整改状态" width="135">
             <template slot-scope="scope">
               <div
-                v-if="scope.row.zhengGaiStatus=='未整改'"
-                style="color:#ff858b"
-              >{{scope.row.zhengGaiStatus}}</div>
-              <div v-else>{{scope.row.zhengGaiStatus}}</div>
+                class="status"
+                style="color:#3ada76"
+                v-if="scope.row.status==3"
+              >已完成</div>
+              <div
+                class="status"
+                style="color:#feb37f"
+                v-else-if="scope.row.status==1"
+              >待整改</div>
+              <div
+                class="status"
+                style="color:#feb37f"
+                v-else-if="scope.row.status==2"
+              >待复查</div>
+              <div
+                class="status"
+                style="color:#ff7a81"
+                v-else
+              >超期未整改</div>
+              <!-- <div v-else>{{scope.row.zhengGaiStatus}}</div> -->
             </template>
           </el-table-column>
-          <el-table-column prop="creamTime" label="创建时间" width="144"></el-table-column>
+          <el-table-column prop="initiatorTime" label="创建时间" width="244"></el-table-column>
           <el-table-column label="操作" align="right">
             <template slot-scope="scope">
-              <a class="a" @click="handleEdit(scope.row)">编辑</a>
-              <a class="a" @click="handleDelete(scope.row)">删除</a>
+              <a class="a" @click="getInfo(scope.row.safetyId)">编辑</a>
+              <a class="a" @click="deleteSafety(scope.row.safetyId)">删除</a>
             </template>
           </el-table-column>
         </el-table>
@@ -71,11 +87,12 @@
         <!-- @size-change="handleSizeChange"
         @current-change="handleCurrentChange"-->
         <el-pagination
-          :current-page="1"
+          @current-change="handleCurrentChange"
+          :current-page="pageNum"
           :page-sizes="[10, 20, 30, 40]"
-          :page-size="10"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="4"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="pageTotal"
         ></el-pagination>
       </div>
     </div>
@@ -109,13 +126,72 @@ export default {
           creamTime: "2018-08-01"
         }
       ], // 列表数据
+
+      pageNum: 1, // 当前页
+      pageSize: 15, // 每页显示条数
+      pageTotal: 0, // 总条数
+      differentiate: 1, // 安全管理
+      projectId: '', // 项目id
     }
+  },
+  created() {
+    this.getProjectId()
+    this.getManagementList()
   },
   methods: {
     //   行点击事件
-    getInfo(row, event, column) {
-      this.$router.push(`/systemSafety_manageInfo?id=${row.number}`);
-    }
+    getInfo(safetyId) {
+      this.$router.push(`/systemSafety_manageInfo?id=${safetyId}`);
+    },
+
+    // 获取项目id
+    getProjectId() {
+      this.projectId = sessionStorage.getItem('pid')
+    },
+
+    // 序号
+    indexMethod(index) {
+      return (this.pageNum-1)*this.pageSize+index+1
+    },
+
+    // 翻页
+    handleCurrentChange(val) {
+        // console.log(`当前页: ${val}`)
+        this.pageNum = val
+        this.getManagementList()
+    },
+
+    // 获取整改单管理列表
+    getManagementList() {
+      this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/getManagementList?projectId=${this.projectId}&differentiate=${this.differentiate}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
+        res => {
+          // console.log(res.data)
+          this.allTableData = res.data.data
+          this.pageTotal = res.data.total
+        }
+      )
+    },
+
+    // 整改单管理删除
+    deleteSafety(safetyId) {
+      this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/deleteSafety?safetyId=${safetyId}`).then(
+        res => {
+          // console.log(res.data)
+          if (res.data.code == 0) {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.getManagementList()
+          } else {
+            this.$message({
+              message: '删除失败',
+              type: 'error'
+            })
+          }
+        }
+      )
+    },
   }
 };
 </script>

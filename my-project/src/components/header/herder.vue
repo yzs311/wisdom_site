@@ -66,9 +66,9 @@
             <a>安全管理</a>
             <div class="drop-down2">
               <ul>
-                <li v-on:click="isActive('/quality')">
+                <!-- <li v-on:click="isActive('/quality')">
                   <router-link to="/quality">安全巡检</router-link>
-                </li>
+                </li> -->
 
                 <li v-on:click="isActive('/gaoZhiMo')">
                   <router-link to="/gaoZhiMo">高支模检测</router-link>
@@ -177,8 +177,8 @@ export default {
     };
   },
   created() {
-    this.getName()
-    this.getWeather()
+    // this.getName()
+    // this.getWeather()
     this.setTime()
     this.setActive()
     // this.getliuyong()
@@ -287,7 +287,7 @@ export default {
 
       if (this.dropDownState2) {
         $('.drop-down2').animate({
-          height:'2.4rem'
+          height:'1.96rem'
         },500)
         this.dropDownState2 = false
       } else {
@@ -450,7 +450,7 @@ export default {
      text-align: center;
      height: 0.56rem;
      line-height: 0.4rem;
-     font-size: 0.3rem;
+     font-size: 0.2rem;
      color: #ffffff;
      font-weight: bold;
 }

@@ -21,12 +21,12 @@
                         整改单管理
                     </router-link>
                 </li>
-                <li @click="isActive='/quality/q_set'">
+                <!-- <li @click="isActive='/quality/q_set'">
                     <router-link to="/quality/q_set" :class="isActive=='/quality/q_set'?'active':''">
                         <i class="system"></i>
                         安全隐患库
                     </router-link>
-                </li>
+                </li> -->
             </ul>
         </div>
         <!-- 内容区域 -->

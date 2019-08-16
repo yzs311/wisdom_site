@@ -4,13 +4,13 @@
             <div class="message">
                 <div class="inquire">
                     <el-input v-model="name" placeholder="姓名或设备编号或电话"></el-input>
-                    <!-- <el-date-picker
-                        v-model="createDate"
+                    <el-date-picker
+                        v-model="startTime"
                         value-format="yyyy-MM-dd"
                         type="date"
                         placeholder="选择日期">
-                    </el-date-picker> -->
-                    <el-date-picker
+                    </el-date-picker>
+                    <!-- <el-date-picker
                         v-model="createDate"
                         type="daterange"
                         range-separator="-"
@@ -18,7 +18,7 @@
                         end-placeholder="结束日期"
                         value-format="yyyy-MM-dd"
                         @change="getTime">
-                    </el-date-picker>
+                    </el-date-picker> -->
                     <button @click="getHireHistory">查询</button>
                 </div>
                 <div class="message-box">
@@ -122,7 +122,7 @@
                         width: 2rem;
                         height: .3rem;
                         font-size: .12rem;
-                        border: .01rem solid #3375fe;
+                        // border: .01rem solid #3375fe;
                         background-color: #1d1f3b;
                         .el-range-separator {
                             width: auto;
@@ -329,6 +329,7 @@ export default {
                     },
                 }
             }],
+            startTime: '', // 开始时间
         }
     },
     created() {
@@ -395,8 +396,8 @@ export default {
 
         // 获取人员历史轨迹
         getHireHistory() {
-            if (this.name && this.startTime && this.endTime ) {
-                this.$axios.post(`/api/hireApi/getHireHistory?filed=${this.name}&startTime=${this.startTime}&endTime=${this.endTime}&projectId=${this.projectId}`).then(
+            if (this.name && this.startTime) {
+                this.$axios.post(`/api/hireApi/getHireHistory?filed=${this.name}&startTime=${this.startTime}&projectId=${this.projectId}`).then(
                     res => {
                         console.log(res.data)
                         if (res.data.code == 0) {

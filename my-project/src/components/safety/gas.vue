@@ -20,37 +20,42 @@
                     </div>
                     <div class="data-box">
                         <div class="EX normal">
-                            --%LEL
+                            0.1%LEL
                             <p>EX(易燃)</p>
                         </div>
                         <div class="O2 normal">
-                            --%VOL
+                            0.1%VOL
                             <p>O2(缺氧)</p>
                         </div>
                         <div class="H2S normal">
-                            --PPM
+                            0.3PPM
                             <p>H2S(中毒)</p>
                         </div>
                         <div class="CO normal">
-                            --PPM
+                            0.5PPM
                             <p>CO(中毒)</p>
                         </div>
                     </div>
-                    <div class="history">
+                    <!-- <div class="history">
                         <a>查看历史记录</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="content-box">
                 <div class="top-box">
                     <div class="top-left normal">
-                        气体超标
+                        气体正常
                     </div>
-                    <div class="top-right warning">
-                        <div class="text-box">
+                    <div class="top-right">
+                        <!-- <div class="text-box">
                             EX气体超标
                             <p>120%</p>
                             <span>( 正常值100% )</span>
+                        </div> -->
+                        <div class="text-box">
+                            气体无异常
+                            <!-- <p>120%</p>
+                            <span>( 正常值100% )</span> -->
                         </div>
                     </div>
                 </div>
@@ -59,38 +64,43 @@
                         气体检测二号机
                     </div>
                     <div class="data-box">
-                        <div class="EX warning">
-                            --%LEL
+                        <div class="EX normal">
+                            0.3%LEL
                             <p>EX(易燃)</p>
                         </div>
                         <div class="O2 normal">
-                            --%VOL
+                            0.3%VOL
                             <p>O2(缺氧)</p>
                         </div>
                         <div class="H2S normal">
-                            --PPM
+                            0.2PPM
                             <p>H2S(中毒)</p>
                         </div>
                         <div class="CO normal">
-                            --PPM
+                            0.6PPM
                             <p>CO(中毒)</p>
                         </div>
                     </div>
-                    <div class="history">
+                    <!-- <div class="history">
                         <a>查看历史记录</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="content-box">
                 <div class="top-box">
                     <div class="top-left normal">
-                        气体超标
+                        气体正常
                     </div>
-                    <div class="top-right warning">
-                        <div class="text-box">
+                    <div class="top-right">
+                        <!-- <div class="text-box">
                             EX气体超标
                             <p>120%</p>
                             <span>( 正常值100% )</span>
+                        </div> -->
+                        <div class="text-box">
+                            气体无异常
+                            <!-- <p>120%</p>
+                            <span>( 正常值100% )</span> -->
                         </div>
                     </div>
                 </div>
@@ -99,26 +109,26 @@
                         气体检测三号机
                     </div>
                     <div class="data-box">
-                        <div class="EX warning">
-                            --%LEL
+                        <div class="EX normal">
+                            0.1%LEL
                             <p>EX(易燃)</p>
                         </div>
                         <div class="O2 normal">
-                            --%VOL
+                            0.1%VOL
                             <p>O2(缺氧)</p>
                         </div>
                         <div class="H2S normal">
-                            --PPM
+                            0.3PPM
                             <p>H2S(中毒)</p>
                         </div>
                         <div class="CO normal">
-                            --PPM
+                            0.1PPM
                             <p>CO(中毒)</p>
                         </div>
                     </div>
-                    <div class="history">
+                    <!-- <div class="history">
                         <a>查看历史记录</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

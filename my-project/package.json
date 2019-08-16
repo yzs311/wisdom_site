@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
+    "dhtmlx-gantt": "^6.2.2",
     "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.6.1",
     "js-md5": "^0.7.3",

@@ -3,7 +3,7 @@
     <ul id="ul">
       <li id="li">
         <div class="title">
-          <h3>支架沉降</h3>
+          <h3>地下水位</h3>
           <div class="serch">
             <div class="search-bar">
               <el-input placeholder="请输入测点名称搜索" v-model="serch"></el-input>
@@ -36,7 +36,7 @@
           </div>
           <div style="width:30%" class="right">
             <ul>
-              <li style="font-size:0.16rem">支架沉降(mm)</li>
+              <li style="font-size:0.16rem">地下水位(mm)</li>
               <li>0.5</li>
               <li>0.66</li>
               <li>0.22</li>
@@ -64,7 +64,7 @@
       </li>
       <li id="li">
         <div class="title">
-          <h3>立杆轴力</h3>
+          <h3>支撑轴力</h3>
           <div class="serch">
             <div class="search-bar">
               <el-input placeholder="请输入测点名称搜索" v-model="serch"></el-input>
@@ -97,7 +97,7 @@
           </div>
           <div style="width:30%" class="right">
             <ul>
-              <li style="font-size:0.16rem">立杆轴力(kN)</li>
+              <li style="font-size:0.16rem">支撑轴力(kN)</li>
               <li>5.12</li>
               <li>2.48</li>
               <li>4.23</li>
@@ -125,7 +125,7 @@
       </li>
       <li id="li">
         <div class="title">
-          <h3>杆件倾角</h3>
+          <h3>周边沉降</h3>
           <div class="serch">
             <div class="search-bar">
               <el-input placeholder="请输入测点名称搜索" v-model="serch"></el-input>
@@ -147,9 +147,9 @@
             <div class="bottom">
               <ul>
                 <li>深基坑：1号深基坑</li>
-                <li>最大值：0.5°</li>
-                <li>最小值：0.14°</li>
-                <li>平均值：0.36°</li>
+                <li>最大值：0.5mm</li>
+                <li>最小值：0.14mm</li>
+                <li>平均值：0.36mm</li>
               </ul>
             </div>
           </div>
@@ -158,7 +158,7 @@
           </div>
           <div style="width:30%" class="right">
             <ul>
-              <li style="font-size:0.16rem">杆件倾角( ° )</li>
+              <li style="font-size:0.16rem">周边沉降(mm)</li>
               <li>0.5</li>
               <li>0.43</li>
               <li>0.14</li>
@@ -186,7 +186,7 @@
       </li>
       <li id="li">
         <div class="title">
-          <h3>水平位移</h3>
+          <h3>土地位移</h3>
           <div class="serch">
             <div class="search-bar">
               <el-input placeholder="请输入测点名称搜索" v-model="serch"></el-input>
@@ -219,7 +219,7 @@
           </div>
           <div style="width:30%" class="right">
             <ul>
-              <li style="font-size:0.16rem">水平位移(mm)</li>
+              <li style="font-size:0.16rem">土地位移(mm)</li>
               <li>0.61</li>
               <li>0.27</li>
               <li>0.49</li>

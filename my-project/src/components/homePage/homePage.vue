@@ -187,28 +187,28 @@
           <ul>
             <li>
               在场工人：人
-              <span>{{projectList.numW}}</span>
+              <span>{{statisticsData.numW}}</span>
             </li>
             <li>
               参建单位：
-              <span>{{projectList.numC}}</span>
+              <span>{{statisticsData.numC}}</span>
               家
             </li>
             <li>
               今日上工：
-              <span style="color:#3ada76;">{{projectList.numWing}}</span>
+              <span style="color:#3ada76;">{{statisticsData.numWing}}</span>
               人
-              (<span style="color:#3ada76;">{{Math.floor((projectList.numWing/projectList.numW)*100)}}</span>%)
+              (<span style="color:#3ada76;">{{Math.floor((statisticsData.numWing/statisticsData.numW)*100)}}</span>%)
             </li>
             <li>
               投资金额：
-              <span>{{projectList.totalMoney}}</span>
+              <span>{{statisticsData.totalMoney}}</span>
               万
             </li>
           </ul>
         </div>
         <ul class="main-list">
-          <li v-for="(val,key) in projectList.map" :key="key">
+          <!-- <li v-for="(val,key) in projectList.map" :key="key">
             <a @click="projectClick(val.id)">
               <div class="img-box">
                 <img>
@@ -242,7 +242,53 @@
                 </div>
               </div>
             </a>
+          </li> -->
+
+          <li v-for="(item,index) in projectListData" :key="index">
+            <a @click="projectClick(item.id)">
+              <div class="img-box">
+                <img :src="item.projectImage" alt="">
+              </div>
+              <div class="text-box">
+                <div class="title">
+                  {{item.projectName}}
+                  <span class="year">2019</span>
+                </div>
+                <div class="middle">
+                  <span class="type">建设单位：</span>
+                  <span>{{item.companyName}}</span>
+                </div>
+                <div class="middle">
+                  <span class="type">开工日期：</span>
+                  <span>{{item.startingTime.split(' ')[0]}}</span>
+                </div>
+                <div class="middle">
+                  <span class="type">参建单位：</span>
+                  <span><span style="color:#048fe8;">{{item.numProjectC}}</span>家</span>
+                </div>
+                <div class="bottom">
+                  <div class="left-box">
+                    <span class="type">在场工人：</span>
+                    <span><span style="color:#3ada76;">{{item.numProjectWorking}}</span>人</span>
+                  </div>
+                  <div class="right-box">
+                    <span class="type">今日上工：</span>
+                    <span><span style="color:#048fe8;">{{item.numProjectC}}</span>人</span>
+                  </div>
+                </div>
+              </div>
+            </a>
           </li>
+
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage1"
+            :page-size="pageSize"
+            layout="total, prev, pager, next"
+            :total="projectSum">
+          </el-pagination>
+
           <!-- <li>
             <div class="img-box">
               <img>
@@ -496,15 +542,21 @@ export default {
       projectSum: '', // 项目总数
       provinceList: '', // 城市列表
       provinceActive: '全国', // 当前选中城市
+      pageNum: 1, // 当前页
+      pageSize: 5, // 没页显示条数
+      statisticsData: '', // 统计数据
+      projectListData: '', // 项目列表数据
     }
   },
   created() {
     this.getUserType()
     this.getComoanyId()
-    this.getProjectList()
+    // this.getProjectList()
     this.getCompanyList()
     this.getComoanyName()
     this.getProvinceList()
+    this.selectProjectArea()
+    this.selectAreaProjectList()
   },
   methods: {
     enter() {
@@ -762,6 +814,170 @@ export default {
       // console.log(id)
       sessionStorage.setItem("pid", id)
       this.$router.push({ path: "/spectaculars" })
+    },
+
+    // 获取统计数据
+    selectProjectArea() {
+      this.$axios.post(`http://192.168.1.117:5555/provider/project/selectProjectArea?companyId=${this.companyId}&region=${this.region}`).then(
+        res => {
+          // console.log(res.data)
+          this.statisticsData = res.data
+        }
+      )
+    },
+
+    // 获取项目列表
+    selectAreaProjectList() {
+      this.$axios.post(`http://192.168.1.117:5555/provider/project/selectAreaProjectList?companyId=${this.companyId}&region=${this.region}&pageNum=${this.pageNum}&pageSize=${this.pageSize}`).then(
+        res => {
+          // console.log(res.data)
+          this.projectSum = res.data.data.total
+          this.projectListData = res.data.data.rows
+
+          let temp = []
+          temp.push(res.data.data.rows[0].longitude)
+          temp.push(res.data.data.rows[0].latitude)
+          this.marker1.setPosition(temp)
+          this.center = temp
+          this.marker1.setTitle(res.data.data.rows[0].projectName)
+          this.marker1.setLabel({
+              content: `<div class="info-box">
+              <div class="top-box">
+                <span>${res.data.data.rows[0].projectName}</span>
+                <span class="state" style="color:${Math.floor((res.data.data.rows[0].numWing/res.data.data.rows[0].numW)*100)>80?'#3ada76;':'#ff7a81;'}">${Math.floor((res.data.data.rows[0].numProjectC/res.data.data.rows[0].numProjectW)*100)>80?'合格':'不合格'}</span>
+              </div>
+              <div class="bottom-box">
+                <div class="left-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#048fe8;">${res.data.data.rows[0].numProjectW}</span>
+                  <span>人</span>
+                </div>
+                <div class="right-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#3ada76;">${res.data.data.rows[0].numProjectC}</span>
+                  <span>人</span>
+                </div>
+              </div>`,
+              offset: new AMap.Pixel(-115, -80)
+          })
+          this.marker1.show()
+
+          let temp1 = []
+          temp1.push(res.data.data.rows[1].longitude)
+          temp1.push(res.data.data.rows[1].latitude)
+          this.marker2.setPosition(temp1)
+          this.marker2.setTitle(res.data.data.rows[1].projectName)
+          this.marker2.setLabel({
+              content: `<div class="info-box">
+              <div class="top-box">
+                <span>${res.data.data.rows[1].projectName}</span>
+                <span class="state" style="color:${Math.floor((res.data.data.rows[1].numWing/res.data.data.rows[1].numW)*100)>80?'#3ada76;':'#ff7a81;'}">${Math.floor((res.data.data.rows[1].numProjectC/res.data.data.rows[1].numProjectW)*100)>80?'合格':'不合格'}</span>
+              </div>
+              <div class="bottom-box">
+                <div class="left-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#048fe8;">${res.data.data.rows[1].numProjectW}</span>
+                  <span>人</span>
+                </div>
+                <div class="right-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#3ada76;">${res.data.data.rows[1].numProjectC}</span>
+                  <span>人</span>
+                </div>
+              </div>`,
+              offset: new AMap.Pixel(-115, -80)
+          })
+          this.marker2.show()
+
+          let temp2 = []
+          temp2.push(res.data.data.rows[2].longitude)
+          temp2.push(res.data.data.rows[2].latitude)
+          this.marker3.setPosition(temp2)
+          this.marker3.setTitle(res.data.data.rows[2].projectName)
+          this.marker3.setLabel({
+              content: `<div class="info-box">
+              <div class="top-box">
+                <span>${res.data.data.rows[2].projectName}</span>
+                <span class="state" style="color:${Math.floor((res.data.data.rows[2].numWing/res.data.data.rows[2].numW)*100)>80?'#3ada76;':'#ff7a81;'}">${Math.floor((res.data.data.rows[2].numProjectC/res.data.data.rows[2].numProjectW)*100)>80?'合格':'不合格'}</span>
+              </div>
+              <div class="bottom-box">
+                <div class="left-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#048fe8;">${res.data.data.rows[2].numProjectW}</span>
+                  <span>人</span>
+                </div>
+                <div class="right-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#3ada76;">${res.data.data.rows[2].numProjectC}</span>
+                  <span>人</span>
+                </div>
+              </div>`,
+              offset: new AMap.Pixel(-115, -80)
+          })
+          this.marker3.show()
+
+          let temp3 = []
+          temp3.push(res.data.data.rows[3].longitude)
+          temp3.push(res.data.data.rows[3].latitude)
+          this.marker4.setPosition(temp3)
+          this.marker4.setTitle(res.data.data.rows[3].projectName)
+          this.marker4.setLabel({
+              content: `<div class="info-box">
+              <div class="top-box">
+                <span>${res.data.data.rows[3].projectName}</span>
+                <span class="state" style="color:${Math.floor((res.data.data.rows[3].numWing/res.data.data.rows[3].numW)*100)>80?'#3ada76;':'#ff7a81;'}">${Math.floor((res.data.data.rows[3].numProjectC/res.data.data.rows[3].numProjectW)*100)>80?'合格':'不合格'}</span>
+              </div>
+              <div class="bottom-box">
+                <div class="left-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#048fe8;">${res.data.data.rows[3].numProjectW}</span>
+                  <span>人</span>
+                </div>
+                <div class="right-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#3ada76;">${res.data.data.rows[3].numProjectC}</span>
+                  <span>人</span>
+                </div>
+              </div>`,
+              offset: new AMap.Pixel(-115, -80)
+          })
+          this.marker4.show()
+
+          let temp4 = []
+          temp4.push(res.data.data.rows[4].longitude)
+          temp4.push(res.data.data.rows[4].latitude)
+          this.marker5.setPosition(temp4)
+          this.marker5.setTitle(res.data.data.rows[4].projectName)
+          this.marker5.setLabel({
+              content: `<div class="info-box">
+              <div class="top-box">
+                <span>${res.data.data.rows[4].projectName}</span>
+                <span class="state" style="color:${Math.floor((res.data.data.rows[4].numWing/res.data.data.rows[4].numW)*100)>80?'#3ada76;':'#ff7a81;'}">${Math.floor((res.data.data.rows[4].numProjectC/res.data.data.rows[4].numProjectW)*100)>80?'合格':'不合格'}</span>
+              </div>
+              <div class="bottom-box">
+                <div class="left-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#048fe8;">${res.data.data.rows[4].numProjectW}</span>
+                  <span>人</span>
+                </div>
+                <div class="right-box">
+                  <span class="type">在场工人：</span>
+                  <span style="color:#3ada76;">${res.data.data.rows[4].numProjectC}</span>
+                  <span>人</span>
+                </div>
+              </div>`,
+              offset: new AMap.Pixel(-115, -80)
+          })
+          this.marker5.show()
+        }
+      )
+    },
+
+    // 翻页
+    handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`);
+      this.pageNum = val
+      this.selectAreaProjectList()
     }
   }
 };

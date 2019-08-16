@@ -160,7 +160,7 @@
             style="width:2.74rem;height:2.74rem"
           >
         </div>
-        <router-link to="/green/g_particulars" class="mianInfo">
+        <router-link to="/green" class="mianInfo">
             <div class="global" v-for="(item,index) in dustEmissionCentreData.newData" :key="index">
               <div class="title">PM2.5</div>
               <div class="num">{{item.PM25}}</div>
@@ -174,6 +174,20 @@
               </div>
             </div>
         </router-link>
+        <!-- <router-link to="/green/g_particulars" class="mianInfo">
+            <div class="global" v-for="(item,index) in dustEmissionCentreData.newData" :key="index">
+              <div class="title">PM2.5</div>
+              <div class="num">{{item.PM25}}</div>
+              <div class="yuan">
+                <div v-if="item.PM25<50" class="bor" style="background-color: #24e974;">优</div>
+                <div v-else-if="item.PM25<75" class="bor" style="background-color: #feb113;">良</div>
+                <div v-else-if="item.PM25<150" class="bor" style="background-color: #f06743;">轻度污染</div>
+                <div v-else-if="item.PM25<250" class="bor" style="background-color: #d0021b;">中度污染</div>
+                <div v-else-if="item.PM25<300" class="bor" style="background-color: #6c00cc;">重度污染</div>
+                <div v-else class="bor" style="background-color: #6d1e06;">严重污染</div>
+              </div>
+            </div>
+        </router-link> -->
         <div class="leftInfo" v-for="(item,index) in dustEmissionCentreData.newData" :key="index+1">
           <div class="box">
             <img
@@ -268,7 +282,7 @@
     </div>
     <!-- 右边 -->
     <div id="right">
-      <router-link to="/green/g_electricity" class="up">
+      <router-link to="/green" class="up">
         <h3>用电管理</h3>
         <div class="title">
           <span>
@@ -320,6 +334,58 @@
           </div>
         </div>
       </router-link>
+      <!-- <router-link to="/green/g_electricity" class="up">
+        <h3>用电管理</h3>
+        <div class="title">
+          <span>
+            <img src="../../../static/images/g_shandian.png">
+          </span>
+          <span class="content">
+            电箱运行状态：
+            <span :class="electricBoxData.sb=='正常'?'noml':'danger'">{{electricBoxData.sb}}</span>
+            <span class="danwei">&nbsp;kw/h</span>
+          </span>
+        </div>
+        <div class="imgs">
+          <div :class="electricBoxData.kg==0?'loudian':'loudian1'">
+            <div class="text">
+              <p style="font-size:.2rem; line-height:.45rem">{{electricBoxData.kg==0?'关':'开'}}</p>
+              <p>kwh</p>
+            </div>
+          </div>
+          <div :class="electricBoxData.envirwarm<45?'loudian':'loudian1'">
+            <div class="text">
+              <p>{{electricBoxData.envirwarm}}</p>
+              <p>℃</p>
+            </div>
+          </div>
+          <div :class="electricBoxData.current<150?'loudian':'loudian1'">
+            <div class="text">
+              <p>{{electricBoxData.current}}</p>
+              <p>kwh</p>
+            </div>
+          </div>
+        </div>
+        <div class="subtitle">
+          <p :class="electricBoxData.kg==0?'huang':'danger'">箱门开关</p>
+          <p :class="electricBoxData.envirwarm<45?'huang':'danger'">电箱温度</p>
+          <p :class="electricBoxData.current<150?'huang':'danger'">电箱漏电</p>
+          <p v-else class="danger">电箱漏电</p>
+        </div>
+        <div class="door-state">
+          <div class="door-title">电箱开关</div>
+          <div class="door-data" id="doorList">
+            <ul id="doorList1">
+              <li v-for="(item,index) in electricBoxData.kgjl" :key="index">
+                <span>开门时间：{{item.opendoorTime}}</span>
+                <span>关门时间：{{item.closelockTime}}</span>
+                <span>状态：{{item.doorType==0?'关':'开'}}</span>
+              </li>
+            </ul>
+            <ul id="doorList2"></ul>
+          </div>
+        </div>
+      </router-link> -->
       <div class="down">
         <h3>用水管理</h3>
         <div class="title">

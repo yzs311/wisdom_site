@@ -36,76 +36,6 @@
                     </div>
                 </div>
             </div>
-            <div class="content-box" v-for="(item,index) in carData" :key="index">
-                <div class="title bolder">
-                    {{item.name}}
-                </div>
-                <!-- :class="item.State==0?'normal':'anomaly'" -->
-                <div class="status bolder normal" >
-                    <!-- {{item.State==0?'正常运行':'异常运行'}} -->
-                    正常运行
-                </div>
-                <div class="top-data">
-                    <!-- :class="val.State==0?'border-blue normal':'border-red anomaly'" -->
-                    <div class="amount border-blue normal" style="font-size:.24rem" >
-                        {{item.todaycount.count}}
-                        <p style="font-size:.18rem">今日进出</p>
-                    </div>
-                    <div class="truck-space" :class="item.pkcount>=1?'border-blue normal':'border-red anomaly'" style="font-size:.24rem">
-                        {{item.pkcount}}
-                        <p style="font-size:.18rem">剩余车位</p>
-                    </div>
-                </div>
-                <div class="bottom-data">
-                    <p class="bolder">实时进出</p>
-                    <div class="licence" :id="item.name">
-                        <ul :id="item.name+1">
-                            <li v-for="item2 in item.todaycount.vehicleList" :key="item2.id">
-                                <span>{{item2.vehicleNo}}</span>
-                                <span>{{item2.gateinname}}</span>
-                                <span>{{item2.liftTime}}</span>
-                                <!-- <span>{{item2.CarType}}</span> -->
-                            </li>
-                        </ul>
-                        <ul :id="item.name+2"></ul>
-                    </div>
-                </div>
-            </div>
-            <div class="content-box" v-for="(item,index) in carData" :key="index">
-                <div class="title bolder">
-                    {{item.name}}
-                </div>
-                <!-- :class="item.State==0?'normal':'anomaly'" -->
-                <div class="status bolder normal" >
-                    <!-- {{item.State==0?'正常运行':'异常运行'}} -->
-                    正常运行
-                </div>
-                <div class="top-data">
-                    <!-- :class="val.State==0?'border-blue normal':'border-red anomaly'" -->
-                    <div class="amount border-blue normal" style="font-size:.24rem" >
-                        {{item.todaycount.count}}
-                        <p style="font-size:.18rem">今日进出</p>
-                    </div>
-                    <div class="truck-space" :class="item.pkcount>=1?'border-blue normal':'border-red anomaly'" style="font-size:.24rem">
-                        {{item.pkcount}}
-                        <p style="font-size:.18rem">剩余车位</p>
-                    </div>
-                </div>
-                <div class="bottom-data">
-                    <p class="bolder">实时进出</p>
-                    <div class="licence" :id="item.name">
-                        <ul :id="item.name+1">
-                            <li v-for="item2 in item.todaycount.vehicleList" :key="item2.id">
-                                <span>{{item2.vehicleNo}}</span>
-                                <span>{{item2.gateinname}}</span>
-                                <span>{{item2.liftTime}}</span>
-                                <!-- <span>{{item2.CarType}}</span> -->
-                            </li>
-                        </ul>
-                        <ul :id="item.name+2"></ul>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -161,14 +91,14 @@ export default {
               }
             }
             var MyMar1 = setInterval(Marquee1, speed); //设置定时器
-            //鼠标移上时清除定时器达到滚动停止的目的
-            colee.onmouseover = function() {
-              clearInterval(MyMar1);
-            };
-            //鼠标移开时重设定时器
-            colee.onmouseout = function() {
-              MyMar1 = setInterval(Marquee1, speed);
-            };
+            // //鼠标移上时清除定时器达到滚动停止的目的
+            // colee.onmouseover = function() {
+            //   clearInterval(MyMar1);
+            // };
+            // //鼠标移开时重设定时器
+            // colee.onmouseout = function() {
+            //   MyMar1 = setInterval(Marquee1, speed);
+            // };
           }, 1000);
         },
 

@@ -9,7 +9,7 @@
         </div>
         <!-- 搜索栏 -->
         <div class="search-box">
-            <div class="search-background">
+            <!-- <div class="search-background">
                 <div class="area-search">
                     <i class="area-icon"></i>
                     <input type="text" placeholder="地区">
@@ -21,7 +21,7 @@
                 <div class="search-button">
                     <a>搜索</a>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- 页面主体 -->
         <div class="content-box">
@@ -273,14 +273,14 @@ export default {
         }
     },
     created() {
-        this.getQueryUtil()
-        this.getqueryWorkTypeData()
+        // this.getQueryUtil()
+        // this.getqueryWorkTypeData()
         this.getQueryForemanData()
     },
     methods: {
         // 获取地区
         getQueryUtil() {
-            this.$axios.post(`/lz/hujiangGroup/queryUtil`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/hujiangGroup/queryUtil`).then(
                 res => {
                     // console.log(res.data)
                     this.areaData = res.data.msg
@@ -290,7 +290,7 @@ export default {
 
         // 获取工种
         getqueryWorkTypeData() {
-            this.$axios.post(`/lz/hujiangGroup/queryWorkType`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/hujiangGroup/queryWorkType`).then(
                 res => {
                     // console.log(res.data)
                     this.workTypeData = res.data.msg
@@ -300,7 +300,7 @@ export default {
 
         // 获取班组数据
         getQueryForemanData() {
-            this.$axios.post(`/lz/hujiangGroup/queryForeman`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/hujiangGroup/queryForeman`).then(
                 res => {
                     this.foremanData = res.data.msg
                 }

@@ -3,7 +3,7 @@
         <!-- 标题 -->
         <div class="title">
             <!-- <router-link to="/systemLiangZhi">{{indexData.projectName}}</router-link> -->
-            <a @click="$router.go(-1)">{{indexData.projectName}}</a>
+            <a @click="returnClick()">{{indexData.projectName}}</a>
         </div>
         <!-- 主体 -->
         <div class="main">
@@ -695,28 +695,15 @@ export default {
                             this.scrollStart('qykq','qykq1','qykq2')
                         }
                     },100)
+                    this.indexTimeId = setInterval(()=>{
+                        this.$axios.post(`/api/inOutKanBan/selectIndex?pid=${this.projectId}`).then(
+                            res => {
+                                this.indexData = res.data.data
+                            }
+                        )
+                    },10000)
                 }
             )
-            this.indexTimeId = setInterval(()=>{
-                this.$axios.post(`/api/inOutKanBan/selectIndex?pid=${this.projectId}`).then(
-                    res => {
-                        // console.log(res.data)
-                        this.indexData = res.data.data
-                        setTimeout(()=>{
-                            this.attendanceEcart(this.indexData.gzList)
-                            if (this.indexData.grdtList.length > 5) {
-                                this.scrollStart('grdt','grdt1','grdt2')
-                            }
-                            if (this.indexData.glrydtList.length > 5) {
-                                this.scrollStart('gldt','gldt1','gldt2')
-                            }
-                            if (this.indexData.sgqykq.length > 8) {
-                                this.scrollStart('qykq','qykq1','qykq2')
-                            }
-                        },100)
-                    }
-                )
-            },10000)
         },
 
         // 获取当前时间
@@ -752,15 +739,25 @@ export default {
                     }
                 }
                 var MyMar1 = setInterval(Marquee1, speed); //设置定时器
-                //鼠标移上时清除定时器达到滚动停止的目的
-                colee.onmouseover = function() {
-                    clearInterval(MyMar1);
-                }
-                //鼠标移开时重设定时器
-                colee.onmouseout = function() {
-                    MyMar1 = setInterval(Marquee1, speed);
-                }
+                // //鼠标移上时清除定时器达到滚动停止的目的
+                // colee.onmouseover = function() {
+                //     clearInterval(MyMar1);
+                // }
+                // //鼠标移开时重设定时器
+                // colee.onmouseout = function() {
+                //     MyMar1 = setInterval(Marquee1, speed);
+                // }
             }, 1000)
+        },
+
+        // 返回
+        returnClick() {
+            // console.log(123)
+            window.clearInterval(this.indexTimeId)
+            // this.$router.go(-1)
+            setTimeout(() => {
+                this.$router.go(-1)
+            },100)
         },
     }
 }

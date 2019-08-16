@@ -776,7 +776,7 @@ export default {
     },
     created() {
         // this.getPid()
-        this.getQueryPollingInFo()
+        // this.getQueryPollingInFo()
     },
     methods: {
         // 获取项目id

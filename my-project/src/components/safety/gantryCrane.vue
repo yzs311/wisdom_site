@@ -8,11 +8,12 @@
                     </div>
                     <div class="employee">
                         <span class="bolder">操作员</span>
-                        <span>某某某</span>
+                        <span>覃开奖</span>
                         <span class="bolder">上班时间</span>
-                        <span>07:30</span>
+                        <span>06:31</span>
                     </div>
-                    <img src="../../../static/images/s_pic.png" alt="" class="pic">
+                    <!-- <img src="../../../static/images/s_pic.png" alt="" class="pic"> -->
+                    <img src="http://hujiang.oss-cn-shenzhen.aliyuncs.com/5c85626c-8185-4e5d-a6a3-50303a430f33.jpg" alt="" class="pic">
                 </div>
                 <div class="bottom-box">
                     <div class="name">
@@ -21,17 +22,17 @@
                     <div class="top-data">
                         <div class="top-left">
                             <p class="warning">额定重量</p>
-                            <span>--t</span>
+                            <span>50t</span>
                         </div>
                         <div class="middle">
                             <div class="middle-img">
-                                <span style="font-size:.24rem">--t</span>
+                                <span style="font-size:.24rem">30t</span>
                             </div>
                             <span>重量</span>
                         </div>
                         <div class="top-right">
                             <p class="warning">起重循环</p>
-                            <span>--次</span>
+                            <span>66次</span>
                         </div>
                     </div>
                     <div class="bottom-data">
@@ -40,14 +41,14 @@
                                 <img src="../../../static/images/s_altitude.png" alt="">
                                 <div>
                                     <p class="warning">高度</p>
-                                    <p>--m</p>
+                                    <p>22m</p>
                                 </div>
                             </li>
                             <li>
                                 <img src="../../../static/images/s_wind-speed.png" alt="">
                                 <div>
                                     <p class="warning">风速</p>
-                                    <p>--m</p>
+                                    <p>1.8m</p>
                                 </div>
                             </li>
                         </ul>
@@ -70,9 +71,9 @@
                                     <span>风速</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
+                                    <span>16:10</span>
+                                    <span>12</span>
+                                    <span>50</span>
                                     <span>54.9</span>
                                     <span>27.5</span>
                                     <span>0</span>
@@ -81,80 +82,80 @@
                                     <span>0.84</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
+                                    <span>16:20</span>
                                     <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
+                                    <span>50</span>
+                                    <span>64.9</span>
+                                    <span>17.5</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
-                                    <span>0.84</span>
+                                    <span>0.64</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
+                                    <span>16:30</span>
+                                    <span>30</span>
+                                    <span>50</span>
                                     <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
+                                    <span>15.2</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
-                                    <span>0.84</span>
+                                    <span>0.44</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
+                                    <span>16:40</span>
+                                    <span>30</span>
+                                    <span>50</span>
+                                    <span>12.2</span>
+                                    <span>6.4</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
-                                    <span>0.84</span>
+                                    <span>0.19</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
+                                    <span>16:50</span>
                                     <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
+                                    <span>50</span>
+                                    <span>47.9</span>
+                                    <span>22.2</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
-                                    <span>0.84</span>
+                                    <span>0.66</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
+                                    <span>17:00</span>
                                     <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
+                                    <span>50</span>
+                                    <span>29.4</span>
+                                    <span>57.2</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
-                                    <span>0.84</span>
+                                    <span>0.82</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
+                                    <span>17:10</span>
+                                    <span>22</span>
+                                    <span>50</span>
                                     <span>54.9</span>
                                     <span>27.5</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
-                                    <span>0.84</span>
+                                    <span>0.38</span>
                                 </li>
                             </ul>
                         </div>
-                        <div class="history">
+                        <!-- <div class="history">
                             历史数据查询
-                        </div>
+                        </div> -->
                     </div>
                     <div class="day">
                         <span class="bolder">检修倒计时： </span>
-                        <span class="bolder normal">730天</span>
+                        <span class="bolder normal">69天</span>
                     </div>
                 </div>
             </div>
@@ -165,30 +166,31 @@
                     </div>
                     <div class="employee">
                         <span class="bolder">操作员</span>
-                        <span>某某某</span>
+                        <span>王砚哲</span>
                         <span class="bolder">上班时间</span>
-                        <span>07:30</span>
+                        <span>07:11</span>
                     </div>
-                    <img src="../../../static/images/s_pic.png" alt="" class="pic">
+                    <!-- <img src="../../../static/images/s_pic.png" alt="" class="pic"> -->
+                    <img src="http://hujiang.oss-cn-shenzhen.aliyuncs.com/9e98d8ca-9685-4291-a229-6041dd6d24ac.jpg" alt="" class="pic">
                 </div>
                 <div class="bottom-box">
                     <div class="name">
-                        <span class="bolder">龙门吊一号机</span>
+                        <span class="bolder">龙门吊二号机</span>
                     </div>
                     <div class="top-data">
                         <div class="top-left">
                             <p class="warning">额定重量</p>
-                            <span>--t</span>
+                            <span>50t</span>
                         </div>
                         <div class="middle">
                             <div class="middle-img">
-                                <span style="font-size:.24rem">--t</span>
+                                <span style="font-size:.24rem">11t</span>
                             </div>
                             <span>重量</span>
                         </div>
                         <div class="top-right">
                             <p class="warning">起重循环</p>
-                            <span>--次</span>
+                            <span>23次</span>
                         </div>
                     </div>
                     <div class="bottom-data">
@@ -197,14 +199,14 @@
                                 <img src="../../../static/images/s_altitude.png" alt="">
                                 <div>
                                     <p class="warning">高度</p>
-                                    <p>--m</p>
+                                    <p>31m</p>
                                 </div>
                             </li>
                             <li>
                                 <img src="../../../static/images/s_wind-speed.png" alt="">
                                 <div>
                                     <p class="warning">风速</p>
-                                    <p>--m</p>
+                                    <p>6.5m</p>
                                 </div>
                             </li>
                         </ul>
@@ -227,7 +229,29 @@
                                     <span>风速</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
+                                    <span>16:10</span>
+                                    <span>30</span>
+                                    <span>50</span>
+                                    <span>24.6</span>
+                                    <span>15.2</span>
+                                    <span>0</span>
+                                    <span>2</span>
+                                    <span>1</span>
+                                    <span>0.44</span>
+                                </li>
+                                <li>
+                                    <span>16:20</span>
+                                    <span>30</span>
+                                    <span>50</span>
+                                    <span>12.2</span>
+                                    <span>6.4</span>
+                                    <span>0</span>
+                                    <span>2</span>
+                                    <span>1</span>
+                                    <span>0.19</span>
+                                </li>
+                                <li>
+                                    <span>16:30</span>
                                     <span>0</span>
                                     <span>24.6</span>
                                     <span>54.9</span>
@@ -238,9 +262,20 @@
                                     <span>0.84</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
+                                    <span>16:40</span>
                                     <span>0</span>
-                                    <span>24.6</span>
+                                    <span>50</span>
+                                    <span>64.9</span>
+                                    <span>17.5</span>
+                                    <span>0</span>
+                                    <span>2</span>
+                                    <span>1</span>
+                                    <span>0.64</span>
+                                </li>
+                                <li>
+                                    <span>16:50</span>
+                                    <span>12</span>
+                                    <span>50</span>
                                     <span>54.9</span>
                                     <span>27.5</span>
                                     <span>0</span>
@@ -249,69 +284,36 @@
                                     <span>0.84</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
+                                    <span>17:00</span>
+                                    <span>22</span>
+                                    <span>50</span>
                                     <span>54.9</span>
                                     <span>27.5</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
-                                    <span>0.84</span>
+                                    <span>0.38</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
+                                    <span>17:10</span>
                                     <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
-                                    <span>0</span>
-                                    <span>2</span>
-                                    <span>1</span>
-                                    <span>0.84</span>
-                                </li>
-                                <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
+                                    <span>50</span>
+                                    <span>29.4</span>
+                                    <span>57.2</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
-                                    <span>0.84</span>
-                                </li>
-                                <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
-                                    <span>0</span>
-                                    <span>2</span>
-                                    <span>1</span>
-                                    <span>0.84</span>
-                                </li>
-                                <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
-                                    <span>0</span>
-                                    <span>2</span>
-                                    <span>1</span>
-                                    <span>0.84</span>
+                                    <span>0.82</span>
                                 </li>
                             </ul>
                         </div>
-                        <div class="history">
+                        <!-- <div class="history">
                             历史数据查询
-                        </div>
+                        </div> -->
                     </div>
                     <div class="day">
                         <span class="bolder">检修倒计时： </span>
-                        <span class="bolder normal">730天</span>
+                        <span class="bolder normal">55天</span>
                     </div>
                 </div>
             </div>
@@ -322,30 +324,31 @@
                     </div>
                     <div class="employee">
                         <span class="bolder">操作员</span>
-                        <span>某某某</span>
+                        <span>闫泽国</span>
                         <span class="bolder">上班时间</span>
-                        <span>07:30</span>
+                        <span>07:29</span>
                     </div>
-                    <img src="../../../static/images/s_pic.png" alt="" class="pic">
+                    <!-- <img src="../../../static/images/s_pic.png" alt="" class="pic"> -->
+                    <img src="http://hujiang.oss-cn-shenzhen.aliyuncs.com/a2eccdc9-d293-4d59-9d9b-fe3ee8422b96.jpg" alt="" class="pic">
                 </div>
                 <div class="bottom-box">
                     <div class="name">
-                        <span class="bolder">龙门吊一号机</span>
+                        <span class="bolder">龙门吊三号机</span>
                     </div>
                     <div class="top-data">
                         <div class="top-left">
                             <p class="warning">额定重量</p>
-                            <span>--t</span>
+                            <span>50t</span>
                         </div>
                         <div class="middle">
                             <div class="middle-img">
-                                <span style="font-size:.24rem">--t</span>
+                                <span style="font-size:.24rem">34t</span>
                             </div>
                             <span>重量</span>
                         </div>
                         <div class="top-right">
                             <p class="warning">起重循环</p>
-                            <span>--次</span>
+                            <span>11次</span>
                         </div>
                     </div>
                     <div class="bottom-data">
@@ -354,14 +357,14 @@
                                 <img src="../../../static/images/s_altitude.png" alt="">
                                 <div>
                                     <p class="warning">高度</p>
-                                    <p>--m</p>
+                                    <p>15m</p>
                                 </div>
                             </li>
                             <li>
                                 <img src="../../../static/images/s_wind-speed.png" alt="">
                                 <div>
                                     <p class="warning">风速</p>
-                                    <p>--m</p>
+                                    <p>1.5m</p>
                                 </div>
                             </li>
                         </ul>
@@ -384,9 +387,64 @@
                                     <span>风速</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
+                                    <span>16:10</span>
+                                    <span>22</span>
+                                    <span>50</span>
+                                    <span>54.9</span>
+                                    <span>27.5</span>
                                     <span>0</span>
+                                    <span>2</span>
+                                    <span>1</span>
+                                    <span>0.38</span>
+                                </li>
+                                <li>
+                                    <span>16:20</span>
+                                    <span>0</span>
+                                    <span>50</span>
+                                    <span>47.9</span>
+                                    <span>22.2</span>
+                                    <span>0</span>
+                                    <span>2</span>
+                                    <span>1</span>
+                                    <span>0.66</span>
+                                </li>
+                                <li>
+                                    <span>16:30</span>
+                                    <span>0</span>
+                                    <span>50</span>
+                                    <span>29.4</span>
+                                    <span>57.2</span>
+                                    <span>0</span>
+                                    <span>2</span>
+                                    <span>1</span>
+                                    <span>0.82</span>
+                                </li>
+                                <li>
+                                    <span>16:40</span>
+                                    <span>30</span>
+                                    <span>50</span>
+                                    <span>12.2</span>
+                                    <span>6.4</span>
+                                    <span>0</span>
+                                    <span>2</span>
+                                    <span>1</span>
+                                    <span>0.19</span>
+                                </li>
+                                <li>
+                                    <span>16:50</span>
+                                    <span>30</span>
+                                    <span>50</span>
                                     <span>24.6</span>
+                                    <span>15.2</span>
+                                    <span>0</span>
+                                    <span>2</span>
+                                    <span>1</span>
+                                    <span>0.44</span>
+                                </li>
+                                <li>
+                                    <span>17:00</span>
+                                    <span>12</span>
+                                    <span>50</span>
                                     <span>54.9</span>
                                     <span>27.5</span>
                                     <span>0</span>
@@ -395,66 +453,11 @@
                                     <span>0.84</span>
                                 </li>
                                 <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
-                                    <span>0</span>
-                                    <span>2</span>
-                                    <span>1</span>
-                                    <span>0.84</span>
-                                </li>
-                                <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
-                                    <span>0</span>
-                                    <span>2</span>
-                                    <span>1</span>
-                                    <span>0.84</span>
-                                </li>
-                                <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
-                                    <span>0</span>
-                                    <span>2</span>
-                                    <span>1</span>
-                                    <span>0.84</span>
-                                </li>
-                                <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
-                                    <span>0</span>
-                                    <span>2</span>
-                                    <span>1</span>
-                                    <span>0.84</span>
-                                </li>
-                                <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
-                                    <span>0</span>
-                                    <span>2</span>
-                                    <span>1</span>
-                                    <span>0.84</span>
-                                </li>
-                                <li>
-                                    <span>16:08</span>
-                                    <span>0</span>
-                                    <span>24.6</span>
-                                    <span>54.9</span>
-                                    <span>27.5</span>
+                                    <span>17:10</span>
+                                    <span>12</span>
+                                    <span>50</span>
+                                    <span>6.1</span>
+                                    <span>10.5</span>
                                     <span>0</span>
                                     <span>2</span>
                                     <span>1</span>
@@ -462,13 +465,13 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="history">
+                        <!-- <div class="history">
                             历史数据查询
-                        </div>
+                        </div> -->
                     </div>
                     <div class="day">
                         <span class="bolder">检修倒计时： </span>
-                        <span class="bolder normal">730天</span>
+                        <span class="bolder normal">43天</span>
                     </div>
                 </div>
             </div>

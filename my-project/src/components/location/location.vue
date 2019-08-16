@@ -3,12 +3,12 @@
         <!-- 侧导航栏 -->
         <div class="select">
             <ul>
-                <li @click="isActive='/location/l_homePage'">
+                <!-- <li @click="isActive='/location/l_homePage'">
                     <router-link to="/location/l_homePage" :class="isActive=='/location/l_homePage'?'active':''">
                         <i class="homePage"></i>
                         首页
                     </router-link>
-                </li>
+                </li> -->
                 <li @click="isActive='/location/l_monitoring'">
                     <router-link to="/location/l_monitoring" :class="isActive=='/location/l_monitoring'?'active':''">
                         <i class="location"></i>
@@ -33,12 +33,12 @@
                         历史轨迹
                     </router-link>
                 </li>
-                <li @click="isActive='/location/l_set'">
+                <!-- <li @click="isActive='/location/l_set'">
                     <router-link to="/location/l_set" :class="isActive=='/location/l_set'?'active':''">
                         <i class="system"></i>
                         系统设置
                     </router-link>
-                </li>
+                </li> -->
             </ul>
         </div>
         <!-- 内容区域 -->
@@ -119,7 +119,7 @@
 export default {
     data() {
         return {
-            isActive: '/location/l_homePage',
+            isActive: '/location/l_monitoring',
         }
     },
     methods: {

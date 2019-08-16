@@ -291,7 +291,7 @@ const router = new VueRouter({
             {path:"gas",meta:{needLogin:true},component:resolve => require(['../components/safety/gas.vue'],resolve)},
         ]},
         {path:'/location',meta:{needLogin:true},component:resolve => require(['../components/location/location.vue'],resolve),children:[
-            {path:"",meta:{needLogin:true},component:resolve => require(['../components/location/l_homePage.vue'],resolve)},
+            {path:"",meta:{needLogin:true},component:resolve => require(['../components/location/l_monitoring.vue'],resolve)},
             {path:"l_homePage",meta:{needLogin:true},component:resolve => require(['../components/location/l_homePage.vue'],resolve)},
             {path:"l_monitoring",meta:{needLogin:true},component:resolve => require(['../components/location/l_monitoring.vue'],resolve)},
             {path:"l_search",meta:{needLogin:true},component:resolve => require(['../components/location/l_search.vue'],resolve)},

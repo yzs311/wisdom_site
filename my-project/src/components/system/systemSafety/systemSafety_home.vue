@@ -9,7 +9,7 @@
                         </div>
                         <div class="right">
                             <p style="font-size:0.18rem;">合格</p>
-                            <p style="font-size:0.26rem;margin-top:0.05rem">0</p>
+                            <p style="font-size:0.26rem;margin-top:0.05rem">{{statistics.qualified}}</p>
                         </div>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                         </div>
                         <div class="right">
                             <p style="font-size:0.18rem;">未整改</p>
-                            <p style="font-size:0.26rem;margin-top:0.05rem">0</p>
+                            <p style="font-size:0.26rem;margin-top:0.05rem">{{statistics.rectifyCount}}</p>
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="right">
                             <p style="font-size:0.18rem;">待复查</p>
-                            <p style="font-size:0.26rem;margin-top:0.05rem">0</p>
+                            <p style="font-size:0.26rem;margin-top:0.05rem">{{statistics.reviewCount}}</p>
                         </div>
                     </div>
                 </div>
@@ -42,19 +42,19 @@
                         </div>
                         <div class="right">
                             <p style="font-size:0.18rem;">超期未整改</p>
-                            <p style="font-size:0.26rem;margin-top:0.05rem">0</p>
+                            <p style="font-size:0.26rem;margin-top:0.05rem">{{statistics.pastCount}}</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="timeList">
-                <ul>
+                <!-- <ul>
                     <li>本周</li>
                     <li>本月</li>
                     <li>按年</li>
                     <li>累计</li>
                     <li>自定义</li>
-                </ul>
+                </ul> -->
                 <div class="time">
                     <el-date-picker
                     type="daterange"
@@ -68,7 +68,7 @@
                 <div class="up">
                     <div class="title">安检概况</div>
                     <div class="quan">
-                        <p class="num">0%</p>
+                        <p class="num">{{statistics.yield}}%</p>
                         <p class="text">合格率</p>
                     </div>
                     <div class="textInfo">
@@ -76,7 +76,7 @@
                             <div class="info">
                                 <div class="right">
                                     <p style="font-size:0.22rem;">检查总数</p>
-                                    <p style="font-size:0.26rem;margin-top:0.1rem;font-weight:600">0</p>
+                                    <p style="font-size:0.26rem;margin-top:0.1rem;font-weight:600">{{statistics.checkdSum}}</p>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                             <div class="info">
                                 <div class="right">
                                     <p style="font-size:0.22rem;">合格</p>
-                                    <p style="font-size:0.26rem;margin-top:0.1rem;font-weight:600">0</p>
+                                    <p style="font-size:0.26rem;margin-top:0.1rem;font-weight:600">{{statistics.qualified}}</p>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                             <div class="info">
                                 <div class="right">
                                     <p style="font-size:0.22rem;">不合格</p>
-                                    <p style="font-size:0.26rem;margin-top:0.1rem;font-weight:600">0</p>
+                                    <p style="font-size:0.26rem;margin-top:0.1rem;font-weight:600">{{statistics.noQualified}}</p>
                                 </div>
                             </div>
                         </div>
@@ -264,9 +264,18 @@
 <script>
 export default {
     data() {
-        return {}
+        return {
+            differentiate: 1, // 安全管理
+            projectId: '', // 项目id
+            statistics: '', // 统计
+        }
+    },
+    created() {
+        this.getProjectId()
+        this.statisticsCount()
     },
     methods: {
+        // 渲染隐患趋势
         renderTu() {
             let qushitu = this.$echarts.init(document.getElementById("tutu"));
             qushitu.setOption({
@@ -354,7 +363,22 @@ export default {
                     }
                 ]
             });
-        }
+        },
+
+        // 获取项目id
+        getProjectId() {
+          this.projectId = sessionStorage.getItem('pid')
+        },
+
+        // 获取数据统计数据
+        statisticsCount() {
+        this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/statisticsCount?projectId=${this.projectId}&differentiate=${this.differentiate}`).then(
+          res =>{
+            // console.log(res.data)
+            this.statistics = res.data.data
+          }
+        )
+    },
     },
     mounted() {
         this.renderTu();

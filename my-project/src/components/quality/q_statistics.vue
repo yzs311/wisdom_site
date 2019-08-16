@@ -4,28 +4,28 @@
         <div class="top-box">
             <div>
                 <div class="left-box">
-                    <p>{{accomplish}}</p>
+                    <p>0</p>
                     <span>已完成</span>
                 </div>
                 <div class="right-box plaint1"></div>
             </div>
             <div>
                 <div class="left-box">
-                    <p>{{rectify}}</p>
+                    <p>0</p>
                     <span>未整改</span>
                 </div>
                 <div class="right-box plaint1"></div>
             </div>
             <div>
                 <div class="left-box">
-                    <p>{{review}}</p>
+                    <p>0</p>
                     <span>待复查</span>
                 </div>
                 <div class="right-box plaint2"></div>
             </div>
             <div>
                 <div class="left-box">
-                    <p>{{overtime}}</p>
+                    <p>0</p>
                     <span>超期未整改</span>
                 </div>
                 <div class="right-box plaint2"></div>
@@ -81,7 +81,8 @@
                 </div>
                 <div class="generalize-main">
                     <div class="generalize-left">
-                        {{Math.floor(accomplish/sum*100)}}%
+                        <!-- {{Math.floor(accomplish/sum*100)}}% -->
+                        0%
                         <br>
                         完成率
                     </div>
@@ -90,19 +91,19 @@
                             <li>
                                 检查总数
                                 <br>
-                                <span>{{sum}}</span>
+                                <span>0</span>
                                 项
                             </li>
                             <li>
                                 已完成
                                 <br>
-                                <span>{{accomplish}}</span>
+                                <span>0</span>
                                 项
                             </li>
                             <li>
                                 未完成
                                 <br>
-                                <span>{{sum-accomplish}}</span>
+                                <span>0</span>
                                 项
                             </li>
                         </ul>
@@ -270,11 +271,11 @@ export default {
         }
     },
     mounted() {
-        // this.temp()
+        this.temp()
     },
     created() {
         // this.getPid()
-        this.getSelectPolling()
+        // this.getSelectPolling()
     },
     methods: {
         // 柱状图初始化

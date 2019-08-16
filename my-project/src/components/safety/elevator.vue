@@ -29,7 +29,8 @@
         </div>
         <!-- <img :src="`${imgUrl}/${item.photo}`" alt class="pic"> -->
         <!-- <img :src="item.img" alt="" class="pic"> -->
-        <img src="../../../static/images/s_pic.png" alt="" class="pic">
+        <!-- <img src="../../../static/images/s_pic.png" alt="" class="pic"> -->
+        <img src="http://hujiang.oss-cn-shenzhen.aliyuncs.com/5353a96f-029e-4bd5-b7d4-62c5064a1933.jpg" alt="" class="pic">
       </div>
       <div class="top-box">
         <div class="status">
@@ -44,7 +45,8 @@
         </div>
         <!-- <img :src="`${imgUrl}/${item.photo}`" alt class="pic"> -->
         <!-- <img :src="item.img" alt="" class="pic"> -->
-        <img src="../../../static/images/s_pic.png" alt="" class="pic">
+        <!-- <img src="../../../static/images/s_pic.png" alt="" class="pic"> -->
+        <img src="http://hujiang.oss-cn-shenzhen.aliyuncs.com/3e7f4fad-1dd7-4ad0-aa78-ee5d2979ea74.jpg" alt="" class="pic">
       </div>
       <div class="top-box">
         <div class="status">
@@ -59,7 +61,8 @@
         </div>
         <!-- <img :src="`${imgUrl}/${item.photo}`" alt class="pic"> -->
         <!-- <img :src="item.img" alt="" class="pic"> -->
-        <img src="../../../static/images/s_pic.png" alt="" class="pic">
+        <!-- <img src="../../../static/images/s_pic.png" alt="" class="pic"> -->
+        <img src="https://hujiang.oss-cn-shenzhen.aliyuncs.com/hj/lo6q4v085744.jpg" alt="" class="pic">
       </div>
     </div>
     <div class="buttom">
@@ -114,7 +117,7 @@
         <div class="info" >
           <div class="manyInfo">
             <div class="num">
-              <p class="noml small noml-border">26t</p>
+              <p class="noml small noml-border">0.26t</p>
             </div>
             <!-- <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_zz}}t</p>
@@ -123,7 +126,7 @@
           </div>
           <div class="manyInfo">
             <div class="num">
-              <p class="noml small noml-border">33m</p>
+              <p class="noml small noml-border">3.3m</p>
             </div>
             <!-- <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_gd}}m</p>
@@ -151,7 +154,7 @@
         </div>
         <div class="subtitle">
           <h1 style="display:inline-block">检修倒计时:</h1>
-          <h1 class="normal" style="display:inline-block">&nbsp;&nbsp;67天</h1>
+          <h1 class="normal" style="display:inline-block">&nbsp;&nbsp;62天</h1>
         </div>
       </div>
       <div class="main">
@@ -159,7 +162,7 @@
         <div class="info" >
           <div class="manyInfo">
             <div class="num">
-              <p class="noml small noml-border">26t</p>
+              <p class="noml small noml-border">0.6t</p>
             </div>
             <!-- <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_zz}}t</p>
@@ -168,7 +171,7 @@
           </div>
           <div class="manyInfo">
             <div class="num">
-              <p class="noml small noml-border">33m</p>
+              <p class="noml small noml-border">9.6m</p>
             </div>
             <!-- <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_gd}}m</p>
@@ -204,7 +207,7 @@
         <div class="info" >
           <div class="manyInfo">
             <div class="num">
-              <p class="noml small noml-border">26t</p>
+              <p class="noml small noml-border">1.3t</p>
             </div>
             <!-- <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_zz}}t</p>
@@ -213,7 +216,7 @@
           </div>
           <div class="manyInfo">
             <div class="num">
-              <p class="noml small noml-border">33m</p>
+              <p class="noml small noml-border">3.1m</p>
             </div>
             <!-- <div class="t_num" v-else>
               <p class="danger small danger-border">{{item.yx_gd}}m</p>
@@ -241,7 +244,7 @@
         </div>
         <div class="subtitle">
           <h1 style="display:inline-block">检修倒计时:</h1>
-          <h1 class="normal" style="display:inline-block">&nbsp;&nbsp;67天</h1>
+          <h1 class="normal" style="display:inline-block">&nbsp;&nbsp;65天</h1>
         </div>
       </div>
     </div>

@@ -101,11 +101,11 @@
                             <div class="line"></div>
                             <div class="weather-icon fine"></div>
                             <div class="temperature">30℃</div>
-                            <div class="day">
+                            <!-- <div class="day">
                                 安全文明施工天数：
                                 <span>211</span>
                                 天
-                            </div>
+                            </div> -->
                         </div>
                         <div class="main">
 
@@ -1025,6 +1025,19 @@ export default {
                 this.day = moment().format("DD")
             },1000)
         },
+
+        // 下载测试
+        download() {
+            this.$axios.post(`http://192.168.1.117:5555/provider/Node/exportZhProgressPlan?progressId=29&title=导出测试&outS=${'E:\导出测试.xlsx'}`).then(
+                // &outS=C:\Users\Administrator\Desktop
+                res => {
+                    console.log(res.data)
+                }
+            )
+        }
+    },
+    created() {
+        this.download()
     }
 }
 </script>

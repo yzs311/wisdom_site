@@ -47,87 +47,93 @@
                 </el-collapse> -->
                 <ul>
                     <li v-for="(item,index) in videoList" :key="index">
-                        <a :class="item.id==areaId?'active':''" @click="areaId=item.id">{{item.areaName}}</a>
+                        <a :class="item.id==areaId?'active':''" @click="selectClick(item.id);">{{item.areaName}}</a>
                     </li>
                 </ul>
             </div>
         </div>
         <!-- 监控显示模块 -->
-        <div class="main" v-for="(item,index) in videoData" :key="index" v-if="videoData.length>1">
-            <div class="main-box" >
-                <div class="no-data">
-                    <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[0].url">
-                        <source :src="videoData[0].url" type="" />
-                        <source :src="videoData[0].url" type="application/x-mpegURL" />
-                    </video>
-                    <span v-else>无视频数据</span>
+        <div class="center-box" v-for="(item2,index2) in videoList" :key="index2" v-if="item2.id==areaId">
+            <div class="main" v-for="(item,index) in videoData" :key="index" v-if="videoData.length>1&&index==1">
+                <div class="main-box" >
+                    <div class="no-data">
+                        <!-- <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[0].url">
+                            <source :src="videoData[0].url" type="" />
+                            <source :src="videoData[0].url" type="application/x-mpegURL" />
+                        </video> -->
+                        <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[0].url">
+                            <source :src="videoData[0].url" type="" />
+                            <source :src="videoData[0].url" type="application/x-mpegURL" />
+                        </video>
+                        <span v-else>无视频数据</span>
+                    </div>
                 </div>
+                <div class="main-box">
+                    <div class="no-data">
+                        <video id="player2" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[1].url">
+                            <source :src="videoData[1].url" type="" />
+                            <source :src="videoData[1].url" type="application/x-mpegURL" />
+                        </video>
+                        <span v-else>无视频数据</span>
+                    </div>
+                </div>
+                <div class="main-box" style="margin-top:.3rem">
+                    <div class="no-data">
+                        <video id="player3" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[2].url">
+                            <source :src="videoData[2].url" type="" />
+                            <source :src="videoData[2].url" type="application/x-mpegURL" />
+                        </video>
+                        <span v-else>无视频数据</span>
+                    </div>
+                </div>
+                <div class="main-box" style="margin-top:.3rem">
+                    <div class="no-data">
+                        <video id="player4" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[3].url">
+                            <source :src="videoData[3].url" type="" />
+                            <source :src="videoData[3].url" type="application/x-mpegURL" />
+                        </video>
+                        <span v-else>无视频数据</span>
+                    </div>
+                </div>
+                <!-- <div class="main-bottom">
+                    <div class="left-button" @click="leftMove">
+                    </div>
+                    <div class="frames">
+                        <ul>
+                            <li>
+                                <div class="temp1"></div>
+                                <span>画面2</span>
+                            </li>
+                            <li>
+                                <div class="temp2"></div>
+                                <span>画面3</span>
+                            </li>
+                            <li>
+                                <div class="temp3"></div>
+                                <span>画面4</span>
+                            </li>
+                            <li>
+                                <span>画面5</span>
+                            </li>
+                            <li>
+                                <span>画面6</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="right-button" @click="rightMove">
+                    </div>
+                </div> -->
             </div>
-            <div class="main-box">
-                <div class="no-data">
-                    <video id="player2" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[1].url">
-                        <source :src="videoData[1].url" type="" />
-                        <source :src="videoData[1].url" type="application/x-mpegURL" />
-                    </video>
-                    <span v-else>无视频数据</span>
-                </div>
-            </div>
-            <div class="main-box" style="margin-top:.3rem">
-                <div class="no-data">
-                    <video id="player3" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[2].url">
-                        <source :src="videoData[2].url" type="" />
-                        <source :src="videoData[2].url" type="application/x-mpegURL" />
-                    </video>
-                    <span v-else>无视频数据</span>
-                </div>
-            </div>
-            <div class="main-box" style="margin-top:.3rem">
-                <div class="no-data">
-                    <video id="player4" poster="" controls playsInline webkit-playsinline autoplay v-if="videoData[3].url">
-                        <source :src="videoData[3].url" type="" />
-                        <source :src="videoData[3].url" type="application/x-mpegURL" />
-                    </video>
-                    <span v-else>无视频数据</span>
-                </div>
-            </div>
-            <!-- <div class="main-bottom">
-                <div class="left-button" @click="leftMove">
-                </div>
-                <div class="frames">
-                    <ul>
-                        <li>
-                            <div class="temp1"></div>
-                            <span>画面2</span>
-                        </li>
-                        <li>
-                            <div class="temp2"></div>
-                            <span>画面3</span>
-                        </li>
-                        <li>
-                            <div class="temp3"></div>
-                            <span>画面4</span>
-                        </li>
-                        <li>
-                            <span>画面5</span>
-                        </li>
-                        <li>
-                            <span>画面6</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="right-button" @click="rightMove">
-                </div>
-            </div> -->
-        </div>
-        <!-- 监控显示模块单个 -->
-        <div class="main" v-for="(item,index) in videoData" :key="index" v-if="videoData.length==1">
-            <div class="main-one" >
-                <div class="no-data-one">
-                    <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="item.url">
-                        <source :src="item.url" type="" />
-                        <source :src="item.url" type="application/x-mpegURL" />
-                    </video>
-                    <span v-else>无视频数据</span>
+            <!-- 监控显示模块单个 -->
+            <div class="main" v-for="(item,index) in videoData" :key="index" v-if="videoData.length==1">
+                <div class="main-one" >
+                    <div class="no-data-one">
+                        <video id="player1" poster="" controls playsInline webkit-playsinline autoplay v-if="item.url">
+                            <source :src="item.url" type="" />
+                            <source :src="item.url" type="application/x-mpegURL" />
+                        </video>
+                        <span v-else>无视频数据</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -264,6 +270,7 @@ export default {
                     if (res.data.data) {
                         // console.log('有视频区域')
                         this.videoList = res.data.data
+                        console.log(this.videoList)
                     } else {
                         // console.log('无视频区域')
                         this.videoAreaData = [{
@@ -284,9 +291,18 @@ export default {
                 res => {
                     // console.log(res.data)
                     this.videoData = res.data.data
+                    // console.log(this.videoData)
                 }
             )
         },
+
+        // 切换视频区列表列表
+        selectClick(areaId) {
+            this.areaId = areaId
+            // console.log(areaId)
+            this.getProjectVideo()
+            this.$router.push('/monitoring')
+        }
     },
     updated() {
         if(this.rtmp_url!=""){

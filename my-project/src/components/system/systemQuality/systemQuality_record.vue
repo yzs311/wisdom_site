@@ -1,7 +1,7 @@
 <template>
   <div id="systemQuality_record">
     <div class="content">
-      <div class="top">
+      <!-- <div class="top">
         <ul>
           <li class="active">所有</li>
           <li>待整改</li>
@@ -9,7 +9,7 @@
           <li>复查未通过</li>
           <li>复查通过</li>
         </ul>
-      </div>
+      </div> -->
       <div class="searchBox">
         <ul>
           <li>
@@ -66,29 +66,29 @@
       </div>
       <div class="tableBox">
         <el-table :data="allTableData" stripe border @row-click="getInfo">
-          <el-table-column prop="number" label="序号" width="80">
-            <template slot-scope="scope">
+          <el-table-column type="index" label="序号" width="80" :index="indexMethod">
+            <!-- <template slot-scope="scope" class="number">
               <div class="number" style="line-height:0.7rem">{{scope.row.number}}</div>
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column prop="problem" label="问题" width="339">
             <template slot-scope="scope">
               <div class="problem">
-                <p>{{scope.row.problem}}</p>
+                <p>{{scope.row.safetyDescribe}}</p>
                 <p>
                   <span
-                    v-if="scope.row.problemStatus=='严重'"
+                    v-if="scope.row.gradeName=='严重'"
                     class="problemRed problemTu"
-                  >{{scope.row.problemStatus}}</span>
+                  >{{scope.row.gradeName}}</span>
                   <span
-                    v-else-if="scope.row.problemStatus=='轻微'"
+                    v-else-if="scope.row.gradeName=='轻微'"
                     class="problemBlue problemTu"
-                  >{{scope.row.problemStatus}}</span>
+                  >{{scope.row.gradeName}}</span>
                   <span
-                    v-else-if="scope.row.problemStatus=='一般'"
+                    v-else-if="scope.row.gradeName=='一般'"
                     class="problemYellow problemTu"
-                  >{{scope.row.problemStatus}}</span>
-                  <span v-else class="problemGreen problemTu">{{scope.row.problemStatus}}</span>
+                  >{{scope.row.gradeName}}</span>
+                  <span v-else class="problemGreen problemTu">{{scope.row.gradeName}}</span>
                   <span style="margin-left:0.05rem">{{scope.row.problemArea}}</span>
                 </p>
               </div>
@@ -96,28 +96,28 @@
           </el-table-column>
           <el-table-column prop="danger" label="隐患类型" width="175">
             <template slot-scope="scope">
-              <div class="danger" style="line-height:0.7rem">{{scope.row.danger}}</div>
+              <div class="danger" style="line-height:0.7rem">{{scope.row.hiddenName}}</div>
             </template>
           </el-table-column>
           <el-table-column prop="examine" label="检查人 | 检查时间" width="266">
             <template slot-scope="scope">
               <div class="examine">
-                <p>{{scope.row.examine}}</p>
-                <p>{{scope.row.examineTime}}</p>
+                <p>{{scope.row.initiatorName}}</p>
+                <p>{{scope.row.initiatorTime}}</p>
               </div>
             </template>
           </el-table-column>
           <el-table-column prop="repair" label="整改人 | 责任分包公司" width="279">
             <template slot-scope="scope">
               <div class="repair">
-                <p>{{scope.row.repair}}</p>
-                <p>{{scope.row.repairSubpackage}}</p>
+                <p>{{scope.row.rectifyName}}</p>
+                <p>{{scope.row.constructionName}}</p>
               </div>
             </template>
           </el-table-column>
           <el-table-column prop="time" label="整改期限" width="180">
             <template slot-scope="scope">
-              <div class="time" style="line-height:0.7rem">{{scope.row.time}}</div>
+              <div class="time" style="line-height:0.7rem">{{scope.row.safetyDeadline}}</div>
             </template>
           </el-table-column>
           <el-table-column prop="status" label="状态">
@@ -125,18 +125,23 @@
               <div
                 class="status"
                 style="line-height:0.7rem;color:#3ada76"
-                v-if="scope.row.status=='复查通过'||scope.row.status=='合格'"
-              >{{scope.row.status}}</div>
+                v-if="scope.row.status==3"
+              >已完成</div>
               <div
                 class="status"
                 style="line-height:0.7rem;color:#feb37f"
-                v-else-if="scope.row.status=='待复查'"
-              >{{scope.row.status}}</div>
+                v-else-if="scope.row.status==1"
+              >待整改</div>
+              <div
+                class="status"
+                style="line-height:0.7rem;color:#feb37f"
+                v-else-if="scope.row.status==2"
+              >待复查</div>
               <div
                 class="status"
                 style="line-height:0.7rem;color:#ff7a81"
                 v-else
-              >{{scope.row.status}}</div>
+              >超期未整改</div>
             </template>
           </el-table-column>
         </el-table>
@@ -147,11 +152,12 @@
         <!-- @size-change="handleSizeChange"
         @current-change="handleCurrentChange"-->
         <el-pagination
-          :current-page="1"
+          :current-page="pageNum"
+          @current-change="handleCurrentChange"
           :page-sizes="[10, 20, 30, 40]"
-          :page-size="10"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="4"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="pageTotal"
         ></el-pagination>
       </div>
     </div>
@@ -186,70 +192,86 @@ export default {
           label: "分包公司3"
         }
       ], //责任分包选项
-      allTableData: [
-        {
-          number: 1,
-          problem: "某某某工地没护栏",
-          problemStatus: "严重",
-          problemArea: "南山EPC创新工业园",
-          danger: "施工用电",
-          examine: "某某某",
-          examineTime: "2019-01-01 20:11",
-          repair: "伟业-某某某",
-          repairSubpackage: "深圳市伟业建筑劳务有限公司",
-          time: "2018-01-23",
-          status: "复查通过"
-        },
-        {
-          number: 2,
-          problem: "某某某工地没护栏",
-          problemStatus: "轻微",
-          problemArea: "南山EPC创新工业园",
-          danger: "施工用电",
-          examine: "某某某",
-          examineTime: "2019-01-01 20:11",
-          repair: "伟业-某某某",
-          repairSubpackage: "深圳市伟业建筑劳务有限公司",
-          time: "2018-01-23",
-          status: "待复查"
-        },
-        {
-          number: 3,
-          problem: "某某某工地没护栏",
-          problemStatus: "一般",
-          problemArea: "南山EPC创新工业园",
-          danger: "施工用电",
-          examine: "某某某",
-          examineTime: "2019-01-01 20:11",
-          repair: "伟业-某某某",
-          repairSubpackage: "深圳市伟业建筑劳务有限公司",
-          time: "2018-01-23",
-          status: "待整改"
-        },
-        {
-          number: 4,
-          problem: "某某某工地没护栏",
-          problemStatus: "优秀",
-          problemArea: "南山EPC创新工业园",
-          danger: "施工用电",
-          examine: "某某某",
-          examineTime: "2019-01-01 20:11",
-          repair: "伟业-某某某",
-          repairSubpackage: "深圳市伟业建筑劳务有限公司",
-          time: "2018-01-23",
-          status: "合格"
-        }
-      ]
+      allTableData: [], // 表格数据
+
+      pageNum: 1, // 当前页
+      pageSize: 8, // 每页显示条数
+      pageTotal: 0, // 总条数
+      differentiate: 2, // 质量监督
+      projectId: '', // 项目id
     };
+  },
+  created() {
+    this.getProjectId()
+    this.getInspectionRecordList()
+    this.getInformationList()
+    // this.getAreaList()
+    this.getHiddenList()
   },
   methods: {
     //   行点击事件
     getInfo(row, event, column) {
-      this.$router.push(`/systemQuality_recordInfo?id=${row.number}`);
-    }
+      this.$router.push(`/systemQuality_recordInfo?id=${row.safetyId}`);
+    },
+
+    // 翻页
+    handleCurrentChange(val) {
+        // console.log(`当前页: ${val}`)
+        this.pageNum = val
+        this.getInspectionRecordList()
+    },
+
+    // 获取项目id
+    getProjectId() {
+      this.projectId = sessionStorage.getItem('pid')
+    },
+
+    // 序号
+    indexMethod(index) {
+      return (this.pageNum-1)*this.pageSize+index+1
+    },
+
+    // 获取检查记录列表
+    getInspectionRecordList() {
+      this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/getInspectionRecordList?pageNum=${this.pageNum}&pageSize=${this.pageSize}&projectId=${this.projectId}&differentiate=${this.differentiate}`).then(
+        res => {
+          // console.log(res.data)
+          this.allTableData = res.data.data
+          this.pageTotal = res.data.total
+        }
+      )
+    },
+
+    // 查询分包单位列表
+    getInformationList() {
+      this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/getInformationList?projectId=${this.projectId}`).then(
+        res => {
+          console.log(res.data)
+        }
+      )
+    },
+
+    // 查询检查区域列表
+    getAreaList() {
+      this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/getAreaList?projectId=${this.projectId}`).then(
+        res => {
+          console.log(res.data)
+        }
+      )
+    },
+
+    // 查询检查类型列表
+    getHiddenList() {
+      this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/getHiddenList?projectId=${this.projectId}`).then(
+        res => {
+          console.log(res.data)
+        }
+      )
+    },
   }
 };
 </script>
+
 <style lang="less">
 #systemQuality_record {
   .content {
@@ -346,15 +368,19 @@ export default {
         padding: 0;
         div {
           height: 0.7rem;
+          line-height: .7rem;
           color: #646464;
           font-size: 0.16rem;
+          >p {
+            line-height: .23rem;
+          }
         }
       }
     }
     .tableBox {
       padding: 0 0.2rem;
       .problem {
-        padding-top: 0.12rem;
+        // padding-top: 0.12rem;
         .problemTu {
           display: inline-block;
           width: 0.54rem;

@@ -4,13 +4,13 @@
             <div class="message">
                 <div class="inquire">
                     <el-input v-model="name" placeholder="姓名或设备编号或电话"></el-input>
-                    <!-- <el-date-picker
-                        v-model="createDate"
+                    <el-date-picker
+                        v-model="startTime"
                         value-format="yyyy-MM-dd"
                         type="date"
                         placeholder="选择日期">
-                    </el-date-picker> -->
-                    <el-date-picker
+                    </el-date-picker>
+                    <!-- <el-date-picker
                         v-model="createDate"
                         type="daterange"
                         range-separator="至"
@@ -18,7 +18,7 @@
                         end-placeholder="结束日期"
                         value-format="yyyy-MM-dd"
                         @change="getTime">
-                    </el-date-picker>
+                    </el-date-picker> -->
                     <a class="button" @click="getHireHistory">搜索</a>
                 </div>
                 <div class="message-box">
@@ -88,7 +88,7 @@
                     position: relative;
                     .el-date-editor {
                         width: 2.95rem;
-                        border: 0.01rem solid #b6b6b6;
+                        // border: 0.01rem solid #b6b6b6;
                         .el-range-separator {
                             width: auto;
                         }
@@ -328,7 +328,7 @@ export default {
 
         // 获取人员历史轨迹
         getHireHistory() {
-            if (this.name && this.startTime && this.endTime ) {
+            if (this.name && this.startTime) {
                 this.$axios.post(`/api/hireApi/getHireHistory?filed=${this.name}&startTime=${this.startTime}&endTime=${this.endTime}&projectId=${this.projectId}`).then(
                     res => {
                         console.log(res.data)

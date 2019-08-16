@@ -94,9 +94,9 @@
                 </div>
                 <div class="search-bottom">
                     共
-                    <span>30</span>
+                    <span>0</span>
                     条记录，待整改
-                    <span>4</span>
+                    <span>0</span>
                     条，待复查
                     <span>0</span>
                     条
@@ -135,7 +135,7 @@
                     </li>
                 </ul>
                 <ul class="list-body">
-                    <li @click="particulars">
+                    <!-- <li @click="particulars">
                         <div class="number">
                             10088
                         </div>
@@ -157,7 +157,7 @@
                         <div class="operation">
                             <a @click="aClick"></a>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>

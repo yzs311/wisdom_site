@@ -6,7 +6,7 @@
                     <i class="el-icon-arrow-left" style="font-size:0.18rem"></i>
                     返回&nbsp;/&nbsp;
                 </span>
-                <span @click="$router.push('/systemSafety_home')">数据统计&nbsp;/&nbsp;</span>
+                <!-- <span @click="$router.push('/systemSafety_home')">数据统计&nbsp;/&nbsp;</span> -->
                 <span @click="$router.push('/systemSafety_manage')">整改单管理&nbsp;/&nbsp;</span>
                 <span>详情</span>
             </div>
@@ -194,7 +194,33 @@ export default {
             district: '', // 检查区域
             type: '', // 检查类型
             textarea: '', // 整改要求
+
+            safetyId: '', // 整改id
+            getIdState: 0, // 调用一次获取url中的值
         }
+    },
+    created() {
+      this.getSafetyId()
+      this.getManagementDetails()
+    },
+    methods: {
+      // 获取实时监控页面传过来的值
+      getSafetyId() {
+          if (this.$route.query.id != undefined && this.getIdState == 0) {
+              this.safetyId = this.$route.query.id
+              this.getIdState = 1
+          }
+          // console.log(this.safetyId)
+      },
+
+      // 获取整改单管理详情
+      getManagementDetails() {
+        this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/getManagementDetails?safetyId=${this.safetyId}`).then(
+          res => {
+            console.log(res.data)
+          }
+        )
+      }
     }
 };
 </script>

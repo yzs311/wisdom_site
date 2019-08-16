@@ -6,14 +6,14 @@
           <i class="el-icon-arrow-left" style="font-size:0.18rem"></i>
           返回&nbsp;/&nbsp;
         </span>
-        <span @click="$router.push('/systemQuality_home')">数据统计&nbsp;/&nbsp;</span>
+        <!-- <span @click="$router.push('/systemQuality_home')">数据统计&nbsp;/&nbsp;</span> -->
         <span @click="$router.push('/systemQuality_manage')">整改单管理&nbsp;/&nbsp;</span>
         <span>详情</span>
       </div>
       <div class="status">
         <div class="box">
-          <p class="text">未整改</p>
-          <p class="time">整改时间：2018-09-01 14:22</p>
+          <p class="text">{{indexData.status==1?'待整改':indexData.status==2?'待复查':indexData.status==3?'已完成':'超期未整改'}}</p>
+          <p class="time">整改时间：{{indexData.safetyDeadline}}</p>
         </div>
       </div>
       <div class="tableBox">
@@ -22,75 +22,79 @@
           <span class="text">隐患明细</span>
         </div>
         <el-table :data="allTableData" stripe border>
-          <el-table-column prop="problem" label="问题" width="339">
+          <el-table-column prop="problem" label="问题">
             <template slot-scope="scope">
               <div class="problem">
-                <p>{{scope.row.problem}}</p>
-                <p>
+                <p>{{indexData.safetyDescribe}}</p>
+                <p style="height:.23rem;overflow:hidden;">
                   <span
-                    v-if="scope.row.problemStatus=='严重'"
+                    v-if="indexData.gradeName=='严重'"
                     class="problemRed problemTu"
-                  >{{scope.row.problemStatus}}</span>
+                  >{{indexData.gradeName}}</span>
                   <span
-                    v-else-if="scope.row.problemStatus=='轻微'"
+                    v-else-if="indexData.gradeName=='轻微'"
                     class="problemBlue problemTu"
-                  >{{scope.row.problemStatus}}</span>
+                  >{{indexData.gradeName}}</span>
                   <span
-                    v-else-if="scope.row.problemStatus=='一般'"
+                    v-else-if="indexData.gradeName=='一般'"
                     class="problemYellow problemTu"
-                  >{{scope.row.problemStatus}}</span>
-                  <span v-else class="problemGreen problemTu">{{scope.row.problemStatus}}</span>
-                  <span style="margin-left:0.05rem">{{scope.row.problemArea}}</span>
+                  >{{indexData.gradeName}}</span>
+                  <span v-else class="problemGreen problemTu">{{indexData.gradeName}}</span>
+                  <span style="margin-left:0.05rem">{{indexData.areaName}}</span>
                 </p>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="danger" label="隐患类型" width="175">
+          <el-table-column prop="danger" label="隐患类型" width="185">
             <template slot-scope="scope">
-              <div class="danger" style="line-height:0.7rem">{{scope.row.danger}}</div>
+              <div class="danger" style="line-height:0.7rem">{{indexData.hiddenName}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="examine" label="检查人 | 检查时间" width="266">
+          <el-table-column prop="examine" label="检查人 | 检查时间" width="275">
             <template slot-scope="scope">
               <div class="examine">
-                <p>{{scope.row.examine}}</p>
-                <p>{{scope.row.examineTime}}</p>
+                <p>{{indexData.initiatorName}}</p>
+                <p>{{indexData.initiatorTime}}</p>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="repair" label="整改人 | 责任分包公司" width="279">
+          <el-table-column prop="repair" label="整改人 | 责任分包公司" width="295">
             <template slot-scope="scope">
               <div class="repair">
-                <p>{{scope.row.repair}}</p>
-                <p>{{scope.row.repairSubpackage}}</p>
+                <p>{{indexData.rectifyName}}</p>
+                <p>{{indexData.constructionName}}</p>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="time" label="整改期限" width="180">
+          <el-table-column prop="time" label="整改期限" width="195">
             <template slot-scope="scope">
-              <div class="time" style="line-height:0.7rem">{{scope.row.time}}</div>
+              <div class="time" style="line-height:0.7rem">{{indexData.safetyDeadline}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="status" label="状态" width="169">
+          <el-table-column prop="status" label="状态" width="185">
             <template slot-scope="scope">
               <div
                 style="line-height:0.7rem;color:#3ada76"
-                v-if="scope.row.status=='复查通过' || scope.row.status=='合格' "
-              >{{scope.row.status}}</div>
+                v-if="scope.row.status== 3"
+              >已完成</div>
               <div
                 style="line-height:0.7rem;color:#feb37f"
-                v-else-if="scope.row.status=='待复查'"
-              >{{scope.row.status}}</div>
-              <div style="line-height:0.7rem;color:#ff7a81" v-else>{{scope.row.status}}</div>
+                v-else-if="scope.row.status==1"
+              >待整改</div>
+              <div
+                style="line-height:0.7rem;color:#feb37f"
+                v-else-if="scope.row.status==2"
+              >待复查</div>
+              <div style="line-height:0.7rem;color:#ff7a81" v-else>超期未整改</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <!-- <el-table-column label="操作">
             <template slot-scope="scope">
               <div style="line-height:0.7rem">
                 <a @click="handleDelete(scope.row)">删除</a>
               </div>
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </div>
       <div class="searchBox">
@@ -172,8 +176,36 @@ export default {
           time: "2018-01-23",
           status: "复查通过"
         }
-      ]
-    };
+      ],
+
+      safetyId: '', // 整改id
+      getIdState: 0, // 调用一次获取url中的值
+      indexData: '', // 页面数据
+    }
+  },
+  created() {
+    this.getSafetyId()
+    this.getManagementDetails()
+  },
+  methods: {
+    // 获取实时监控页面传过来的值
+    getSafetyId() {
+        if (this.$route.query.id != undefined && this.getIdState == 0) {
+            this.safetyId = this.$route.query.id
+            this.getIdState = 1
+        }
+        // console.log(this.safetyId)
+    },
+
+    // 获取整改单管理详情
+    getManagementDetails() {
+      this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/getManagementDetails?safetyId=${this.safetyId}`).then(
+        res => {
+          // console.log(res.data)
+          this.indexData = res.data.data
+        }
+      )
+    }
   }
 };
 </script>

@@ -88,7 +88,7 @@
                 </div>
             </div> -->
 
-            <!-- <div class="content-box" v-for="(item,index) in towerCraneData" :key="index">
+            <div class="content-box" v-for="(item,index) in towerCraneData" :key="index">
                 <div class="top-box">
                     <div class="status">
                         <span :class="item.sb=='正常'?'normal':'anomaly'">{{item.sb}}</span>
@@ -172,9 +172,9 @@
                         <span class="bolder" :class="item.residue>=10?'normal':item.residue>=1?'warning':'anomaly'">{{item.residue}}天</span>
                     </div>
                 </div>
-            </div> -->
+            </div>
             
-            <div class="content-box">
+            <!-- <div class="content-box">
                 <div class="top-box">
                     <div class="status">
                         <span class="normal">正常</span>
@@ -185,7 +185,6 @@
                         <span class="bolder">上班时间</span>
                         <span>07：51</span>
                     </div>
-                    <!-- <img :src="item.img" alt="" class="pic"> -->
                     <img src="../../../static/images/s_pic.png" alt="" class="pic">
                 </div>
                 <div class="bottom-box">
@@ -249,7 +248,6 @@
                                 <img src="../../../static/images/s_dip-angle.png" alt="">
                                 <div>
                                     <p class="warning">倾角</p>
-                                    <!--  <p>X{{val.yx_qjX}}°</p> -->
                                     <p>7°</p>
                                 </div>
                             </li>
@@ -272,7 +270,6 @@
                         <span class="bolder">上班时间</span>
                         <span>07：03</span>
                     </div>
-                    <!-- <img :src="item.img" alt="" class="pic"> -->
                     <img src="../../../static/images/s_pic.png" alt="" class="pic">
                 </div>
                 <div class="bottom-box">
@@ -336,7 +333,6 @@
                                 <img src="../../../static/images/s_dip-angle.png" alt="">
                                 <div>
                                     <p class="warning">倾角</p>
-                                    <!--  <p>X{{val.yx_qjX}}°</p> -->
                                     <p>7°</p>
                                 </div>
                             </li>
@@ -359,7 +355,6 @@
                         <span class="bolder">上班时间</span>
                         <span>06：19</span>
                     </div>
-                    <!-- <img :src="item.img" alt="" class="pic"> -->
                     <img src="../../../static/images/s_pic.png" alt="" class="pic">
                 </div>
                 <div class="bottom-box">
@@ -423,7 +418,6 @@
                                 <img src="../../../static/images/s_dip-angle.png" alt="">
                                 <div>
                                     <p class="warning">倾角</p>
-                                    <!--  <p>X{{val.yx_qjX}}°</p> -->
                                     <p>7°</p>
                                 </div>
                             </li>
@@ -434,7 +428,7 @@
                         <span class="bolder normal">92天</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

@@ -309,7 +309,7 @@ export default {
 
         // 获取班组人数与项目经验
         getQueryFlowData() {
-            this.$axios.post(`/lz/hujiangGroup/queryFlow?teamId=${this.teamId}`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/hujiangGroup/queryFlow?teamId=${this.teamId}`).then(
                 res => {
                     // console.log(res.data)
                     this.flowData = res.data
@@ -319,7 +319,7 @@ export default {
 
         // 获取班组的基础信息
         getQueryForemanData() {
-            this.$axios.post(`/lz/hujiangGroup/queryForeman`).then(
+            this.$axios.post(`http://39.108.103.150:8989/lz/hujiangGroup/queryForeman`).then(
                 res => {
                     // console.log(res.data.msg.length)
                     for (let i = 0; i < res.data.msg.length; i++) {

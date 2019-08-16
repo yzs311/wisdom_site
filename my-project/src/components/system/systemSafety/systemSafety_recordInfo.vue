@@ -6,100 +6,106 @@
                     <i class="el-icon-arrow-left" style="font-size:0.18rem"></i>
                     返回&nbsp;/&nbsp;
                 </span>
-                <span @click="$router.push('/systemSafety_home')">数据统计&nbsp;/&nbsp;</span>
+                <!-- <span @click="$router.push('/systemSafety_home')">数据统计&nbsp;/&nbsp;</span> -->
                 <span @click="$router.push('/systemSafety_record')">检查记录&nbsp;/&nbsp;</span>
                 <span>详情</span>
             </div>
             <div class="status">
-                <p class="text">未整改</p>
-                <p class="time">整改时间：2018-09-01 14:22</p>
+              <p class="text">{{indexData.status==1?'待整改':indexData.status==2?'待复查':indexData.status==3?'已完成':'超期未整改'}}</p>
+              <p class="time">整改时间：{{indexData.safetyDeadline}}</p>
             </div>
             <div class="quality">
-                <div class="title">
-                    <span class="shu"></span>
-                    <span class="text">质量检查</span>
-                </div>
-                <div class="textInfo">
-                    通风井操作低于工作面，人工操作时存在高坠风险。
-                    <span>轻微</span>
-                </div>
-                <div class="listInfo">
-                    <ul>
-                        <li>
-                            检查区域：
-                            <span>创新科技园项目东侧</span>
-                        </li>
-                        <li>
-                            隐患类型：
-                            <span>其他</span>
-                        </li>
-                        <li>
-                            分包单位：
-                            <span>深圳市伟业建筑劳务有限公司</span>
-                        </li>
-                        <li>
-                            &#12288;检查人：
-                            <span>某某某</span>
-                        </li>
-                    </ul>
-                </div>
-                <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3647093518,1808240454&fm=15&gp=0.jpg">
+              <div class="title">
+                <span class="shu"></span>
+                <span class="text">质量检查</span>
+              </div>
+              <div class="textInfo">
+                {{indexData.rectifyResult}}
+                <span>{{indexData.gradeName}}</span>
+              </div>
+              <div class="listInfo">
+                <ul>
+                  <li>
+                    检查区域：
+                    <span>{{indexData.areaName}}</span>
+                  </li>
+                  <li>
+                    隐患类型：
+                    <span>{{indexData.hiddenName}}</span>
+                  </li>
+                  <li>
+                    分包单位：
+                    <span>{{indexData.constructionName}}</span>
+                  </li>
+                  <li>
+                    &#12288;检查人：
+                    <span>{{indexData.initiatorName}}</span>
+                  </li>
+                </ul>
+              </div>
+              <img
+                :src="indexData.safetyPhotos[0]"
+              >
             </div>
             <div class="inform">
-                <div class="title">
-                    <span class="shu"></span>
-                    <span class="text">整改通知</span>
-                </div>
-                <div class="listInfo">
-                    <ul>
-                        <li>
-                            &#12288;整改人：
-                            <span>伟业-张东方</span>
-                        </li>
-                        <li>
-                            整改时限：
-                            <span>2019-01-07</span>
-                        </li>
-                        <li>
-                            整改要求：
-                            <span>操作架高于工作面1.2米</span>
-                        </li>
-                        <li>
-                            创表时间：
-                            <span>2019-01-07 21:22</span>
-                        </li>
-                    </ul>
-                </div>
+              <div class="title">
+                <span class="shu"></span>
+                <span class="text">整改通知</span>
+              </div>
+              <div class="listInfo">
+                <ul>
+                  <li>
+                    &#12288;整改人：
+                    <span>{{indexData.rectifyName}}</span>
+                  </li>
+                  <li>
+                    整改时限：
+                    <span>{{indexData.safetyDeadline}}</span>
+                  </li>
+                  <li>
+                    整改要求：
+                    <span>{{indexData.safetyRequire}}</span>
+                  </li>
+                  <li>
+                    创表时间：
+                    <span>{{indexData.safetyCreateTime}}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
             <div class="abarbeitungList">
-                <div class="list">
-                    <div class="title">
-                        <span class="shu"></span>
-                        <span class="text">第1次整改</span>
-                    </div>
-                    <div class="listInfo">
-                        <ul>
-                            <li>
-                                &#12288;整改人：
-                                <span>创新科技园项目东侧</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="case">处理情况</div>
-                    <div class="caseInfo">已把操作架高于操作面1.2米</div>
-                    <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3647093518,1808240454&fm=15&gp=0.jpg">
-                    <div class="caseTime">整改时间：2018-09-01 20:50</div>
-                    <div class="review">
-                        <p>复查意见&#12288;&#12288;通过</p>
-                        <p>整改合格确认通过</p>
-                        <p>复查人：王嘉兴</p>
-                        <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3647093518,1808240454&fm=15&gp=0.jpg">
-                        <p class="reviewTime">复查时间：2018-07-19 20:50</p>
-                    </div>
+              <div class="list">
+                <div class="title">
+                  <span class="shu"></span>
+                  <span class="text">第1次整改</span>
                 </div>
-                <div class="createTime">表单创建时间：2018-07-19 20:50</div>
+                <div class="listInfo">
+                  <ul>
+                    <li>
+                      &#12288;整改人：
+                      <span>{{indexData.rectifyName}}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="case">处理情况</div>
+                <div class="caseInfo">{{indexData.rectifyResult}}</div>
+                <img
+                  :src="indexData.rectifyPhotos[0]"
+                >
+                <div class="caseTime">整改时间：{{indexData.rectifyTime}}</div>
+                <div class="review">
+                  <p>复查意见&#12288;&#12288;{{indexData.reviewOpinions}}</p>
+                  <p>{{indexData.reviewResult}}</p>
+                  <p>复查人：{{indexData.reviewName}}</p>
+                  <img
+                    :src="indexData.reviewPath[0]"
+                  >
+                  <p class="reviewTime">复查时间：{{indexData.reviewTime}}</p>
+                </div>
+              </div>
+              <div class="createTime">表单创建时间：{{indexData.safetyCreateTime}}</div>
             </div>
-            <div class="right">
+            <!-- <div class="right">
                 <div class="liuCheng">
                     <div class="title">
                         <span class="shu"></span>
@@ -150,7 +156,7 @@
                     </div>
                     <p>无</p>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -359,8 +365,33 @@
 export default {
     data() {
         return {
-            
+            safetyId: '', // 整改id
+            getIdState: 0, // 调用一次获取url中的值
+            indexData: '', // 页面数据
         }
+    },
+    created() {
+      this.getSafetyId()
+      this.getInspectionRecordList()
+    },
+    methods: {
+      // 获取实时监控页面传过来的值
+      getSafetyId() {
+          if (this.$route.query.id != undefined && this.getIdState == 0) {
+              this.safetyId = this.$route.query.id
+              this.getIdState = 1
+          }
+          // console.log(this.safetyId)
+      },
+
+      // 获取检查记录详情页数据
+      getInspectionRecordList() {
+        this.$axios.post(`http://192.168.1.51:8083/provider/safetyPcApi/getInspectionRecordDetails?safetyId=${this.safetyId}`).then(
+          res => {
+            this.indexData = res.data.data
+          }
+        )
+      }, 
     }
 }
 </script>

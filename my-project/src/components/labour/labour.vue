@@ -115,8 +115,8 @@
               <table id="staff1">
                 <tr v-for="(item,index) in teamCount.list" :key="index">
                   <td>{{item.title}}</td>
-                  <td>{{item.inOut_id=='in'?'进':'出'}}</td>
-                  <td>{{item.createTime}}</td>
+                  <td>{{item.createTime=='in'?'进':'出'}}</td>
+                  <td>{{item.inOut_id}}</td>
                 </tr>
                 <tr></tr>
               </table>
@@ -165,7 +165,7 @@
                 </div>
                 <div class="reality" id="reality">
                   <span>现场实时人数</span>
-                  <span class="progress" :style="`width:${Math.floor((item.zc/item.kq)*100)}%`"></span>
+                  <span class="progress" :style="`width:${(item.zc/item.kq)*1.4}rem`"></span>
                   <span>{{item.kq || 0}}</span>
                 </div>
               </li>
@@ -202,16 +202,16 @@
             </li>
             <li>
               <span class="span-margin">是否合格:</span>
-              <span :class="contract.workConfirm.bfb=='100%'?'font-green':'font-red'">{{contract.workConfirm.hg}}</span>
+              <span :class="contract.workConfirm.hg=='合格'?'font-green':'font-red'">{{contract.workConfirm.hg}}</span>
             </li>
           </ul>
         </div>
         <div
           class="map float-right"
-          :class="contract.workConfirm.bfb=='100%'?'qualified':'disqualification'"
+          :class="contract.workConfirm.hg=='合格'?'qualified':'disqualification'"
         >
           <!-- qualified为合格 disqualification为不合格 -->
-          <div class="border" :class="contract.workConfirm.bfb=='100%'?'border-green':'border-red'">
+          <div class="border" :class="contract.workConfirm.hg=='合格'?'border-green':'border-red'">
             <!-- <div class="subBorder" id="roateBox1">
               <div class="wrapper" style="right:0rem">
                 <div
@@ -254,15 +254,15 @@
             </li>
             <li>
               <span class="span-margin">是否合格:</span>
-              <span :class="contract.entrance.bfb=='100%'?'font-green':'font-red'">{{contract.entrance.hg}}</span>
+              <span :class="contract.entrance.hg=='合格'?'font-green':'font-red'">{{contract.entrance.hg}}</span>
             </li>
           </ul>
         </div>
         <div
           class="map float-right"
-          :class="contract.entrance.bfb=='100%'?'qualified':'disqualification'"
+          :class="contract.entrance.hg=='合格'?'qualified':'disqualification'"
         >
-          <div class="border" :class="contract.entrance.bfb=='100%'?'border-green':'border-red'">
+          <div class="border" :class="contract.entrance.hg=='合格'?'border-green':'border-red'">
             <!-- <div class="subBorder" id="roateBox2">
               <div class="wrapper" style="right:0rem">
                 <div
@@ -305,15 +305,15 @@
             </li>
             <li>
               <span class="span-margin">是否合格:</span>
-              <span :class="contract.contract.bfb=='100%'?'font-green':'font-red'">{{contract.contract.hg}}</span>
+              <span :class="contract.contract.hg=='合格'?'font-green':'font-red'">{{contract.contract.hg}}</span>
             </li>
           </ul>
         </div>
         <div
           class="map float-right"
-          :class="contract.contract.bfb=='100%'?'qualified':'disqualification'"
+          :class="contract.contract.hg=='合格'?'qualified':'disqualification'"
         >
-          <div class="border" :class="contract.contract.bfb=='100%'?'border-green':'border-red'">
+          <div class="border" :class="contract.contract.hg=='合格'?'border-green':'border-red'">
             <!-- <div class="subBorder" id="roateBox3">
               <div class="wrapper" style="right:0rem">
                 <div
@@ -356,15 +356,15 @@
             </li>
             <li>
               <span class="span-margin">是否合格:</span>
-              <span :class="contract.exit_pdf.bfb=='100%'?'font-green':'font-red'">{{contract.exit_pdf.hg}}</span>
+              <span :class="contract.exit_pdf.hg=='合格'?'font-green':'font-red'">{{contract.exit_pdf.hg}}</span>
             </li>
           </ul>
         </div>
         <div
           class="map float-right"
-          :class="contract.exit_pdf.bfb=='100%'?'qualified':'disqualification'"
+          :class="contract.exit_pdf.hg=='合格'?'qualified':'disqualification'"
           >
-          <div class="border" :class="contract.exit_pdf.bfb=='100%'?'border-green':'border-red'">
+          <div class="border" :class="contract.exit_pdf.hg=='合格'?'border-green':'border-red'">
             <!-- <div class="subBorder" id="roateBox4">
               <div class="wrapper" style="right:0rem">
                 <div
@@ -726,14 +726,14 @@ export default {
           }
         }
         var MyMar1 = setInterval(Marquee1, speed); //设置定时器
-        //鼠标移上时清除定时器达到滚动停止的目的
-        colee.onmouseover = function() {
-          clearInterval(MyMar1);
-        };
-        //鼠标移开时重设定时器
-        colee.onmouseout = function() {
-          MyMar1 = setInterval(Marquee1, speed);
-        };
+        // //鼠标移上时清除定时器达到滚动停止的目的
+        // colee.onmouseover = function() {
+        //   clearInterval(MyMar1);
+        // };
+        // //鼠标移开时重设定时器
+        // colee.onmouseout = function() {
+        //   MyMar1 = setInterval(Marquee1, speed);
+        // };
       }, 1000);
     },
 
@@ -883,6 +883,7 @@ export default {
             }
           }
           // 初始化今日劳动曲线图
+          
           this.labourCurve(lMZc, lMDay)
       })
     },
@@ -942,6 +943,7 @@ export default {
             }
           }
           // console.log(temp)
+          // this.professionMap(temp)
           setTimeout(()=>{
             this.professionMap(temp)
           },100)
@@ -955,6 +957,12 @@ export default {
         res => {
           // console.log(res.data)
           this.teamCount = res.data
+          if (this.teamCount.team.length >= 7) {
+            this.scrollStart('squad','squad1','squad2')
+          }
+          if (this.teamCount.list.length >= 7) {
+            this.scrollStart('staff','staff1','staff2')
+          }
         }
       )
     },
@@ -976,7 +984,7 @@ export default {
           }
           setTimeout(()=>{
             this.attendance(date,count,wc,mc)
-          })
+          },100)
         }
       )
     },
@@ -994,9 +1002,9 @@ export default {
               day.push(key.split(' ')[1])
             }
           }
-          setTimeout(() => {
+          setTimeout(()=>{
             this.labourCurve(zc,day)
-          }, 100)
+          },100)
         }
       )
     },
@@ -1007,6 +1015,9 @@ export default {
         res => {
           // console.log(res.data)
           this.buildCompany = res.data.buildcompany
+          if (this.buildCompany.length > 3) {
+            this.scrollStart('rightBottom','rightBottom1','rightBottom2')
+          }
         }
       )
     },
